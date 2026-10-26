@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Ontwerpformulier – AI × Mobiliteit</title>
+  <meta name="description" content="Van vraagstuk naar AI-prototype: ontwerpformulier voor de Themadag Mobiliteit Rotterdam × Den Haag.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Naar de inhoud</a>
+
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">AI</span><span>AI × Mobiliteit</span></a>
+      <nav class="site-nav" aria-label="Hoofdmenu">
+        <ul>
+          <li><a href="index.html">Start</a></li>
+          <li><a href="demos.html">Inspiratie</a></li>
+          <li><a href="ontwerp.html" aria-current="page">Ontwerpen</a></li>
+          <li><a href="testen.html">Testen</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-head">
+      <div class="container container-narrow">
+        <p class="eyebrow">Ochtend · Ontwerpen</p>
+        <h1>Van vraagstuk naar <span class="nowrap">AI-prototype</span></h1>
+        <p class="subtitle">Themadag Mobiliteit | Rotterdam × Den Haag</p>
+        <p class="lead">Werk als team in vijf stappen van een probleem naar een concreet ontwerp. De AI-begeleiders gebruiken jullie ontwerp om tussen de sessies een eerste prototype te bouwen.</p>
+        <div class="notice">
+          <p><strong>Jullie antwoorden worden automatisch bewaard op dit apparaat</strong> en nergens naartoe gestuurd. Klaar? Download het formulier en lever het in. Vul geen persoonsgegevens of vertrouwelijke informatie in.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="container container-narrow">
+      <form class="worksheet" data-form="ontwerp" data-title="Van vraagstuk naar AI-prototype" data-subtitle="Themadag Mobiliteit | Rotterdam × Den Haag" data-file-label="ontwerp" data-file-topic="onderwerp" novalidate>
+
+        <div class="card meta-card">
+          <div class="field">
+            <label for="team">Team <span class="req">(verplicht)</span></label>
+            <input id="team" name="team" type="text" autocomplete="off" required data-shared="team">
+          </div>
+          <div class="field">
+            <label for="onderwerp">Onderwerp</label>
+            <input id="onderwerp" name="onderwerp" type="text" autocomplete="off">
+          </div>
+        </div>
+
+        <fieldset class="card step">
+          <legend><span class="step-nr">Stap 1</span> <span class="step-title">Wat is het probleem?</span></legend>
+          <label class="hint" for="probleem">Welk concreet probleem willen jullie oplossen? Wat gaat er nu niet goed of kost veel moeite?</label>
+          <textarea id="probleem" name="probleem" rows="4"></textarea>
+        </fieldset>
+
+        <fieldset class="card step">
+          <legend><span class="step-nr">Stap 2</span> <span class="step-title">Voor wie lossen we dit op?</span></legend>
+          <label class="hint" for="doelgroep">Wie heeft er last van dit probleem of wie zou geholpen zijn met een oplossing?</label>
+          <textarea id="doelgroep" name="doelgroep" rows="4"></textarea>
+        </fieldset>
+
+        <fieldset class="card step">
+          <legend><span class="step-nr">Stap 3</span> <span class="step-title">Wat willen we bereiken?</span></legend>
+          <label class="hint" for="doel">Wat zou er beter, makkelijker of mogelijk moeten worden? Denk ook aan dingen die nu nog niet kunnen.</label>
+          <textarea id="doel" name="doel" rows="4"></textarea>
+        </fieldset>
+
+        <fieldset class="card step">
+          <legend><span class="step-nr">Stap 4</span> <span class="step-title">Hoe zou de oplossing eruitzien?</span></legend>
+          <p class="step-help">Beschrijf wat jullie AI-tool moet kunnen. Wat voert iemand in, wat doet de tool en wat krijgt de gebruiker terug?</p>
+          <div class="field">
+            <label for="invoer">Invoer</label>
+            <textarea id="invoer" name="invoer" rows="3" placeholder="Bijv. een adres, een foto van een trottoir, een vraag in gewone taal"></textarea>
+          </div>
+          <div class="field">
+            <label for="werking">Wat doet de tool?</label>
+            <textarea id="werking" name="werking" rows="3" placeholder="Bijv. zoekt informatie op, vergelijkt, rekent door, vat samen"></textarea>
+          </div>
+          <div class="field">
+            <label for="uitkomst">Uitkomst</label>
+            <textarea id="uitkomst" name="uitkomst" rows="3" placeholder="Bijv. een kaart, een conceptadvies, een lijst met knelpunten"></textarea>
+          </div>
+        </fieldset>
+
+        <fieldset class="card step">
+          <legend><span class="step-nr">Stap 5</span> <span class="step-title">Wat willen we vandaag laten zien?</span></legend>
+          <label class="hint" for="eerste_prototype">Welk onderdeel van de oplossing willen jullie als eerste prototype laten bouwen? Houd het klein en concreet.</label>
+          <textarea id="eerste_prototype" name="eerste_prototype" rows="4"></textarea>
+        </fieldset>
+
+        <section class="card done-card" aria-labelledby="klaar">
+          <h2 id="klaar">Klaar!</h2>
+          <p>Download het formulier en lever het in bij de AI-begeleiders. Zij gebruiken jullie ontwerp om tussen de sessies een eerste prototype te bouwen.</p>
+          <p><strong>Inleveren:</strong> <span class="todo">[nog invullen: e-mailadres of Teams-kanaal]</span></p>
+          <p><strong>In de middag:</strong> jullie proberen het prototype uit en bespreken wat werkt en wat beter kan.</p>
+          <p class="reset-row no-print">Opnieuw beginnen? <button type="button" class="btn btn-ghost btn-sm" data-action="reset">Formulier leegmaken</button></p>
+        </section>
+
+        <div class="form-bar">
+          <p class="form-status"><span data-progress>0 van 5 stappen ingevuld</span> · <span data-saved>Wordt automatisch bewaard</span></p>
+          <div class="form-actions">
+            <button type="button" class="btn btn-primary btn-sm" data-action="download">Download</button>
+            <button type="button" class="btn btn-sm" data-action="copy">Kopieer tekst</button>
+            <button type="button" class="btn btn-sm" data-action="print">Print / PDF</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="toast" role="status" aria-live="polite" data-toast></div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Themadag Mobiliteit · Rotterdam × Den Haag · 5 november 2026</p>
+    </div>
+  </footer>
+
+  <script src="assets/forms.js"></script>
+</body>
+</html>
