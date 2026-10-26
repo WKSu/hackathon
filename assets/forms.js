@@ -162,7 +162,9 @@
     return saved;
   }
 
-  /* ---------- Markdown-export ---------- */
+  /* ---------- Export: één opbouw, als Markdown en als opgemaakte HTML ---------- */
+
+  var NOT_FILLED = "(niet ingevuld)";
 
   function cleanText(node) {
     if (!node) return "";
@@ -177,22 +179,24 @@
     return cleanText(form.querySelector('label[for="' + field.id + '"]')) || field.name;
   }
 
-  function answer(value) {
-    var text = value.trim();
-    return text || "_(niet ingevuld)_";
-  }
-
-  function toMarkdown() {
-    var blocks = ["# " + form.dataset.title, form.dataset.subtitle];
+  // Het ingevulde formulier als lijst blokken; Markdown en HTML worden hieruit gemaakt
+  function buildDocument() {
+    var blocks = [
+      { type: "title", text: form.dataset.title },
+      { type: "text", text: form.dataset.subtitle },
+    ];
 
     var meta = Array.prototype.slice.call(form.querySelectorAll(".meta-card input[name]")).map(function (field) {
-      return "**" + labelFor(field) + ":** " + (field.value.trim() || "—");
+      return { label: labelFor(field), value: field.value.trim() || "—" };
     });
-    meta.push("**Ingevuld op:** " + formatDateTime(new Date()));
-    blocks.push(meta.join("  \n"));
+    meta.push({ label: "Ingevuld op", value: formatDateTime(new Date()) });
+    blocks.push({ type: "meta", items: meta });
 
     steps.forEach(function (step) {
-      blocks.push("## " + cleanText(step.querySelector(".step-nr")) + " — " + cleanText(step.querySelector(".step-title")));
+      blocks.push({
+        type: "step",
+        text: cleanText(step.querySelector(".step-nr")) + " — " + cleanText(step.querySelector(".step-title")),
+      });
 
       var all = stepFields(step);
       var checkboxes = all.filter(function (f) {
@@ -203,27 +207,101 @@
       });
 
       if (checkboxes.length) {
-        blocks.push(
-          checkboxes
-            .map(function (cb) {
-              return "- [" + (cb.checked ? "x" : " ") + "] " + labelFor(cb);
-            })
-            .join("\n")
-        );
+        blocks.push({
+          type: "checklist",
+          items: checkboxes.map(function (cb) {
+            return { label: labelFor(cb), checked: cb.checked };
+          }),
+        });
       }
 
       // Eén vrij tekstveld: alleen het antwoord. Meerdere velden: met tussenkopjes.
       if (others.length === 1 && !checkboxes.length) {
-        blocks.push(answer(others[0].value));
+        blocks.push({ type: "answer", text: others[0].value.trim() });
       } else {
         others.forEach(function (field) {
-          blocks.push("### " + labelFor(field));
-          blocks.push(answer(field.value));
+          blocks.push({ type: "subhead", text: labelFor(field) });
+          blocks.push({ type: "answer", text: field.value.trim() });
         });
       }
     });
 
-    return blocks.join("\n\n") + "\n";
+    return blocks;
+  }
+
+  function toMarkdown(blocks) {
+    var parts = blocks.map(function (block) {
+      switch (block.type) {
+        case "title":
+          return "# " + block.text;
+        case "step":
+          return "## " + block.text;
+        case "subhead":
+          return "### " + block.text;
+        case "meta":
+          return block.items
+            .map(function (item) {
+              return "**" + item.label + ":** " + item.value;
+            })
+            .join("  \n");
+        case "checklist":
+          return block.items
+            .map(function (item) {
+              return "- [" + (item.checked ? "x" : " ") + "] " + item.label;
+            })
+            .join("\n");
+        case "answer":
+          return block.text || "_" + NOT_FILLED + "_";
+        default:
+          return block.text;
+      }
+    });
+    return parts.join("\n\n") + "\n";
+  }
+
+  function escapeHtml(text) {
+    return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  // Opgemaakte versie: die gebruiken Teams en Outlook bij plakken
+  function toHtml(blocks) {
+    var parts = blocks.map(function (block) {
+      switch (block.type) {
+        case "title":
+          return "<h2>" + escapeHtml(block.text) + "</h2>";
+        case "step":
+          return "<h3>" + escapeHtml(block.text) + "</h3>";
+        case "subhead":
+          return "<p><strong>" + escapeHtml(block.text) + "</strong></p>";
+        case "meta":
+          return (
+            "<p>" +
+            block.items
+              .map(function (item) {
+                return "<strong>" + escapeHtml(item.label) + ":</strong> " + escapeHtml(item.value);
+              })
+              .join("<br>") +
+            "</p>"
+          );
+        case "checklist":
+          return (
+            "<ul>" +
+            block.items
+              .map(function (item) {
+                return "<li>" + (item.checked ? "☑ " : "☐ ") + escapeHtml(item.label) + "</li>";
+              })
+              .join("") +
+            "</ul>"
+          );
+        case "answer":
+          return block.text
+            ? "<p>" + escapeHtml(block.text).replace(/\n/g, "<br>") + "</p>"
+            : "<p><em>" + NOT_FILLED + "</em></p>";
+        default:
+          return "<p>" + escapeHtml(block.text) + "</p>";
+      }
+    });
+    return parts.join("\n");
   }
 
   // Bestandsnaam volgens teamconventie: JJMMDD Auteur korte inhoud
@@ -270,7 +348,7 @@
     var warning = emptyStepsWarning();
     if (warning && !window.confirm(warning + " Toch downloaden?")) return;
 
-    var blob = new Blob([toMarkdown()], { type: "text/markdown;charset=utf-8" });
+    var blob = new Blob([toMarkdown(buildDocument())], { type: "text/markdown;charset=utf-8" });
     var url = URL.createObjectURL(blob);
     var link = document.createElement("a");
     link.href = url;
@@ -281,7 +359,7 @@
     setTimeout(function () {
       URL.revokeObjectURL(url);
     }, 1000);
-    toast("Gedownload als “" + link.download + "”. Vergeet niet het in te leveren.");
+    toast("Gedownload als “" + link.download + "”. Zet het bestand in de Teams-chat of stuur het naar de AI-begeleiders.");
   }
 
   function fallbackCopy(text) {
@@ -302,20 +380,39 @@
     return ok;
   }
 
+  // Kopieert opgemaakte tekst (voor Teams/Outlook) én platte Markdown (voor een AI-tool
+  // of Kladblok); de plek waar je plakt kiest zelf de passende vorm.
   function copy() {
-    var text = toMarkdown();
+    if (!requireTeam()) return;
+    var blocks = buildDocument();
+    var text = toMarkdown(blocks);
+    var html = toHtml(blocks);
+    var warning = emptyStepsWarning();
+
     var done = function () {
-      toast("Tekst gekopieerd. Plak hem in een e-mail of Teams-bericht.");
+      var note = warning ? " Let op: " + warning.replace(/Stap /g, "stap ") : "";
+      toast("Gekopieerd! Plak de tekst in de Teams-chat." + note);
     };
     var failed = function () {
       if (fallbackCopy(text)) done();
       else toast("Kopiëren lukte niet. Gebruik de knop Download.");
     };
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(done, failed);
-    } else {
-      failed();
+    var plainOnly = function () {
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, failed);
+      else failed();
+    };
+
+    var item = null;
+    try {
+      item = new ClipboardItem({
+        "text/plain": new Blob([text], { type: "text/plain" }),
+        "text/html": new Blob([html], { type: "text/html" }),
+      });
+    } catch (e) {
+      item = null; // oudere browser zonder ClipboardItem
     }
+    if (item && navigator.clipboard && navigator.clipboard.write) navigator.clipboard.write([item]).then(done, plainOnly);
+    else plainOnly();
   }
 
   function reset() {

@@ -31,15 +31,34 @@ maar dat is geen beveiliging.
 
 ## Vóór de themadag nog invullen
 
-- **Waar teams hun formulier inleveren.** Zoek in `ontwerp.html` en `testen.html` op
-  `class="todo"` en vervang de gele placeholder door een e-mailadres of Teams-kanaal.
-- **Echte demo's** in `data/demos.js` (de twee huidige kaarten zijn voorbeelden).
+- **De Teams-chat waarin teams hun formulier plakken.** Zoek in `ontwerp.html` en
+  `testen.html` op `class="todo"` en vervang de gele placeholder door de naam van de chat.
+- **Bouwtijd en rol van AI** bij de demo's in `data/demos.js`, waar die nog ontbreken.
+- **De kleuren van Den Haag** in `assets/style.css` (zie *Huisstijl* hieronder).
 
 ## Een demo toevoegen
 
 Open `data/demos.js`, kopieer een blok `{ ... }` en pas de velden aan. Uitleg per veld
-staat bovenin het bestand. Screenshots zet je in `img/demos/` (liefst 16:9) en verwijs
-je naar met bijvoorbeeld `afbeelding: "img/demos/loopruimte.png"`.
+staat bovenin het bestand. Met `gemeente: "Rotterdam"` of `gemeente: "Den Haag"` krijgt
+de kaart de stadskleur. Screenshots zet je in `img/demos/` (16:9, ± 960×540) en verwijs
+je naar met bijvoorbeeld `afbeelding: "img/demos/loopruimte.jpg"`.
+
+## Huisstijl: Rotterdam × Den Haag
+
+Beide gemeenten dragen groen: Rotterdam groen-wit, Den Haag geel-groen (goud en sinopel
+uit het stadswapen). Groen is daarom de gedeelde basis en Haags geel het accent. De hero
+loopt van Haags naar Rotterdams groen, en de twee overlappende cirkels en de tweekleurige
+band bovenaan staan voor de samenwerking. Demokaarten krijgen de kleur van hun gemeente.
+
+- **Rotterdam** (`--rdam-*` in `assets/style.css`): groen `#00811F` en lichtgrijs
+  `#EFF4F6` uit de Rotterdamse huisstijl.
+- **Den Haag** (`--dh-*`): de gemeente publiceert geen hexcodes op een plek die we konden
+  bereiken. Groen `#155429` en geel `#E3C029` zijn uit het logo benaderd. Controleer ze
+  bij de huisstijlhandleiding en pas zo nodig de variabelen aan; de rest volgt vanzelf.
+- **Letter**: Bolder (Rotterdam) en Thesis (Den Haag) zijn licentiefonts. De site
+  gebruikt het systeemfont (Segoe UI op Windows); Den Haag gebruikt online zelf Arial.
+
+De belangrijkste tekst- en achtergrondcombinaties halen WCAG AA (contrast ≥ 4,5:1).
 
 ## Formuliervragen aanpassen
 
@@ -57,10 +76,13 @@ kwijt. Dat is alleen een probleem als je dat op de dag zelf doet.
 
 - **Automatisch bewaren**: antwoorden staan in de `localStorage` van de browser op dat
   apparaat. Er wordt niets naar een server gestuurd. Met *Leegmaken* wis je ze.
-- **Download**: een Markdown-bestand (`.md`) met de naam volgens de teamconventie,
-  bijvoorbeeld `261105 Team Blauw ontwerp loopruimte.md`. Markdown is leesbaar in elke
-  teksteditor en kan direct als bouwopdracht in een AI-tool geplakt worden.
-- **Kopieer tekst**: dezelfde inhoud naar het klembord, om in een mail of Teams te plakken.
+- **Kopieer tekst** (de hoofdroute): zet het formulier op het klembord in twee vormen.
+  Plak je in Teams of Outlook, dan komt het opgemaakt binnen (kopjes, vet). Plak je in
+  een AI-tool of Kladblok, dan krijg je platte Markdown. Zo kunnen de AI-begeleiders de
+  tekst uit de chat direct als bouwopdracht gebruiken.
+- **Download**: dezelfde inhoud als Markdown-bestand (`.md`), met de naam volgens de
+  teamconventie, bijvoorbeeld `261105 Team Blauw ontwerp loopruimte.md`. Reserveroute
+  als plakken niet lukt.
 - **Print / PDF**: nette afdruk van het ingevulde formulier.
 - **Teamnaam** wordt gedeeld tussen beide formulieren op hetzelfde apparaat.
 

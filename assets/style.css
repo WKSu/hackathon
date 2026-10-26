@@ -1,18 +1,36 @@
-/* Themadag AI × Mobiliteit — gedeelde stijl voor alle pagina's */
+/* Themadag AI × Mobiliteit — gedeelde stijl voor alle pagina's
+ *
+ * Kleur: beide gemeenten dragen groen (Rotterdam: groen-wit, Den Haag: geel-groen uit
+ * het stadswapen). Groen is daarom de gedeelde basis; Haags geel is het accent.
+ * Letter: Bolder (Rotterdam) en Thesis (Den Haag) zijn licentiefonts; online gebruikt
+ * Den Haag Arial. We gebruiken het systeemfont, dat op Windows-laptops Segoe UI is.
+ */
 
 :root {
+  /* Rotterdam, uit de huisstijl */
+  --rdam-groen: #00811f;
+  --rdam-groen-donker: #006317; /* voor tekst op lichte groene vlakken */
+  --rdam-licht: #eff4f6;
+  /* Den Haag: geen officiële hexcodes gevonden, benaderd uit het logo.
+     Controleer bij de huisstijlhandleiding van Den Haag. */
+  --dh-groen: #155429;
+  --dh-geel: #e3c029;
+  --dh-geel-licht: #fbf3d0;
+
   --ink: #16212e;
   --muted: #566273;
-  --bg: #f5f6f8;
+  --bg: var(--rdam-licht);
   --surface: #ffffff;
-  --border: #dbe0e6;
-  --border-strong: #b9c2cc;
-  --primary: #0b6e4f;
-  --primary-hover: #08573e;
-  --primary-soft: #e3f2ec;
-  --accent-soft: #fff4cc;
-  --accent-border: #f0d27a;
-  --accent-ink: #7a5300;
+  --border: #d6dee3;
+  --border-strong: #b3bec6;
+  --primary: var(--rdam-groen);
+  --primary-hover: var(--dh-groen);
+  --primary-soft: #e3f1e6;
+  --primary-ink: var(--rdam-groen-donker);
+  --accent: var(--dh-geel);
+  --accent-soft: var(--dh-geel-licht);
+  --accent-border: #e9d37a;
+  --accent-ink: #6b5200;
   --danger: #b42318;
   --danger-soft: #fdecea;
   --radius: 12px;
@@ -112,6 +130,14 @@ h3 {
   border-bottom: 1px solid var(--border);
 }
 
+/* Dunne band in de twee stadskleuren: Rotterdam groen | Den Haag geel */
+.site-header::before {
+  content: "";
+  display: block;
+  height: 4px;
+  background: linear-gradient(90deg, var(--rdam-groen) 0 50%, var(--dh-geel) 50% 100%);
+}
+
 .site-header .container {
   display: flex;
   flex-wrap: wrap;
@@ -137,6 +163,7 @@ h3 {
 }
 
 .brand-mark {
+  position: relative;
   display: grid;
   place-items: center;
   width: 32px;
@@ -146,6 +173,18 @@ h3 {
   color: #fff;
   font-size: 0.8rem;
   font-weight: 800;
+}
+
+.brand-mark::after {
+  content: "";
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  width: 13px;
+  height: 13px;
+  border: 2px solid var(--surface);
+  border-radius: 50%;
+  background: var(--dh-geel);
 }
 
 .site-nav ul {
@@ -173,7 +212,7 @@ h3 {
 
 .site-nav a[aria-current="page"] {
   background: var(--primary-soft);
-  color: var(--primary);
+  color: var(--primary-ink);
 }
 
 @media (max-width: 640px) {
@@ -325,14 +364,47 @@ h3 {
 
 /* ---------- Startpagina ---------- */
 
+/* Van Haags groen (links, achter de tekst) naar Rotterdams groen (rechts) */
 .hero {
+  position: relative;
+  overflow: hidden;
   padding: 56px 0 48px;
-  background: linear-gradient(135deg, #0b6e4f 0%, #0d5a6e 100%);
+  background: linear-gradient(110deg, var(--dh-groen) 0%, var(--dh-groen) 25%, var(--rdam-groen) 100%);
   color: #fff;
 }
 
+.hero .container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Twee overlappende cirkels: Den Haag (geel vlak) en Rotterdam (witte ring) */
+@media (min-width: 1280px) {
+  .hero::before,
+  .hero::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    transform: translateY(-50%);
+  }
+
+  .hero::before {
+    right: 48px;
+    background: var(--dh-geel);
+    opacity: 0.9;
+  }
+
+  .hero::after {
+    right: 228px;
+    border: 3px solid rgba(255, 255, 255, 0.7);
+  }
+}
+
 .hero .eyebrow {
-  color: #cdeee0;
+  color: var(--dh-geel);
 }
 
 .hero h1 {
@@ -343,14 +415,15 @@ h3 {
 }
 
 .hero .lead {
+  max-width: 56ch;
   margin: 0 0 8px;
   color: #eef8f4;
 }
 
 .hero-note {
-  max-width: 65ch;
+  max-width: 56ch;
   margin: 0;
-  color: #cdeee0;
+  color: #f1f8f2;
 }
 
 .hero-actions {
@@ -371,14 +444,15 @@ h3 {
 }
 
 .hero .btn-primary {
-  background: #fff;
-  border-color: #fff;
-  color: var(--primary);
+  background: var(--dh-geel);
+  border-color: var(--dh-geel);
+  color: var(--ink);
 }
 
 .hero .btn-primary:hover {
-  background: #eef8f4;
-  color: var(--primary-hover);
+  background: #edd14f;
+  border-color: #edd14f;
+  color: var(--ink);
 }
 
 .flow {
@@ -495,6 +569,10 @@ h3 {
   border-radius: 8px;
 }
 
+.rules li:nth-child(even) {
+  border-left-color: var(--dh-geel);
+}
+
 .rules strong {
   display: block;
   margin-bottom: 2px;
@@ -592,6 +670,30 @@ h3 {
 }
 
 .pill-example {
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+}
+
+/* Stadskleur bovenaan de kaart en in het label */
+.demo-card.city-rotterdam {
+  border-top-color: var(--rdam-groen);
+}
+
+.demo-card.city-denhaag {
+  border-top-color: var(--dh-geel);
+}
+
+.pill-city {
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.city-rotterdam .pill-city {
+  background: var(--primary-soft);
+  color: var(--primary-ink);
+}
+
+.city-denhaag .pill-city {
   background: var(--accent-soft);
   color: var(--accent-ink);
 }
@@ -744,7 +846,7 @@ h3 {
   padding: 3px 9px;
   border-radius: 999px;
   background: var(--primary-soft);
-  color: var(--primary);
+  color: var(--primary-ink);
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -802,6 +904,20 @@ h3 {
 
 .done-card p:last-child {
   margin-bottom: 0;
+}
+
+.handin {
+  margin: 0 0 10px;
+  padding-left: 1.4em;
+}
+
+.handin li + li {
+  margin-top: 4px;
+}
+
+.handin-alt {
+  color: var(--muted);
+  font-size: 0.9375rem;
 }
 
 .reset-row {

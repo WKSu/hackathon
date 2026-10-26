@@ -13,15 +13,18 @@
     return demo && demo.titel;
   });
 
-  // Vaste kleurparen per thema, in volgorde van voorkomen
+  // Kleurparen per thema, in volgorde van voorkomen. Bewust geen groen of geel:
+  // die kleuren zijn gereserveerd voor de twee gemeenten.
   var PALETTE = [
-    { bg: "#e3f2ec", ink: "#0b6e4f" },
     { bg: "#e5eefb", ink: "#1d4f91" },
-    { bg: "#fff1d6", ink: "#8a5a00" },
     { bg: "#efe8fb", ink: "#5b3a99" },
-    { bg: "#fbe7ea", ink: "#9b2c3f" },
     { bg: "#e0f4f6", ink: "#0f6670" },
+    { bg: "#fbe7ea", ink: "#9b2c3f" },
+    { bg: "#eceff3", ink: "#3d4a5c" },
   ];
+
+  // Klasse per gemeente; de kleuren staan in style.css
+  var CITY_CLASS = { rotterdam: "city-rotterdam", "den haag": "city-denhaag" };
 
   var ALL = "Alle";
   var themes = [];
@@ -46,7 +49,8 @@
   function renderCard(demo) {
     var theme = demo.thema || "Overig";
     var colors = colorsFor(theme);
-    var card = el("article", "demo-card");
+    var cityClass = CITY_CLASS[String(demo.gemeente || "").toLowerCase()] || "";
+    var card = el("article", "demo-card " + cityClass);
     card.style.setProperty("--theme-bg", colors.bg);
     card.style.setProperty("--theme-ink", colors.ink);
 
@@ -63,6 +67,7 @@
     var body = el("div", "demo-body");
 
     var tags = el("div", "demo-tags");
+    if (demo.gemeente) tags.appendChild(el("span", "pill pill-city", demo.gemeente));
     tags.appendChild(el("span", "pill", theme));
     if (demo.voorbeeld) tags.appendChild(el("span", "pill pill-example", "Voorbeeldkaart"));
     body.appendChild(tags);
@@ -71,8 +76,9 @@
     if (demo.beschrijving) body.appendChild(el("p", null, demo.beschrijving));
 
     var facts = [
-      ["Wat doet AI?", demo.watDoetAI],
+      ["Rol van AI", demo.rolVanAI || demo.watDoetAI],
       ["Gebouwd met", demo.gebouwdMet],
+      ["Gemaakt door", demo.gemaaktDoor],
       ["Bouwtijd", demo.bouwtijd],
     ].filter(function (fact) {
       return fact[1];
