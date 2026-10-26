@@ -1,0 +1,2107 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Aantekeningen en acties</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzIzYTg0YiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjAuNTUiIHN0b3AtY29sb3I9IiMwMDgxMWYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMDA1YTE3Ii8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExMiIgZmlsbD0idXJsKCNiZykiLz4KICA8cmVjdCB4PSIxMjQiIHk9IjEwOCIgd2lkdGg9IjI4OCIgaGVpZ2h0PSIzMTgiIHJ4PSIzMCIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC4xOCIvPgogIDxyZWN0IHg9IjExNiIgeT0iOTYiIHdpZHRoPSIyODgiIGhlaWdodD0iMzE4IiByeD0iMzAiIGZpbGw9IiNmZmZmZmYiLz4KICA8ZyBzdHJva2U9IiNiZmUwYzgiIHN0cm9rZS13aWR0aD0iMTQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+CiAgICA8bGluZSB4MT0iMTg2IiB5MT0iMTY0IiB4Mj0iMzY0IiB5Mj0iMTY0Ii8+CiAgICA8bGluZSB4MT0iMTg2IiB5MT0iMjEyIiB4Mj0iMzY0IiB5Mj0iMjEyIi8+CiAgICA8bGluZSB4MT0iMTg2IiB5MT0iMjYwIiB4Mj0iMzY0IiB5Mj0iMjYwIi8+CiAgICA8bGluZSB4MT0iMTg2IiB5MT0iMzA4IiB4Mj0iMjkwIiB5Mj0iMzA4Ii8+CiAgPC9nPgogIDxnIGZpbGw9IiNlM2YxZTciIHN0cm9rZT0iIzAwNGExMyIgc3Ryb2tlLXdpZHRoPSI2Ij4KICAgIDxyZWN0IHg9IjkyIiB5PSIxMzAiIHdpZHRoPSI2NCIgaGVpZ2h0PSIyNCIgcng9IjEyIi8+CiAgICA8cmVjdCB4PSI5MiIgeT0iMTkyIiB3aWR0aD0iNjQiIGhlaWdodD0iMjQiIHJ4PSIxMiIvPgogICAgPHJlY3QgeD0iOTIiIHk9IjI1NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjI0IiByeD0iMTIiLz4KICAgIDxyZWN0IHg9IjkyIiB5PSIzMTYiIHdpZHRoPSI2NCIgaGVpZ2h0PSIyNCIgcng9IjEyIi8+CiAgPC9nPgogIDxjaXJjbGUgY3g9IjM3NCIgY3k9IjM3MCIgcj0iNzYiIGZpbGw9IiMwMDgxMWYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIxNCIvPgogIDxwYXRoIGQ9Ik0zNDAgMzcyIGwyNiAyNiBsNDggLTU2IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K">
+<style>
+:root {
+  --bg:#f4f5f7; --paneel:#ffffff; --rand:#d5d9e0; --tekst:#1b1f24; --zacht:#5b6470;
+  --accent:#00811f; --accent-tekst:#ffffff; --actief:#e3f1e7; --gevaar:#b00020; --waarschuwing:#8a5a00; --ok:#0a7a2f;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#16191d; --paneel:#1f2328; --rand:#363c44; --tekst:#e6e8eb; --zacht:#9aa4b0;
+          --accent:#3fb862; --accent-tekst:#0b1a10; --actief:#233a2b; --gevaar:#ff6b81; --waarschuwing:#e0a73a; --ok:#4cc272; }
+}
+* { box-sizing:border-box; }
+html,body { height:100%; }
+body { margin:0; font:15px/1.45 "Segoe UI",Arial,sans-serif; background:var(--bg); color:var(--tekst); display:flex; flex-direction:column; }
+button,input,select,textarea { font:inherit; color:inherit; }
+button { cursor:pointer; background:var(--paneel); border:1px solid var(--rand); border-radius:6px; padding:.35rem .7rem; }
+button:hover { border-color:var(--accent); }
+button.primair { background:var(--accent); color:var(--accent-tekst); border-color:var(--accent); font-weight:600; }
+button.gevaar { color:var(--gevaar); }
+button.klein { padding:.05rem .4rem; font-size:.8rem; line-height:1.3; }
+button:disabled { opacity:.4; cursor:default; }
+input[type=text],input[type=date],input[type=datetime-local],select,textarea { background:var(--paneel); border:1px solid var(--rand); border-radius:6px; padding:.35rem .5rem; width:100%; }
+textarea { resize:vertical; min-height:3.2rem; scrollbar-color:#4a4a4a #151515; scrollbar-width:thin; }
+textarea::-webkit-scrollbar { width:10px; height:10px; }
+textarea::-webkit-scrollbar-track { background:#151515; }
+textarea::-webkit-scrollbar-thumb { background:#4a4a4a; border-radius:5px; }
+textarea::-webkit-scrollbar-corner { background:#151515; }
+input[type=checkbox] { accent-color:var(--accent); }
+@keyframes flits { 0%,60% { box-shadow:0 0 0 3px var(--accent); } 100% { box-shadow:0 0 0 0 transparent; } }
+.kaart.flits { animation:flits 2.2s ease-out; }
+.fmenu { position:relative; display:inline-block; }
+.fknop { min-width:15rem; text-align:left; font-weight:600; }
+.flijst { display:none; position:absolute; z-index:30; top:100%; left:0; margin-top:2px; min-width:100%; max-height:65vh; overflow:auto; background:var(--paneel); border:1px solid var(--rand); border-radius:6px; box-shadow:0 4px 14px rgba(0,0,0,.25); padding:.25rem; }
+.fmenu.open .flijst { display:block; }
+.fopt { display:block; width:100%; text-align:left; border:none; background:transparent; border-radius:4px; padding:.3rem .6rem; white-space:nowrap; }
+.fopt:hover { background:var(--actief); }
+.fopt.gekozen { background:var(--actief); font-weight:600; }
+.fopt.kopje { font-weight:700; margin-top:.3rem; }
+.fopt.sub { padding-left:1.5rem; }
+.fopt.fgroep { font-weight:600; }
+.fopt.subsub { padding-left:2.6rem; }
+.notitiebody { display:grid; grid-template-columns:minmax(0,1fr) minmax(280px,38%); gap:1rem; align-items:start; }
+@media (max-width:900px){ .notitiebody { grid-template-columns:1fr; } }
+.acties-kolom { border-left:1px solid var(--rand); padding-left:1rem; }
+.acties-kop { display:flex; justify-content:space-between; align-items:center; margin-bottom:.3rem; }
+.acties-kolom .actie { flex-wrap:wrap; }
+.acties-kolom .actie input[type=text] { flex:1 1 9rem; min-width:0; }
+.acties-kolom .actie input[type=date] { width:8.8rem; }
+.acties-kolom .nieuweactie { flex-wrap:wrap; }
+.acties-kolom .nieuweactie input[type=text] { flex:1 1 9rem; min-width:0; }
+button.projectlabel { font-weight:600; border-color:var(--accent); padding:.2rem .7rem; }
+button.projectlabel:hover { background:var(--actief); }
+.kopknop { background:none; border:none; padding:0; font:inherit; font-weight:700; text-transform:inherit; letter-spacing:inherit; color:inherit; cursor:pointer; }
+.kopknop:hover { color:var(--accent); text-decoration:underline; }
+img.logo { width:34px; height:34px; flex:none; display:block; cursor:pointer; border-radius:8px; }
+img.logo:hover { filter:brightness(1.1); } img.logo:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+nav.tabbalk { display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; padding:.4rem .8rem; background:var(--paneel); border-bottom:1px solid var(--rand); }
+.spacer { flex:1; }
+#status { font-size:.85rem; }
+.st-ok { color:var(--ok); } .st-wacht { color:var(--waarschuwing); } .st-fout { color:var(--gevaar); font-weight:600; }
+#melding { display:none; padding:.5rem .8rem; background:#fff4d6; color:#5c3d00; border-bottom:1px solid #e6c36a; }
+#melding.zichtbaar { display:block; }
+.hoofd { flex:1; min-height:0; display:flex; }
+main { flex:1; overflow:auto; padding:1rem 1.2rem 3rem; }
+.typen { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:1.2rem; align-items:start; }
+.typen .groep { background:var(--paneel); border:1px solid var(--rand); border-radius:8px; padding:.7rem .8rem; margin:0; }
+.groep { margin-bottom:1.1rem; }
+.groep h2 { font-size:.8rem; text-transform:uppercase; letter-spacing:.05em; color:var(--zacht); margin:.2rem 0 .4rem; display:flex; justify-content:space-between; }
+.toevoegen { display:flex; gap:.3rem; margin-bottom:.4rem; }
+.item { display:flex; align-items:center; gap:.2rem; border-radius:6px; padding:.1rem .2rem; }
+.item.gekozen { background:var(--actief); }
+.item .naam { flex:1; text-align:left; border:none; background:transparent; padding:.3rem .4rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.item.afgerond .naam { text-decoration:line-through; color:var(--zacht); }
+.badge { font-size:.75rem; background:var(--rand); border-radius:999px; padding:0 .45rem; color:var(--tekst); }
+.tabs { display:flex; flex-wrap:wrap; gap:.3rem; }
+.tabs button.aan { background:var(--accent); color:var(--accent-tekst); border-color:var(--accent); }
+.kaart { background:var(--paneel); border:1px solid var(--rand); border-radius:8px; padding:.8rem 1rem; margin-bottom:.9rem; }
+.kop { display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; margin-bottom:.8rem; }
+input.notitietitel { font-size:1.05rem; font-weight:700; color:var(--accent); border-color:transparent; background:transparent; padding:.15rem .3rem; width:auto; max-width:100%; flex:0 1 auto; }
+input.notitietitel:hover, input.notitietitel:focus { border-color:var(--rand); background:var(--paneel); }
+input.notitietitel.leeg { font-size:.85rem; font-weight:400; }
+.kaart > input.notitietitel { display:block; width:100%; flex:none; margin-bottom:.4rem; border-color:var(--rand); background:var(--paneel); font-size:1.05rem; font-weight:700; }
+.kop input.titel { font-size:1.2rem; font-weight:600; flex:1; min-width:12rem; }
+.kop select { width:auto; }
+.meta { color:var(--zacht); font-size:.8rem; }
+.notitiekop { display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; margin-bottom:.4rem; }
+.notitiekop input.notitiedatum { width:auto; margin-left:auto; }
+.notitieknoppen { display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; justify-content:flex-end; margin-bottom:.5rem; }
+.linkvak { display:flex; flex-wrap:wrap; gap:.3rem .8rem; align-items:center; margin-top:.3rem; font-size:.85rem; }
+.linkvak:empty { display:none; }
+.linkvak a { color:var(--accent); }
+select.fout { border-color:var(--gevaar); box-shadow:0 0 0 1px var(--gevaar); }
+.rij .eind select.koppel { width:100%; max-width:100%; min-width:0; font-size:.8rem; padding:.1rem .25rem; }
+.actie { display:flex; gap:.5rem; align-items:center; padding:.15rem 0; }
+.actie input[type=checkbox] { width:1.1rem; height:1.1rem; flex:none; }
+.actie input[type=text] { flex:1; }
+.actie input[type=date] { width:9.5rem; flex:none; }
+.actie.klaar input[type=text] { text-decoration:line-through; color:var(--zacht); }
+.nieuweactie { display:flex; gap:.5rem; margin-top:.4rem; }
+.nieuweactie input[type=date] { width:9.5rem; flex:none; }
+.leeg { color:var(--zacht); padding:1rem 0; }
+.laat { color:var(--gevaar); font-weight:600; }
+.lijstgroep h3 { margin:1rem 0 .2rem; font-size:1rem; }
+.lijstgroep h3 small { color:var(--zacht); font-weight:400; }
+.rij { display:flex; gap:.6rem; align-items:center; padding:.25rem 0; border-bottom:1px solid var(--rand); }
+.nieuw-balk { display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; background:var(--paneel); border:1px solid var(--rand); border-left:4px solid var(--accent); border-radius:8px; padding:.5rem .7rem; margin-bottom:.7rem; }
+.filterbalk { margin-bottom:.4rem; }
+.filterbalk .scheiding { width:1px; height:1.6rem; background:var(--rand); margin:0 .3rem; }
+.stmenu { flex:none; }
+button.stknop { min-width:1.9rem; font-size:.85rem; font-weight:800; padding:.1rem .2rem; text-align:center; line-height:1.4; border:none; background:transparent; }
+button.stknop:hover { background:var(--actief); }
+.klaar .stknop { color:var(--zacht); filter:grayscale(1); opacity:.75; }
+.sticoon { display:inline-block; min-width:2.2rem; font-weight:800; }
+.rij .dl { color:var(--accent); cursor:pointer; }
+.rij .dl:hover { text-decoration:underline; }
+.rij .dl.leeg-dl { font-weight:400; font-size:.78rem; color:var(--zacht); opacity:0; }
+.rij:hover .dl.leeg-dl, .rij .dl.leeg-dl:focus { opacity:1; }
+.rij .dl-invoer { width:9.5rem; padding:.1rem .3rem; font-weight:600; }
+.rij .dl.laat { color:var(--gevaar); }
+.st-prio { border-color:var(--gevaar); color:var(--gevaar); }
+.st-loopt { border-color:var(--accent); color:var(--accent); }
+.st-wacht { border-color:var(--waarschuwing); color:var(--waarschuwing); }
+.st-slaap { color:var(--zacht); font-style:italic; }
+.stkop { font-weight:700; }
+h3 .stkop.st-prio { color:var(--gevaar); } h3 .stkop.st-loopt { color:var(--accent); } h3 .stkop.st-wacht { color:var(--waarschuwing); } h3 .stkop.st-slaap { color:var(--zacht); }
+.rij .tekst { flex:1; min-width:0; }
+.rij .eind { width:8.5rem; flex:none; text-align:right; }
+.rij .wis { width:1.9rem; flex:none; text-align:right; opacity:0; }
+.rij:hover .wis, .rij .wis:focus-within { opacity:1; }
+.rij input.tekst-invoer { background:transparent; border:1px solid transparent; padding:.15rem .35rem; }
+.rij input.tekst-invoer:hover { border-color:var(--rand); }
+.rij input.tekst-invoer:focus { background:var(--paneel); border-color:var(--accent); outline:none; }
+.rij .dl { min-width:7.5rem; text-align:right; font-weight:700; white-space:nowrap; }
+.rij .link.zacht { font-size:.78rem; color:var(--zacht); white-space:nowrap; }
+.rij.klaar .tekst { text-decoration:line-through; color:var(--zacht); }
+.link { background:none; border:none; padding:0; color:var(--accent); text-decoration:underline; cursor:pointer; }
+.hint { font-size:.8rem; color:var(--zacht); margin-top:.3rem; }
+.modaal-bg { position:fixed; inset:0; background:rgba(0,0,0,.45); display:flex; align-items:center; justify-content:center; z-index:1000; padding:16px; }
+.modaal { background:var(--paneel); color:inherit; border:1px solid var(--rand); border-radius:10px; padding:20px 22px; max-width:440px; width:100%; box-shadow:0 10px 40px rgba(0,0,0,.35); }
+.modaal p { margin:0 0 8px; white-space:pre-line; }
+.modaal .knoppen { display:flex; gap:8px; justify-content:flex-end; margin-top:16px; }
+/* v2: thema's, itemsoort, acties en volgpunten */
+.themaknoppen { display:flex; gap:.25rem; align-items:center; text-transform:none; letter-spacing:0; }
+.groep h2 .kopknop { font-size:.95rem; color:var(--tekst); text-transform:none; letter-spacing:0; }
+.groep h2 input { font-size:.95rem; font-weight:700; }
+.groep.nieuwthema { border-style:dashed; }
+button.soortnieuw { flex:none; width:2rem; padding:0; border-color:var(--rand); background:transparent; color:var(--zacht); font-size:.95rem; }
+button.soortnieuw:hover { color:var(--accent); border-color:var(--accent); }
+/* Datumkiezer: groen kalendericoon, ook in donkere modus goed zichtbaar */
+:root { color-scheme:light; --kalender:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300811f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='16' rx='2'/%3E%3Cpath d='M3 10h18M8 3v4M16 3v4'/%3E%3C/svg%3E"); }
+@media (prefers-color-scheme: dark) { :root { color-scheme:dark; --kalender:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233fb862' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='16' rx='2'/%3E%3Cpath d='M3 10h18M8 3v4M16 3v4'/%3E%3C/svg%3E"); } }
+input[type=date]::-webkit-calendar-picker-indicator, input[type=datetime-local]::-webkit-calendar-picker-indicator { background:var(--kalender) center/contain no-repeat; width:1.05rem; height:1.05rem; cursor:pointer; opacity:1; }
+input[type=datetime-local], .notitiekop input.notitiedatum, input[type=datetime-local][style] { width:10.6rem !important; flex:none; }
+input[type=datetime-local]::-webkit-datetime-edit { flex:1 1 auto; min-width:0; overflow:hidden; }
+input[type=datetime-local]::-webkit-calendar-picker-indicator { margin-left:.35rem; flex:none; width:1.05rem; height:1.05rem; }
+input[type=date]::-webkit-calendar-picker-indicator:hover, input[type=datetime-local]::-webkit-calendar-picker-indicator:hover { filter:brightness(1.25); }
+button.soortitem { border:none; background:transparent; color:var(--zacht); min-width:1.6rem; }
+button.soortitem:hover { color:var(--accent); }
+select.themawissel { width:2.4rem; flex:none; padding:.05rem .2rem; font-size:.8rem; }
+select.verplaatsnotitie { width:auto; max-width:14rem; font-size:.8rem; padding:.1rem .3rem; }
+button.soortknop { flex:none; min-width:1.7rem; border:none; background:transparent; font-size:1rem; padding:.05rem .2rem; line-height:1.3; }
+button.soortknop:hover { background:var(--actief); }
+.sk-actie { color:var(--accent); } .sk-volg { color:var(--waarschuwing); }
+input.trekker { flex:0 0 8rem !important; width:8rem; font-size:.85rem; color:var(--waarschuwing); }
+.rij input.trekker::placeholder, .rij input.stand::placeholder { color:var(--zacht); opacity:.6; }
+.rij.volg { flex-wrap:wrap; }
+.rij input.stand { flex:1 0 100%; margin-left:5.4rem; max-width:calc(100% - 5.4rem); font-size:.82rem; color:var(--zacht); font-style:italic; padding:.05rem .35rem; }
+.dlsoort { font-weight:400; color:var(--zacht); }
+.actiesectie { margin-top:1.4rem; }
+.sectiekop { font-size:1.1rem; margin:0 0 .2rem; padding-bottom:.25rem; border-bottom:2px solid var(--accent); }
+.sectie-volg .sectiekop { border-bottom-color:var(--waarschuwing); }
+.themakop { color:var(--zacht); font-weight:400; }
+/* Leesweergave aantekeningen */
+.leesweergave { border:1px solid var(--rand); border-radius:6px; padding:.35rem .5rem; min-height:3.2rem; cursor:text; overflow-wrap:anywhere; }
+.leesweergave:hover { border-color:var(--zacht); }
+.leesweergave:focus-visible { outline:2px solid var(--accent); }
+.leesweergave .nregel { white-space:pre-wrap; min-height:1.45em; }
+.leesweergave .nkop { font-weight:700; font-size:1.02rem; margin:.2rem 0 .05rem; color:var(--tekst); }
+.leesweergave .nkop:first-child { margin-top:0; }
+.leesweergave .nactie { color:var(--accent); font-weight:600; }
+.leesweergave .nvolg { color:var(--waarschuwing); font-weight:600; }
+.leesweergave a { color:var(--accent); }
+/* Maximale hoogte per aantekening in het overzicht; langere tekst scrolt binnen het veld */
+.kaart[data-note] .leesweergave, .kaart[data-note] textarea { max-height:18rem; overflow-y:auto; scrollbar-width:thin; }
+.leesweergave { scrollbar-color:var(--rand) transparent; }
+.leesweergave::-webkit-scrollbar { width:10px; } .leesweergave::-webkit-scrollbar-thumb { background:var(--rand); border-radius:5px; }
+/* Vereenvoudigde actielijst */
+.rij2 .tools select.koppel.fout { width:6.5rem; max-width:6.5rem; }
+.actiebalk { display:flex; flex-wrap:wrap; gap:.6rem; align-items:center; margin-bottom:.5rem; }
+.segment { display:inline-flex; border:1px solid var(--rand); border-radius:8px; overflow:hidden; }
+.segment button { border:none; border-radius:0; background:transparent; padding:.35rem .8rem; }
+.segment button + button { border-left:1px solid var(--rand); }
+.segment button.aan { background:var(--actief); font-weight:600; }
+.telling { display:inline-block; margin-left:.35rem; font-size:.75rem; color:var(--zacht); font-weight:400; }
+.meerfilters { display:flex; flex-wrap:wrap; gap:.4rem 1rem; align-items:center; padding:.4rem .6rem; margin-bottom:.5rem; border-radius:8px; background:var(--paneel); }
+.nieuwbalk { display:flex; gap:.4rem; align-items:center; margin-bottom:.4rem; }
+.nieuwbalk input.nieuwregel { flex:1; border-color:transparent; background:transparent; }
+.nieuwbalk input.nieuwregel:hover, .nieuwbalk input.nieuwregel:focus { border-color:var(--rand); background:var(--paneel); }
+.tokeuze { display:inline-flex; gap:.3rem; align-items:center; flex:none; }
+.tokeuze select { width:auto; max-width:14rem; }
+.tokeuze select.themakeuze { max-width:11rem; }
+.nieuwbalk .tokeuze select { font-size:.85rem; }
+.nieuwbalk:not(:focus-within) .tokeuze select:not(.fout) { opacity:.45; }
+.nieuwbalk button { flex:none; }
+.nieuwbalk input.nieuwdatum { width:8.4rem; flex:none; }
+.nieuwbalk input.nieuwdatum::-webkit-datetime-edit { flex:1 1 auto; min-width:0; overflow:hidden; }
+.nieuwbalk input.nieuwdatum::-webkit-calendar-picker-indicator { margin-left:.3rem; flex:none; }
+.nieuwbalk:not(:focus-within) input.nieuwdatum:not(:valid), .nieuwbalk:not(:focus-within) input.nieuwdatum[value=""] { opacity:.6; }
+.nieuwbalk:not(:focus-within) button { opacity:.45; }
+.actiesectie .sectiekop { font-size:.95rem; border-bottom:none; margin:1.2rem 0 .1rem; padding:0; }
+.sectie-actie .sectiekop { color:var(--accent); } .sectie-volg .sectiekop { color:var(--waarschuwing); }
+h3.groepkop { font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; color:var(--zacht); font-weight:600; margin:.7rem 0 .1rem .3rem; }
+.rij2 { display:flex; gap:.5rem; align-items:center; padding:.12rem .3rem; border-radius:6px; min-height:2rem; }
+.rij2:hover, .rij2.bewerkt { background:var(--paneel); }
+.rij2 .hoofdtekst { flex:1; min-width:0; cursor:text; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.rij2 .hoofdtekst.bewerk { display:flex; gap:.4rem; white-space:normal; cursor:default; }
+.rij2 .hoofdtekst.bewerk input { padding:.15rem .4rem; }
+.rij2 .hoofdtekst.bewerk .b-tekst { flex:2 1 12rem; } .rij2 .hoofdtekst.bewerk .b-trekker { flex:0 1 9rem; } .rij2 .hoofdtekst.bewerk .b-stand { flex:2 1 12rem; }
+.rij2 .trekkertekst { color:var(--waarschuwing); font-size:.88rem; }
+.rij2 .standtekst { color:var(--zacht); font-size:.85rem; font-style:italic; }
+.rij2 { flex-wrap:wrap; }
+.rij2 .logteller { display:inline-block; margin-left:.35rem; font-size:.7rem; font-style:normal; background:var(--rand); color:var(--tekst); border-radius:999px; padding:0 .4rem; vertical-align:middle; }
+.logpaneel { flex:1 0 100%; margin:.2rem 0 .4rem 2.4rem; padding-left:.7rem; border-left:2px solid var(--rand); display:flex; flex-direction:column; gap:.2rem; }
+.logpaneel input.lognieuw { padding:.2rem .45rem; font-size:.88rem; }
+.logregel { display:flex; gap:.4rem; align-items:center; }
+.logregel input.logdatum { width:6.9rem; flex:none; font-size:.8rem; padding:.05rem .3rem; color:var(--zacht); border-color:transparent; background:transparent; }
+.logregel input.logdatum::-webkit-datetime-edit { flex:1 1 auto; min-width:0; overflow:hidden; }
+.logregel input.logdatum::-webkit-calendar-picker-indicator { margin-left:.3rem; flex:none; }
+.logregel input.logtekst { flex:1; font-size:.86rem; padding:.05rem .35rem; border-color:transparent; background:transparent; }
+.logregel input:hover, .logregel input:focus { border-color:var(--rand); background:var(--paneel); }
+.logregel button { opacity:0; } .logregel:hover button, .logregel button:focus { opacity:1; }
+.rij2 .rodestip { color:var(--gevaar); font-size:.7rem; margin-right:.35rem; vertical-align:middle; }
+.rij2.klaar .t { text-decoration:line-through; color:var(--zacht); }
+.rij2 button.itemlink { border:none; background:none; padding:0 .2rem; color:var(--zacht); font-size:.82rem; white-space:nowrap; max-width:13rem; overflow:hidden; text-overflow:ellipsis; flex:none; }
+.rij2 button.itemlink:hover { color:var(--accent); text-decoration:underline; }
+.rij2 .dl { min-width:5.5rem; text-align:right; font-weight:600; white-space:nowrap; color:var(--accent); cursor:pointer; flex:none; font-size:.9rem; }
+.rij2 .dl.laat { color:var(--gevaar); }
+.rij2 .dl.leeg-dl { font-weight:400; font-size:.78rem; color:var(--zacht); opacity:0; }
+.rij2:hover .dl.leeg-dl, .rij2 .dl.leeg-dl:focus { opacity:1; }
+.rij2 .dl-invoer { width:9.5rem; padding:.1rem .3rem; }
+.rij2 .tools { display:flex; gap:.3rem; align-items:center; flex:none; width:10.5rem; justify-content:flex-end; visibility:hidden; }
+.rij2:hover .tools, .rij2:focus-within .tools, .rij2 .tools.zichtbaar, .rij2.klaar .tools { visibility:visible; }
+.rij2 .tools input[type=checkbox] { width:1rem; height:1rem; }
+.rij2 .tools select.koppel { width:3.2rem; max-width:3.2rem; font-size:.78rem; padding:.05rem .2rem; }
+.item .ophover { display:none; }
+.item:hover .ophover, .item:focus-within .ophover, .item.mvactief .ophover { display:inline-block; }
+.typen { grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); }
+/* Groen kader rond invoer van nieuwe aantekening/actie (zelfde stijl als hover tabmenu) */
+.kaart.nieuwkader { border-color:var(--accent); }
+.nieuwbalk { border:1px solid var(--accent); border-radius:6px; padding:.35rem .45rem; background:var(--paneel); }
+.nieuweactie { border:1px solid var(--accent); border-radius:6px; padding:.35rem .45rem; }
+/* Verstreken datum: rood met rode rand */
+.rij .dl.laat, .rij2 .dl.laat { border:1px solid var(--gevaar); border-radius:6px; padding:.05rem .4rem; text-align:center; }
+/* Filterknop Acties */
+button.filterknop { font-weight:600; }
+button.filterknop.open, button.filterknop.actief { border-color:var(--accent); color:var(--accent); }
+.meerfilters { border:1px solid var(--rand); }
+/* Alternatief A: planning */
+.vak { margin-top:1rem; }
+.vak .vakkop { font-size:.95rem; margin:0 0 .15rem; padding-bottom:.15rem; border-bottom:1px solid var(--rand); display:flex; align-items:center; gap:.3rem; }
+.vak-laat .vakkop { color:var(--gevaar); border-bottom-color:var(--gevaar); }
+.vak-nu .vakkop { color:var(--accent); border-bottom-color:var(--accent); }
+.vak-zacht .vakkop { color:var(--zacht); }
+.vak .rij2 .soortknop { min-width:1.3rem; font-size:.85rem; }
+/* Alternatief B: bord */
+.bord { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:.8rem; align-items:start; margin-top:.4rem; }
+.bkolom, .bslaap { background:var(--bg); border:1px solid var(--rand); border-radius:8px; padding:.5rem; min-height:6rem; }
+.bslaap { margin-top:.8rem; min-height:0; }
+.bkolom.drop, .bslaap.drop { border:1px dashed var(--accent); background:var(--actief); }
+.bkop { font-size:.85rem; margin:0 0 .45rem; display:flex; align-items:center; gap:.3rem; font-weight:700; }
+.bkop.st-prio { color:var(--gevaar); } .bkop.st-loopt { color:var(--accent); } .bkop.st-wacht { color:var(--waarschuwing); } .bkop.st-slaap { color:var(--zacht); }
+.bkaart { background:var(--paneel); border:1px solid var(--rand); border-left:3px solid var(--accent); border-radius:6px; padding:.4rem .5rem; margin-bottom:.7rem; cursor:grab; }
+.bkaart.bk-volg { border-left-color:var(--waarschuwing); }
+.bkaart:hover { border-color:var(--accent); }
+.bkaart.bk-volg:hover { border-color:var(--waarschuwing); }
+.bkaart.sleept { opacity:.4; }
+.bkaart.klaar .bk-tekst { text-decoration:line-through; color:var(--zacht); }
+.bk-boven { display:flex; gap:.3rem; align-items:flex-start; }
+.bk-boven .soortknop { min-width:1.2rem; font-size:.85rem; }
+.bk-tekst { flex:1; min-width:0; cursor:text; overflow-wrap:anywhere; }
+.bk-invoer { flex:1; padding:.1rem .3rem; }
+.bk-regel { font-size:.8rem; margin:.1rem 0 0 1.5rem; }
+.bk-onder { display:flex; align-items:center; gap:.3rem; margin-top:.3rem; flex-wrap:wrap; }
+.bk-onder .itemlink { border:none; background:none; padding:0; color:var(--zacht); font-size:.8rem; max-width:9rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.bk-onder .itemlink:hover { color:var(--accent); text-decoration:underline; }
+.bk-onder .dl { font-weight:600; font-size:.82rem; color:var(--accent); cursor:pointer; white-space:nowrap; }
+.bk-onder .dl.laat { color:var(--gevaar); border:1px solid var(--gevaar); border-radius:6px; padding:0 .35rem; }
+.bk-onder .dl.leeg-dl { font-weight:400; color:var(--zacht); opacity:0; }
+.bkaart:hover .dl.leeg-dl { opacity:1; }
+.bk-onder .dl-invoer { width:9rem; padding:.05rem .25rem; }
+.bk-tools { display:inline-flex; gap:.25rem; align-items:center; visibility:hidden; }
+.bkaart:hover .bk-tools, .bkaart:focus-within .bk-tools, .bkaart.klaar .bk-tools { visibility:visible; }
+/* Datum altijd rechts op de kaart; hoverknoppen links ervan */
+.bk-onder .bk-tools { order:2; }
+.bk-onder .dl { order:3; margin-left:auto; text-align:right; }
+.bk-leeg { color:var(--zacht); font-size:.8rem; text-align:center; padding:1rem 0; }
+/* ---------- Zoeken ---------- */
+.zoekvak { position:relative; flex:0 1 16rem; min-width:11rem; }
+#status { max-width:18rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.zoekvak input { width:100%; padding:.35rem .6rem .35rem 1.9rem; border:1px solid var(--rand); border-radius:6px; background:var(--bg); }
+.zoekvak input:focus { outline:none; border-color:var(--accent); background:var(--paneel); }
+.zoekvak::before { content:'⌕'; position:absolute; left:.6rem; top:50%; transform:translateY(-52%); color:var(--zacht); font-size:1.05rem; pointer-events:none; }
+.zoekres { display:none; position:absolute; z-index:60; top:100%; left:0; margin-top:4px; width:min(40rem, 92vw); max-height:70vh; overflow:auto; background:var(--paneel); border:1px solid var(--rand); border-radius:8px; box-shadow:0 8px 28px rgba(0,0,0,.25); padding:.3rem; }
+.zoekres.open { display:block; }
+.zr-kop { font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; color:var(--zacht); font-weight:600; margin:.5rem .5rem .15rem; display:flex; gap:.4rem; }
+.zr-kop:first-child { margin-top:.2rem; }
+.zr { display:block; width:100%; text-align:left; border:none; border-left:3px solid transparent; border-radius:5px; background:transparent; padding:.35rem .6rem; }
+.zr:hover, .zr.act { background:var(--actief); border-left-color:var(--accent); }
+.zr-titel { font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.zr-ctx { font-size:.78rem; color:var(--zacht); }
+.zr-snip { font-size:.85rem; color:var(--zacht); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.zr-leeg { color:var(--zacht); padding:.6rem; font-size:.9rem; }
+.zr-hint { color:var(--zacht); font-size:.75rem; padding:.4rem .6rem .2rem; border-top:1px solid var(--rand); margin-top:.3rem; }
+mark { background:#ffe58a; color:#1b1f24; border-radius:2px; padding:0 1px; }
+@media (prefers-color-scheme: dark) { mark { background:#8a6d00; color:#fff; } }
+.flits { animation:flits 2.2s ease-out; }
+/* ---------- Rustiger kaarten: bewerkknoppen pas bij aanwijzen ---------- */
+.kaart[data-note] .notitieknoppen .kh { visibility:hidden; }
+.kaart[data-note]:hover .notitieknoppen .kh, .kaart[data-note]:focus-within .notitieknoppen .kh, .kaart[data-note] .notitieknoppen .kh.nodig { visibility:visible; }
+.acties-kolom .actie > .gevaar { visibility:hidden; }
+.acties-kolom .actie:hover > .gevaar, .acties-kolom .actie:focus-within > .gevaar { visibility:visible; }
+.typen .groep .themaknoppen button { visibility:hidden; }
+.typen .groep:hover .themaknoppen button, .typen .groep:focus-within .themaknoppen button { visibility:visible; }
+.item .ophover-v { visibility:hidden; }
+.item:hover .ophover-v, .item:focus-within .ophover-v { visibility:visible; }
+/* ---------- Thema bij onderwerp in Acties ---------- */
+.rij2 button.itemlink { max-width:17rem; }
+.bk-onder .itemlink { max-width:13rem; }
+.itemthema { opacity:.7; }
+/* ---------- Lange aantekeningen: inklappen met vervaging ---------- */
+.kaart[data-note] .leesweergave { max-height:none; overflow:visible; }
+.kaart[data-note] .leesweergave.ingeklapt { max-height:18rem; overflow:hidden; -webkit-mask-image:linear-gradient(to bottom, #000 72%, transparent); mask-image:linear-gradient(to bottom, #000 72%, transparent); }
+button.uitklap { display:block; margin:.15rem 0 0 .5rem; font-size:.85rem; text-decoration:none; font-weight:600; }
+button.uitklap:hover { text-decoration:underline; }
+/* ---------- Logregels op bordkaarten grijs ---------- */
+.bkaart .standtekst { color:var(--zacht); font-style:italic; }
+.bkaart .trekkertekst { color:var(--waarschuwing); }
+/* ---------- Weekoverzicht ---------- */
+.week { max-width:64rem; }
+.weekbalk { display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; margin-bottom:.8rem; }
+.weekbalk .weeklabel { font-size:1.15rem; font-weight:700; margin:0 .4rem; }
+.weekbalk .weeklabel small { font-weight:400; color:var(--zacht); font-size:.9rem; margin-left:.4rem; }
+.tegels { display:grid; grid-template-columns:repeat(auto-fit,minmax(9rem,1fr)); gap:.6rem; margin-bottom:1rem; }
+.tegel { background:var(--paneel); border:1px solid var(--rand); border-radius:8px; padding:.5rem .8rem; }
+.tegel b { display:block; font-size:1.5rem; line-height:1.2; }
+.tegel span { color:var(--zacht); font-size:.82rem; }
+.wk-thema { padding:.7rem 1rem .5rem; }
+.wk-thema > h2 { font-size:1.05rem; margin:0 0 .3rem; display:flex; gap:.5rem; align-items:baseline; }
+.wk-thema > h2 small { color:var(--zacht); font-weight:400; font-size:.8rem; }
+.wk-ond { margin:.4rem 0 .5rem; }
+.wk-ond h3 { font-size:.9rem; margin:0 0 .15rem; color:var(--zacht); font-weight:600; }
+.wk-ond h3 button { font-weight:600; color:var(--tekst); }
+.wk-lijst { list-style:none; margin:0; padding:0; }
+.wk-lijst li { display:flex; gap:.5rem; align-items:baseline; padding:.15rem .3rem; border-radius:5px; }
+.wk-lijst li:hover { background:var(--actief); }
+.wk-lijst .wk-soort { flex:none; width:5.6rem; font-size:.72rem; text-transform:uppercase; letter-spacing:.04em; font-weight:700; }
+.wk-soort.s-not { color:var(--accent); } .wk-soort.s-upd { color:var(--zacht); } .wk-soort.s-klaar { color:var(--ok); } .wk-soort.s-nieuw { color:var(--waarschuwing); } .wk-soort.s-laat { color:var(--gevaar); } .wk-soort.s-komt { color:var(--accent); }
+.wk-lijst .wk-tekst { flex:1; min-width:0; }
+.wk-lijst .wk-tekst button.link { color:var(--tekst); text-decoration:none; text-align:left; }
+.wk-lijst .wk-tekst button.link:hover { color:var(--accent); text-decoration:underline; }
+.wk-lijst .wk-sub { color:var(--zacht); font-style:italic; font-size:.88rem; }
+.wk-lijst .wk-datum { flex:none; color:var(--zacht); font-size:.8rem; white-space:nowrap; }
+.wk-leeg { color:var(--zacht); padding:1rem 0; }
+/* ---------- Back-up ---------- */
+.snaplijst { display:flex; flex-wrap:wrap; gap:.3rem .5rem; margin-top:.4rem; }
+/* Paginakleur: Aantekeningen = blauw, Acties = groen (huiskleur) */
+body[data-pagina="notities"] { --accent:#1f6fc5; --accent-tekst:#ffffff; --actief:#e3edf9; --paginaband:#1f6fc5; }
+body[data-pagina="acties"] { --paginaband:#00811f; }
+@media (prefers-color-scheme: dark) {
+  body[data-pagina="notities"] { --accent:#5aa2ef; --accent-tekst:#0b1726; --actief:#1f3047; --paginaband:#5aa2ef; }
+  body[data-pagina="acties"] { --paginaband:#3fb862; }
+}
+body[data-pagina="notities"] { --kalender:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231f6fc5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='16' rx='2'/%3E%3Cpath d='M3 10h18M8 3v4M16 3v4'/%3E%3C/svg%3E"); }
+@media (prefers-color-scheme: dark) { body[data-pagina="notities"] { --kalender:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235aa2ef' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='16' rx='2'/%3E%3Cpath d='M3 10h18M8 3v4M16 3v4'/%3E%3C/svg%3E"); } }
+body[data-pagina="notities"] .leesweergave .nactie { color:#00811f; }
+@media (prefers-color-scheme: dark) { body[data-pagina="notities"] .leesweergave .nactie { color:#3fb862; } }
+body[data-pagina] nav.tabbalk { border-bottom:4px solid var(--paginaband, var(--rand)); }
+.paginatitel { display:flex; align-items:center; gap:.5rem; font-size:1.25rem; font-weight:700; color:var(--paginaband, var(--tekst)); margin:0 0 .7rem; }
+</style>
+</head>
+<body>
+
+<nav class="tabbalk">
+  <img class="logo" id="logo" role="button" tabindex="0" title="Naar Aantekeningen" alt="Notitieboek" width="34" height="34" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzIzYTg0YiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjAuNTUiIHN0b3AtY29sb3I9IiMwMDgxMWYiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMDA1YTE3Ii8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExMiIgZmlsbD0idXJsKCNiZykiLz4KICA8cmVjdCB4PSIxMjQiIHk9IjEwOCIgd2lkdGg9IjI4OCIgaGVpZ2h0PSIzMTgiIHJ4PSIzMCIgZmlsbD0iIzAwMCIgb3BhY2l0eT0iMC4xOCIvPgogIDxyZWN0IHg9IjExNiIgeT0iOTYiIHdpZHRoPSIyODgiIGhlaWdodD0iMzE4IiByeD0iMzAiIGZpbGw9IiNmZmZmZmYiLz4KICA8ZyBzdHJva2U9IiNiZmUwYzgiIHN0cm9rZS13aWR0aD0iMTQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+CiAgICA8bGluZSB4MT0iMTg2IiB5MT0iMTY0IiB4Mj0iMzY0IiB5Mj0iMTY0Ii8+CiAgICA8bGluZSB4MT0iMTg2IiB5MT0iMjEyIiB4Mj0iMzY0IiB5Mj0iMjEyIi8+CiAgICA8bGluZSB4MT0iMTg2IiB5MT0iMjYwIiB4Mj0iMzY0IiB5Mj0iMjYwIi8+CiAgICA8bGluZSB4MT0iMTg2IiB5MT0iMzA4IiB4Mj0iMjkwIiB5Mj0iMzA4Ii8+CiAgPC9nPgogIDxnIGZpbGw9IiNlM2YxZTciIHN0cm9rZT0iIzAwNGExMyIgc3Ryb2tlLXdpZHRoPSI2Ij4KICAgIDxyZWN0IHg9IjkyIiB5PSIxMzAiIHdpZHRoPSI2NCIgaGVpZ2h0PSIyNCIgcng9IjEyIi8+CiAgICA8cmVjdCB4PSI5MiIgeT0iMTkyIiB3aWR0aD0iNjQiIGhlaWdodD0iMjQiIHJ4PSIxMiIvPgogICAgPHJlY3QgeD0iOTIiIHk9IjI1NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjI0IiByeD0iMTIiLz4KICAgIDxyZWN0IHg9IjkyIiB5PSIzMTYiIHdpZHRoPSI2NCIgaGVpZ2h0PSIyNCIgcng9IjEyIi8+CiAgPC9nPgogIDxjaXJjbGUgY3g9IjM3NCIgY3k9IjM3MCIgcj0iNzYiIGZpbGw9IiMwMDgxMWYiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIxNCIvPgogIDxwYXRoIGQ9Ik0zNDAgMzcyIGwyNiAyNiBsNDggLTU2IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K">
+  <div class="tabs" id="tabs"></div>
+  <div class="zoekvak" id="zoekvak">
+    <input type="search" id="zoek" placeholder="Zoeken…  (Ctrl+F)" aria-label="Zoeken in aantekeningen, acties en onderwerpen" autocomplete="off" spellcheck="false">
+    <div class="zoekres" id="zoekres" role="listbox" aria-label="Zoekresultaten"></div>
+  </div>
+  <span class="spacer"></span>
+  <span id="status"></span>
+  <button id="btnOpslaan">Nu opslaan</button>
+</nav>
+<div id="melding"></div>
+
+<div class="hoofd">
+  <main id="hoofd"></main>
+</div>
+
+<script>
+(function () {
+'use strict';
+
+/* ---------- Basis ---------- */
+/* Datamodel v2: thema -> item. Een item is 'eindig' (project, kan afgerond) of 'doorlopend' (rol/beheer). */
+const ITEMSOORTEN = [
+  { key:'eindig',     label:'Eindig',     icoon:'◆', uitleg:'Eindig: heeft een resultaat en kan worden afgerond' },
+  { key:'doorlopend', label:'Doorlopend', icoon:'↻', uitleg:'Doorlopend: rol of beheer, loopt zonder einddatum' }
+];
+/* Regels in de actielijst: eigen actie of volgpunt (een ander voert uit, ik bewaak). */
+const ACTIESOORTEN = [
+  { key:'actie', label:'Mijn acties', enkel:'Actie (ik)', icoon:'●', datum:'deadline', statussen:['prio','oppakken','loopt','slaap'], standaard:'oppakken' },
+  { key:'volg',  label:'Te bewaken',  enkel:'Volgpunt',   icoon:'◎', datum:'check',    statussen:['prio','loopt','wacht','slaap'], standaard:'loopt' }
+];
+function actieSoort(a) { return ACTIESOORTEN.find(s => s.key === a.soort) || ACTIESOORTEN[0]; }
+function soortGeldig(k) { return k === 'volg' ? 'volg' : 'actie'; }
+const heeftApi = typeof window.showSaveFilePicker === 'function' && typeof window.showOpenFilePicker === 'function';
+
+let state = nieuweState();
+let fileHandle = null;
+let lastModified = null;
+let dirty = false;
+let bezigMetOpslaan = false;
+let opslagTimer = null;
+let statusTekst = '', statusKlasse = '';
+let laatsteHandle = null;   /* laatst gebruikte werkmap (of los bestand) */
+let werkmap = null;         /* map met aantekeningen.json + dagelijkse back-ups: één toestemming voor alles */
+const WERKBESTAND = 'aantekeningen.json';
+const ui = { weergave:'notities', gekozen:null, toonAfgerond:false, actieFilter:'open', concept:{}, conceptDatum:{}, conceptTitel:{}, actieNieuw:{}, actieStatus:'alle', actieItem:'alle', actieGroep:'thema', actieSort:'deadline', actieSoort:'alle', losItem:'', losStatus:'oppakken', losSoort:'actie', losTrekker:'', scrollNaar:null, filter:'alle', focus:null, nieuwItem:false, hernoemThema:null, nieuwSoort:{}, conceptItem:{}, kiesThema:{}, bewerkNotitie:null, meerFilters:false, bewerk:null, losConcept:'', openNotitie:false, openActie:false, toonSlaap:false, actieWeergave:'planning' };
+ui.uitgeklapt = {};   /* aantekeningen die volledig getoond worden */
+ui.markeer = null;    /* { id, termen }: zoektreffer markeren in een aantekening */
+ui.scrollNaarActie = null;
+/* Laatst gekozen weergave van Acties (Planning of Bord) onthouden in deze browser */
+try { const w = localStorage.getItem('notitieboek.actieWeergave'); if (w === 'planning' || w === 'bord') ui.actieWeergave = w; } catch (e) { /* geen opslag beschikbaar */ }
+
+const STATUSSEN = [
+  { key:'prio',     label:'Prio',             icoon:'!' },
+  { key:'loopt',    label:'Loopt',            icoon:'▶' },
+  { key:'oppakken', label:'Nog oppakken',     icoon:'○' },
+  { key:'wacht',    label:'Wacht op anderen', icoon:'⏳' },
+  { key:'slaap',    label:'Slaapstand',       icoon:'Zzz' }
+];
+function statusGeldig(k, soort) {
+  const so = ACTIESOORTEN.find(s => s.key === soort) || ACTIESOORTEN[0];
+  if (so.statussen.includes(k)) return k;
+  if (k === 'wacht') return 'oppakken';       /* volgpunt -> actie */
+  if (k === 'oppakken') return 'loopt';       /* actie -> volgpunt */
+  return so.standaard;
+}
+/* Afvinken legt ook vast wanneer (voor het weekoverzicht) */
+function zetKlaar(a, v) { a.klaar = !!v; a.klaarOp = v ? nu() : ''; }
+function wisselSoort(a) {
+  a.soort = a.soort === 'volg' ? 'actie' : 'volg';
+  a.status = statusGeldig(a.status, a.soort);
+  wijzig();
+}
+function soortKnop(a) {
+  const so = actieSoort(a), ander = ACTIESOORTEN.find(s => s.key !== so.key);
+  return h('button', { class:'soortknop sk-' + so.key, title:so.enkel + ' (klik: maak er een ' + ander.enkel.toLowerCase() + ' van)', 'aria-label':'Soort: ' + so.enkel,
+    onclick:e => { e.stopPropagation(); wisselSoort(a); } }, so.icoon);
+}
+function statusSelect(a) {
+  const keys = actieSoort(a).statussen, opties = STATUSSEN.filter(s => keys.includes(s.key));
+  const huidig = opties.find(s => s.key === a.status) || opties[0];
+  const wrap = h('div', { class:'fmenu stmenu' });
+  const knop = h('button', { class:'stknop st-' + huidig.key, title:huidig.label + ' (klik om te wijzigen)', 'aria-label':'Status: ' + huidig.label, 'aria-haspopup':'listbox',
+    onclick:e => { e.stopPropagation(); const aan = !wrap.classList.contains('open'); document.querySelectorAll('.fmenu.open').forEach(x => x.classList.remove('open')); wrap.classList.toggle('open', aan); } }, huidig.icoon);
+  const lijst = h('div', { class:'flijst', role:'listbox' },
+    opties.map(s => h('button', { class:'fopt st-' + s.key + (s.key === huidig.key ? ' gekozen' : ''), role:'option', onclick:() => { a.status = s.key; wijzig(); } },
+      h('span', { class:'sticoon' }, s.icoon), s.label)));
+  wrap.append(knop, lijst);
+  return wrap;
+}
+const SJABLOON = 'Aanwezig: \n\n';
+function normA(t) { return String(t).trim().toLowerCase().replace(/\s+/g, ' '); }
+function naarLokaal(iso) {
+  const d = new Date(iso); if (isNaN(d)) return '';
+  const p = n => String(n).padStart(2, '0');
+  return d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate()) + 'T' + p(d.getHours()) + ':' + p(d.getMinutes());
+}
+function nieuweActiesIn(no) {
+  const gezien = new Set(no.verwerkt);
+  return parseActies(no.tekst).filter(a => { const k = normA(a.tekst); if (gezien.has(k)) return false; gezien.add(k); return true; });
+}
+function werkActiesBij(no) {
+  const nieuw = nieuweActiesIn(no);
+  nieuw.forEach(a => { no.acties.push(a); no.verwerkt.push(normA(a.tekst)); });
+  return nieuw.length;
+}
+
+function nieuweState() { return { versie:2, themas:[], items:[], losseActies:[] }; }
+function uid() { return (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + Math.random().toString(16).slice(2); }
+function nu() { return new Date().toISOString(); }
+function vandaagISO() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+function yymmdd() { return vandaagISO().slice(2).replace(/-/g,''); }
+function datumNL(iso) { try { return new Date(iso).toLocaleString('nl-NL',{ day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }); } catch(e){ return iso; } }
+function deadlineNL(d) { try { return new Date(d + 'T00:00:00').toLocaleDateString('nl-NL',{ day:'numeric', month:'short', year:'numeric' }); } catch(e){ return d; } }
+function soortInfo(key) { return ITEMSOORTEN.find(s => s.key === key) || ITEMSOORTEN[0]; }
+function item(id) { return state.items.find(i => i.id === id) || null; }
+function thema(id) { return (id && state.themas.find(t => t.id === id)) || null; }
+function themaVan(it) { return it ? thema(it.themaId) : null; }
+function volledigeNaam(it) { const t = themaVan(it); return t ? t.naam + ' · ' + it.naam : it.naam; }
+/* Prefix in een oude itemnaam: 'ANPR - Beheer', 'ANPR · Beheer', 'ANPR: X', 'ANPR / X' */
+function splitsPrefix(naam) { const m = String(naam || '').match(/^(.+?)\s*(?:·|\||\/|:|\s[-–])\s*(\S.*)$/); return m ? [m[1].trim(), m[2].trim()] : null; }
+/* Thema's in vaste volgorde met hun items; items zonder (geldig) thema als laatste groep */
+function themaGroepen(metAfgerond) {
+  const zicht = i => metAfgerond || !i.afgerond;
+  const uit = state.themas.map(t => ({ thema:t, items:state.items.filter(i => i.themaId === t.id && zicht(i)) }));
+  const los = state.items.filter(i => !thema(i.themaId) && zicht(i));
+  if (los.length) uit.push({ thema:null, items:los });
+  return uit;
+}
+function itemInFilter(w, it) {
+  if (w === 'alle') return true;
+  if (!it) return false;
+  if (w === 'thema:') return !thema(it.themaId);
+  if (w.startsWith('thema:')) return it.themaId === w.slice(6);
+  return it.id === w;
+}
+function telt(a, soort) { return !a.klaar && (!soort || a.soort === soort); }
+function openActies(it, soort) { return it.notities.reduce((n, no) => n + no.acties.filter(a => telt(a, soort)).length, 0) + state.losseActies.filter(a => a.itemId === it.id && telt(a, soort)).length; }
+function totaalOpen(soort) { return state.items.reduce((n, it) => n + openActies(it, soort), 0) + state.losseActies.filter(a => telt(a, soort) && !item(a.itemId)).length; }
+
+function h(tag, props, ...kids) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(props || {})) {
+    if (v === null || v === undefined || v === false) continue;
+    if (k === 'class') e.className = v;
+    else if (k === 'value') e.value = v;
+    else if (k === 'checked') e.checked = !!v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v === true ? '' : v);
+  }
+  for (const c of kids.flat()) {
+    if (c === null || c === undefined || c === false) continue;
+    e.append(c.nodeType ? c : document.createTextNode(c));
+  }
+  return e;
+}
+
+/* ---------- Normaliseren van geladen data ---------- */
+function normaliseer(data) {
+  if (!data || !Array.isArray(data.items)) throw new Error('Geen geldig gegevensbestand (veld "items" ontbreekt).');
+  const themas = (Array.isArray(data.themas) ? data.themas : []).map(t => ({ id:t.id || uid(), naam:String(t.naam || 'Zonder naam') }));
+  /* Oud bestand (versie 1, met project/taak/rol): het naamprefix wordt het thema, 'rol' wordt doorlopend */
+  const oud = !Array.isArray(data.themas);
+  /* Alleen een prefix dat bij minstens 2 items voorkomt wordt een thema (voorkomt 'Beheer IP-adressen/Spider' -> thema) */
+  const telPrefix = {};
+  if (oud) data.items.forEach(i => { const p = splitsPrefix(i.naam); if (p) { const k = p[0].toLowerCase(); telPrefix[k] = (telPrefix[k] || 0) + 1; } });
+  const themaVoor = naam => {
+    let t = themas.find(x => x.naam.toLowerCase() === naam.toLowerCase());
+    if (!t) { t = { id:uid(), naam }; themas.push(t); }
+    return t.id;
+  };
+  /* Logboek: [{id, datum (JJJJ-MM-DD), tekst}], nieuwste eerst. Oude losse 'stand' wordt de eerste logregel. */
+  const normLog = a => {
+    let l = Array.isArray(a.log) ? a.log.filter(x => x && String(x.tekst || '').trim()).map(x => ({ id:x.id || uid(), datum:/^\d{4}-\d{2}-\d{2}$/.test(x.datum) ? x.datum : vandaagISO(), tekst:String(x.tekst) })) : [];
+    if (!l.length && String(a.stand || '').trim()) l = [{ id:uid(), datum:vandaagISO(), tekst:String(a.stand).trim() }];
+    return l.sort((x, y) => y.datum.localeCompare(x.datum));
+  };
+  const normActie = a => {
+    const soort = soortGeldig(a.soort);
+    return { id:a.id || uid(), soort, tekst:String(a.tekst || ''), klaar:!!a.klaar, deadline:a.deadline || '', status:statusGeldig(a.status, soort), trekker:String(a.trekker || ''), log:normLog(a), aangemaakt:a.aangemaakt || '', klaarOp:a.klaar ? (a.klaarOp || '') : '' };
+  };
+  return {
+    versie: 2,
+    themas,
+    losseActies: (Array.isArray(data.losseActies) ? data.losseActies : []).map(a => Object.assign(normActie(a), { itemId:a.itemId || '' })),
+    items: data.items.map(i => {
+      let naam = String(i.naam || 'Zonder naam'), themaId = i.themaId || '';
+      let soort = ITEMSOORTEN.some(s => s.key === i.soort) ? i.soort : 'eindig';
+      if (oud) {
+        const p = splitsPrefix(naam);
+        if (p && telPrefix[p[0].toLowerCase()] > 1) { themaId = themaVoor(p[0]); naam = p[1]; }
+        if (i.type === 'rol') soort = 'doorlopend';
+      }
+      return {
+      id: i.id || uid(),
+      themaId,
+      soort,
+      naam,
+      afgerond: !!i.afgerond,
+      aangemaakt: i.aangemaakt || nu(),
+      notities: (Array.isArray(i.notities) ? i.notities : []).map(n => {
+        const acties = (Array.isArray(n.acties) ? n.acties : []).map(normActie);
+        const verwerkt = Array.isArray(n.verwerkt) ? n.verwerkt.map(String) : [];
+        acties.forEach(a => { const k = normA(a.tekst); if (!verwerkt.includes(k)) verwerkt.push(k); });
+        let tekst = String(n.tekst || ''), titel = typeof n.titel === 'string' ? n.titel : '';
+        if (typeof n.titel !== 'string') {
+          /* Oude aantekeningen: regel 'Overleg: ...' bovenaan wordt de titel */
+          const m = tekst.match(/^\s*Overleg:[ \t]*(.*)(?:\r?\n|$)/);
+          if (m) { titel = m[1].trim(); tekst = tekst.slice(m[0].length); }
+        }
+        return { id: n.id || uid(), datum: n.datum || nu(), titel, tekst, acties, verwerkt };
+      })
+    }; })
+  };
+}
+
+/* ---------- Opslag ---------- */
+function setStatus(tekst, klasse) { statusTekst = tekst; statusKlasse = klasse || ''; tekenStatus(); }
+function tekenStatus() {
+  const s = document.getElementById('status');
+  s.textContent = statusTekst; s.className = statusKlasse;
+  const m = document.getElementById('melding');
+  if (!heeftApi) {
+    m.textContent = 'Deze browser ondersteunt het schrijven naar een lokaal bestand niet. Gebruik Edge of Chrome. Tot dan blijven gegevens alleen in het geheugen: gebruik "Back-up downloaden" op het tabblad Configuratie.';
+    m.classList.add('zichtbaar');
+  } else if (!fileHandle && laatsteHandle) {
+    m.replaceChildren(
+      'Je gegevens zijn nog niet geopend: wijzigingen worden pas bewaard na het openen. ',
+      h('button', { class:'primair', onclick:() => heropenLaatste() }, laatsteHandle.kind === 'directory' ? 'Open werkmap "' + laatsteHandle.name + '"' : 'Open ' + laatsteHandle.name));
+    m.classList.add('zichtbaar');
+  } else if (!fileHandle) {
+    m.replaceChildren('Er is nog geen werkmap gekozen: zolang dat niet gebeurd is, worden wijzigingen niet bewaard. Kies de map met ' + WERKBESTAND + ' (bijv. "aantekeningen"). ',
+      h('button', { class:'primair', onclick:() => kiesWerkmap() }, 'Werkmap kiezen'));
+    m.classList.add('zichtbaar');
+  } else if (backupDir && backupToestemming !== 'granted') {
+    m.replaceChildren(
+      'De automatische back-up naar map "' + backupDir.name + '" heeft opnieuw toestemming nodig. ',
+      h('button', { class:'primair', onclick:() => activeerBackup() }, 'Back-ups activeren'));
+    m.classList.add('zichtbaar');
+  } else if (!werkmap && !backupDir && !backupHintWeg && typeof window.showDirectoryPicker === 'function') {
+    m.replaceChildren(
+      'Tip: open je gegevens via een werkmap (de map met ' + WERKBESTAND + '). Dan geef je één keer toestemming voor opslaan én de dagelijkse back-up. ',
+      h('button', { class:'primair', onclick:() => kiesWerkmap() }, 'Werkmap kiezen'), ' ',
+      h('button', { onclick:() => { backupHintWeg = true; try { localStorage.setItem('notitieboek.backupHintWeg', '1'); } catch (e) { /* geen opslag */ } tekenStatus(); } }, 'Niet nu'));
+    m.classList.add('zichtbaar');
+  } else {
+    m.classList.remove('zichtbaar');
+  }
+}
+
+function wijzig(opnieuwTekenen) {
+  dirty = true;
+  if (opnieuwTekenen !== false) tekenAlles();
+  if (fileHandle) { setStatus('Niet opgeslagen…', 'st-wacht'); clearTimeout(opslagTimer); opslagTimer = setTimeout(opslaan, 500); }
+  else setStatus('Niet opgeslagen (geen bestand gekozen)', 'st-fout');
+}
+
+async function opslaan() {
+  if (!fileHandle) { setStatus('Geen bestand gekozen: niets opgeslagen', 'st-fout'); return; }
+  if (bezigMetOpslaan) { clearTimeout(opslagTimer); opslagTimer = setTimeout(opslaan, 300); return; }
+  bezigMetOpslaan = true;
+  try {
+    setStatus('Opslaan…', 'st-wacht');
+    const perm = await fileHandle.requestPermission({ mode:'readwrite' });
+    if (perm !== 'granted') throw new Error('Schrijftoestemming niet verleend.');
+    const f = await fileHandle.getFile();
+    if (lastModified !== null && f.lastModified !== lastModified) {
+      const doorgaan = confirm('Het bestand is gewijzigd buiten deze pagina (ander tabblad, ander apparaat of OneDrive-synchronisatie).\n\nOverschrijven met de gegevens in deze pagina?');
+      if (!doorgaan) { setStatus('Opslaan afgebroken: bestand is extern gewijzigd', 'st-fout'); return; }
+    }
+    /* Eerste opslag van de dag: eerst de versie op schijf (= stand van vorige werkdag) als back-up wegzetten */
+    if (backupGedaan !== yymmdd()) { try { await dagBackup(await f.text()); } catch (e) { /* back-up mag opslaan nooit blokkeren */ } }
+    const w = await fileHandle.createWritable();
+    await w.write(JSON.stringify(state, null, 2));
+    await w.close();
+    lastModified = (await fileHandle.getFile()).lastModified;
+    dirty = false;
+    setStatus('Opgeslagen om ' + new Date().toLocaleTimeString('nl-NL'), 'st-ok');
+  } catch (e) {
+    setStatus('Opslaan mislukt: ' + (e.name ? e.name + ' - ' : '') + e.message, 'st-fout');
+  } finally {
+    bezigMetOpslaan = false;
+  }
+}
+
+/* IndexedDB: onthoudt het laatst gebruikte bestand */
+function idb() { return new Promise((res, rej) => { const r = indexedDB.open('so-mob-aantekeningen', 1); r.onupgradeneeded = () => r.result.createObjectStore('kv'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); }
+async function idbGet(k) { const db = await idb(); return new Promise((res, rej) => { const q = db.transaction('kv').objectStore('kv').get(k); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); }); }
+async function idbSet(k, v) { const db = await idb(); return new Promise((res, rej) => { const q = db.transaction('kv', 'readwrite').objectStore('kv').put(v, k); q.onsuccess = () => res(); q.onerror = () => rej(q.error); }); }
+
+async function onthoudHandle(hd) { try { await idbSet('handle', hd); } catch (e) { /* niet kritiek */ } }
+async function idbSleutels() { const db = await idb(); return new Promise((res, rej) => { const q = db.transaction('kv').objectStore('kv').getAllKeys(); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); }); }
+async function idbWis(k) { const db = await idb(); return new Promise((res, rej) => { const q = db.transaction('kv', 'readwrite').objectStore('kv').delete(k); q.onsuccess = () => res(); q.onerror = () => rej(q.error); }); }
+
+/* ---------- Automatische dagelijkse back-up ----------
+   Bij de eerste opslag van de dag wordt het bestand zoals het op schijf stond weggeschreven als
+   'JJMMDD aantekeningen.json' in de gekozen back-upmap. De nieuwste BACKUP_AANTAL blijven bewaard;
+   alleen bestanden met precies dat naampatroon worden ooit opgeruimd.
+   Daarnaast altijd een kopie in de browser (IndexedDB) als vangnet, ook zonder back-upmap. */
+const BACKUP_AANTAL = 14;
+const BACKUP_RE = /^\d{6} aantekeningen\.json$/;
+let backupDir = null;          /* map-handle (onthouden in IndexedDB) */
+let backupToestemming = '';    /* 'granted' | 'prompt' | 'denied' | '' */
+let backupGedaan = '';         /* JJMMDD waarop de back-up van vandaag gelukt is */
+let backupMelding = '';        /* laatste resultaat, voor Configuratie */
+let backupHintWeg = false;
+try { backupHintWeg = localStorage.getItem('notitieboek.backupHintWeg') === '1'; } catch (e) { /* geen opslag */ }
+
+async function backupRecht(vraag) {
+  if (!backupDir) { backupToestemming = ''; return false; }
+  try {
+    backupToestemming = await backupDir.queryPermission({ mode:'readwrite' });
+    if (backupToestemming !== 'granted' && vraag) backupToestemming = await backupDir.requestPermission({ mode:'readwrite' });
+  } catch (e) { backupToestemming = 'prompt'; }
+  return backupToestemming === 'granted';
+}
+async function dagBackup(tekst) {
+  const dag = yymmdd();
+  if (backupGedaan === dag || !String(tekst || '').trim()) return;
+  /* 1. Vangnet in de browser */
+  try {
+    if (!(await idbGet('snap:' + dag))) await idbSet('snap:' + dag, tekst);
+    const oud = (await idbSleutels()).filter(k => /^snap:\d{6}$/.test(k)).sort().reverse().slice(BACKUP_AANTAL);
+    for (const k of oud) await idbWis(k);
+  } catch (e) { /* IndexedDB niet beschikbaar */ }
+  /* 2. Bestand in de back-upmap */
+  if (!backupDir) { backupGedaan = dag; backupMelding = 'Alleen browserkopie gemaakt (geen back-upmap gekozen).'; return; }
+  if (!(await backupRecht(false))) { backupMelding = 'Back-upmap niet toegankelijk: toestemming nodig.'; tekenStatus(); return; }
+  try {
+    const naam = dag + ' aantekeningen.json';
+    let bestaat = true;
+    try { await backupDir.getFileHandle(naam); } catch (e) { bestaat = false; }
+    if (!bestaat) {
+      const fh = await backupDir.getFileHandle(naam, { create:true });
+      const w = await fh.createWritable(); await w.write(tekst); await w.close();
+    }
+    const namen = [];
+    for await (const [n, hd] of backupDir.entries()) if (hd.kind === 'file' && BACKUP_RE.test(n)) namen.push(n);
+    namen.sort().reverse();
+    for (const n of namen.slice(BACKUP_AANTAL)) { try { await backupDir.removeEntry(n); } catch (e) { /* laten staan */ } }
+    backupGedaan = dag;
+    backupMelding = 'Back-up ' + naam + ' staat in map "' + backupDir.name + '" (' + Math.min(namen.length, BACKUP_AANTAL) + ' bewaard).';
+  } catch (e) {
+    backupMelding = 'Back-up mislukt: ' + e.message;
+  }
+  tekenStatus();
+}
+async function kiesBackupMap() {
+  try {
+    const opties = { id:'notitieboek-backup', mode:'readwrite' };
+    if (fileHandle) opties.startIn = fileHandle;
+    const d = await window.showDirectoryPicker(opties);
+    backupDir = d;
+    try { await idbSet('backupDir', d); } catch (e) { /* niet kritiek */ }
+    await backupRecht(true);
+    backupGedaan = '';
+    /* Direct een eerste back-up maken van de huidige stand op schijf */
+    if (fileHandle) { try { await dagBackup(await (await fileHandle.getFile()).text()); } catch (e) { /* volgende opslag probeert opnieuw */ } }
+    setStatus('Back-upmap ingesteld: ' + d.name, 'st-ok');
+    tekenAlles();
+  } catch (e) { if (e.name !== 'AbortError') setStatus('Back-upmap kiezen mislukt: ' + e.message, 'st-fout'); }
+}
+async function activeerBackup() {
+  if (await backupRecht(true)) {
+    if (fileHandle) { try { await dagBackup(await (await fileHandle.getFile()).text()); } catch (e) { /* later opnieuw */ } }
+    setStatus('Automatische back-up actief', 'st-ok');
+  }
+  tekenAlles();
+}
+async function downloadSnapshot(k) {
+  const tekst = await idbGet(k); if (!tekst) return;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([tekst], { type:'application/json' }));
+  a.download = k.slice(5) + ' aantekeningen browserkopie.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+
+async function gebruikHandle(hd, bronNieuw, vanWerkmap) {
+  if (!vanWerkmap && werkmap) { if (backupDir === werkmap) backupDir = null; werkmap = null; try { await idbWis('werkmap'); } catch (e) { /* niet kritiek */ } }
+  const perm = await hd.requestPermission({ mode:'readwrite' });
+  if (perm !== 'granted') throw new Error('Toestemming niet verleend.');
+  const f = await hd.getFile();
+  const tekst = await f.text();
+  if (bronNieuw || tekst.trim() === '') {
+    fileHandle = hd; lastModified = null;
+    await onthoudHandle(hd);
+    dirty = true;
+    await opslaan();
+    tekenAlles();
+    return;
+  }
+  const data = normaliseer(JSON.parse(tekst));
+  if (!fileHandle && state.items.length > 0 && !confirm('Gegevens in deze pagina die nog niet zijn opgeslagen gaan verloren als je dit bestand opent.\n\nDoorgaan?')) return;
+  state = data; fileHandle = hd; lastModified = f.lastModified; dirty = false;
+  ui.gekozen = null; ui.filter = 'alle'; ui.concept = {}; ui.conceptDatum = {}; ui.conceptTitel = {};
+  await onthoudHandle(hd);
+  setStatus('Geopend: ' + hd.name, 'st-ok');
+  if (ui.weergave === 'config') ui.weergave = 'notities';
+  tekenAlles();
+}
+
+async function kiesNieuw() {
+  try {
+    const hd = await showSaveFilePicker({ suggestedName: yymmdd() + ' SO-MOB aantekeningen.json', types:[{ description:'JSON', accept:{ 'application/json':['.json'] } }] });
+    await gebruikHandle(hd, true);
+  } catch (e) { if (e.name !== 'AbortError') setStatus('Bestand aanmaken mislukt: ' + e.message, 'st-fout'); }
+}
+async function kiesBestaand() {
+  try {
+    const [hd] = await showOpenFilePicker({ types:[{ description:'JSON', accept:{ 'application/json':['.json'] } }] });
+    await gebruikHandle(hd, false);
+  } catch (e) { if (e.name !== 'AbortError') setStatus('Openen mislukt: ' + e.message, 'st-fout'); }
+}
+/* Werkmap: één map-toestemming dekt het werkbestand én de back-ups ernaast */
+async function openWerkmap(dir, nieuwOk) {
+  const perm = await dir.requestPermission({ mode:'readwrite' });
+  if (perm !== 'granted') throw new Error('Toestemming voor de werkmap niet verleend.');
+  let fh = null;
+  try { fh = await dir.getFileHandle(WERKBESTAND); }
+  catch (e) {
+    if (e.name !== 'NotFoundError') throw e;
+    if (!nieuwOk) throw new Error('In map "' + dir.name + '" staat geen ' + WERKBESTAND + '.');
+    fh = await dir.getFileHandle(WERKBESTAND, { create:true });
+  }
+  werkmap = dir; backupDir = dir; backupToestemming = 'granted'; laatsteHandle = dir;
+  try { await idbSet('werkmap', dir); } catch (e) { /* niet kritiek */ }
+  await gebruikHandle(fh, false, true);
+}
+async function kiesWerkmap() {
+  let dir;
+  try { dir = await window.showDirectoryPicker({ id:'notitieboek-werkmap', mode:'readwrite' }); }
+  catch (e) { if (e.name !== 'AbortError') setStatus('Werkmap kiezen mislukt: ' + e.message, 'st-fout'); return; }
+  let bestaat = true;
+  try { await dir.getFileHandle(WERKBESTAND); } catch (e) { bestaat = false; }
+  const doe = async () => { try { await openWerkmap(dir, true); setStatus('Werkmap geopend: ' + dir.name, 'st-ok'); } catch (e) { setStatus('Werkmap openen mislukt: ' + e.message, 'st-fout'); } };
+  if (bestaat) return doe();
+  bevestig('In map "' + dir.name + '" staat nog geen ' + WERKBESTAND + '.\n\n' +
+    (state.items.length ? 'De gegevens die nu in de pagina staan worden daar als nieuw bestand opgeslagen.' : 'Er wordt een nieuw, leeg notitieboek aangemaakt.'), doe, 'Aanmaken');
+}
+
+function backup() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type:'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = yymmdd() + ' SO-MOB aantekeningen back-up.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+
+/* ---------- Acties op gegevens ---------- */
+function voegItemToe(themaId, naam, soort, blijf) {
+  naam = naam.trim(); if (!naam) return;
+  const it = { id:uid(), themaId:themaId || '', soort:soort || 'eindig', naam, afgerond:false, aangemaakt:nu(), notities:[] };
+  state.items.push(it);
+  if (blijf) { ui.conceptItem[themaId || 'geen'] = ''; ui.focus = 'item-in-' + (themaId || 'geen'); wijzig(); return it; }
+  ui.gekozen = it.id; ui.filter = it.id; ui.weergave = 'notities'; ui.openNotitie = true; ui.focus = 'nieuwe-notitie';
+  wijzig();
+  return it;
+}
+function voegThemaToe(naam) {
+  naam = naam.trim(); if (!naam) return null;
+  const bestaand = state.themas.find(t => t.naam.toLowerCase() === naam.toLowerCase());
+  if (bestaand) return bestaand;
+  const t = { id:uid(), naam };
+  state.themas.push(t);
+  ui.focus = 'item-in-' + t.id;
+  wijzig();
+  return t;
+}
+function verplaatsThema(id, richting) {
+  const a = state.themas.findIndex(t => t.id === id), b = a + richting;
+  if (a < 0 || b < 0 || b >= state.themas.length) return;
+  [state.themas[a], state.themas[b]] = [state.themas[b], state.themas[a]];
+  wijzig();
+}
+function verwijderThema(t) {
+  const n = state.items.filter(i => i.themaId === t.id).length;
+  bevestig('Thema "' + t.naam + '" verwijderen?' + (n ? '\n\nDe ' + n + ' onderwerp(en) in dit thema blijven bestaan en komen onder "Zonder thema".' : ''), () => {
+    state.items.forEach(i => { if (i.themaId === t.id) i.themaId = ''; });
+    state.themas = state.themas.filter(x => x.id !== t.id);
+    if (ui.filter === 'thema:' + t.id) ui.filter = 'alle';
+    if (ui.actieItem === 'thema:' + t.id) ui.actieItem = 'alle';
+    wijzig();
+  });
+}
+function verplaats(id, richting, knop) {
+  const it = item(id); if (!it) return;
+  const zelfde = i => (thema(i.themaId) ? i.themaId : '') === (thema(it.themaId) ? it.themaId : '');
+  const zichtbaar = state.items.filter(i => zelfde(i) && (ui.toonAfgerond || !i.afgerond));
+  const pos = zichtbaar.findIndex(i => i.id === id);
+  const buur = zichtbaar[pos + richting];
+  if (!buur) return;
+  const a = state.items.indexOf(it), b = state.items.indexOf(buur);
+  const oud = knop && knop.closest('.item') ? knop.closest('.item').getBoundingClientRect() : null;
+  state.items[a] = buur; state.items[b] = it;
+  wijzig();
+  if (oud) houdOnderCursor(id, richting, oud.top);
+}
+/* Na ▲/▼ de lijst tijdelijk zo verschuiven dat dezelfde knop weer onder de muis staat,
+   zodat herhaald klikken zonder de muis te bewegen mogelijk is. Bij muisbeweging buiten de rij schuift de lijst terug. */
+let mvTerug = null;
+function houdOnderCursor(id, richting, oudTop) {
+  if (mvTerug) { document.removeEventListener('mousemove', mvTerug); mvTerug = null; }
+  const knop = document.querySelector('[data-mv="' + id + ':' + richting + '"]');
+  if (!knop) return;
+  const rij = knop.closest('.item'), groep = knop.closest('.groep');
+  const dy = oudTop - rij.getBoundingClientRect().top;
+  rij.classList.add('mvactief');
+  groep.style.transition = 'none';
+  groep.style.position = 'relative'; groep.style.zIndex = '5';
+  groep.style.transform = dy ? 'translateY(' + dy + 'px)' : '';
+  if (!knop.disabled) knop.focus({ preventScroll:true });
+  mvTerug = e => {
+    if (rij.contains(e.target)) return;
+    document.removeEventListener('mousemove', mvTerug); mvTerug = null;
+    rij.classList.remove('mvactief');
+    groep.style.transition = 'transform .25s ease';
+    groep.style.transform = '';
+    setTimeout(() => { groep.style.position = ''; groep.style.zIndex = ''; groep.style.transition = ''; }, 300);
+  };
+  document.addEventListener('mousemove', mvTerug);
+}
+function bevestig(tekst, ok, label) {
+  const vorigeFocus = document.activeElement;
+  const sluit = () => { bg.remove(); document.removeEventListener('keydown', toets, true); if (vorigeFocus && vorigeFocus.focus && document.contains(vorigeFocus)) vorigeFocus.focus(); };
+  const toets = e => { if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); sluit(); } };
+  const annuleer = h('button', { class:'klein', onclick:sluit }, 'Annuleren');
+  const bg = h('div', { class:'modaal-bg', onmousedown:e => { if (e.target === bg) sluit(); } },
+    h('div', { class:'modaal', role:'alertdialog', 'aria-modal':'true' },
+      ...tekst.split('\n\n').map(t => h('p', {}, t)),
+      h('div', { class:'knoppen' }, annuleer,
+        h('button', { class:'klein gevaar', onclick:() => { sluit(); ok(); } }, label || 'Verwijderen'))));
+  document.body.appendChild(bg);
+  document.addEventListener('keydown', toets, true);
+  annuleer.focus();
+}
+function verwijderItem(id) {
+  const it = item(id); if (!it) return;
+  const nNot = it.notities.length;
+  const nAct = it.notities.reduce((n, no) => n + no.acties.length, 0) + state.losseActies.filter(a => a.itemId === id).length;
+  let vraag = 'Onderwerp "' + volledigeNaam(it) + '" definitief verwijderen, inclusief ' + nNot + ' aantekening(en) en ' + nAct + ' actie(s)?\n\nDit kan niet ongedaan worden gemaakt.';
+  if (!it.afgerond) vraag = 'LET OP: dit onderwerp is nog niet afgerond.\n\n' + vraag;
+  bevestig(vraag, () => {
+    state.items = state.items.filter(i => i.id !== id);
+    state.losseActies = state.losseActies.filter(a => a.itemId !== id);
+    if (ui.gekozen === id) ui.gekozen = null;
+    if (ui.filter === id) ui.filter = 'alle';
+    ui.weergave = 'items';
+    delete ui.concept[id];
+    wijzig();
+  });
+}
+/* Links in aantekeningen: [tekst](https://...) of losse https://... / www.... */
+const LINK_RE = /\[([^\]\n]+)\]\(((?:https?:\/\/|www\.)[^\s)]+)\)|((?:https?:\/\/|www\.)[^\s<>"'\]\[]+)/gi;
+function schoonUrl(u) { u = u.replace(/[.,;:!?)]+$/, ''); return /^www\./i.test(u) ? 'https://' + u : u; }
+function vindLinks(tekst) {
+  const uit = [], gezien = new Set();
+  for (const m of String(tekst || '').matchAll(LINK_RE)) {
+    const url = schoonUrl(m[2] || m[3]);
+    if (gezien.has(url)) continue; gezien.add(url);
+    let label = m[1];
+    if (!label) {
+      try {
+        const x = new URL(url), seg = x.pathname.split('/').filter(Boolean).pop();
+        label = x.hostname.replace(/^www\./, '') + (seg ? '/…/' + decodeURIComponent(seg).slice(0, 30) : '');
+      } catch (e) { label = url.slice(0, 40); }
+    }
+    uit.push({ url, label });
+  }
+  return uit;
+}
+function linkOpPositie(tekst, pos) {
+  for (const m of String(tekst || '').matchAll(LINK_RE)) {
+    if (pos >= m.index && pos <= m.index + m[0].length) return schoonUrl(m[2] || m[3]);
+  }
+  return null;
+}
+/* ---------- Leesweergave van aantekeningen ----------
+   Platte tekst blijft de opslag. '# Kop' wordt een vetgedrukt kopje, **tekst** wordt vet,
+   links worden klikbaar en ACTIE/VOLG-regels krijgen een kleur. */
+function inlineOpmaak(tekst) {
+  const uit = [];
+  const vet = s => {
+    const delen = String(s).split(/(\*\*[^*\n]+\*\*)/);
+    delen.forEach(d => { if (!d) return; const m = d.match(/^\*\*([^*\n]+)\*\*$/); uit.push(m ? h('strong', {}, m[1]) : d); });
+  };
+  let pos = 0;
+  for (const m of String(tekst).matchAll(LINK_RE)) {
+    vet(tekst.slice(pos, m.index));
+    const url = schoonUrl(m[2] || m[3]);
+    const kaal = m[3] ? m[3].replace(/[.,;:!?)]+$/, '') : '';
+    uit.push(h('a', { href:url, target:'_blank', rel:'noopener noreferrer', title:url }, m[1] || kaal));
+    pos = m.index + (m[3] ? kaal.length : m[0].length);
+  }
+  vet(tekst.slice(pos));
+  return uit;
+}
+function leesWeergave(tekst) {
+  const regels = String(tekst || '').split(/\r?\n/);
+  return regels.map(r => {
+    const kop = r.match(/^\s*#{1,3}\s+(.*)$/);
+    if (kop) return h('div', { class:'nkop' }, inlineOpmaak(kop[1]));
+    const ac = r.match(/^\s*(?:[-*]\s*)?(ACTIE|VOLG)(?:\s*:\s*|\s+)/);
+    if (ac) return h('div', { class:'nregel ' + (ac[1] === 'VOLG' ? 'nvolg' : 'nactie') }, inlineOpmaak(r));
+    return h('div', { class:'nregel' }, r.trim() ? inlineOpmaak(r) : ' ');
+  });
+}
+function parseActies(tekst) {
+  const acties = [];
+  tekst.split(/\r?\n/).forEach(regel => {
+    const m = regel.match(/^\s*(?:[-*]\s*)?(?:(ACTIE|VOLG)(?:\s*:\s*|\s+)|\[\s?\]\s*)(.+)$/);
+    if (!m) return;
+    const soort = m[1] === 'VOLG' ? 'volg' : 'actie';
+    let t = m[2].trim(), deadline = '', trekker = '';
+    const pakTrekker = () => { const tr = t.match(/(?:^|\s)@([^\s@]+)\s*$/); if (tr) { trekker = tr[1].replace(/_/g, ' '); t = t.slice(0, tr.index).trim(); } };
+    pakTrekker();
+    const d = t.match(/(?:^|\s)!(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})\s*$/) || t.match(/(?:^|\s)!(\d{4})-(\d{2})-(\d{2})\s*$/);
+    if (d) {
+      const [dag, mnd, jaar] = d[1].length === 4 ? [d[3], d[2], d[1]] : [d[1], d[2], d[3]];
+      const iso = jaar + '-' + mnd.padStart(2, '0') + '-' + dag.padStart(2, '0');
+      const x = new Date(iso + 'T00:00:00');
+      if (!isNaN(x) && x.getDate() === +dag && x.getMonth() + 1 === +mnd) { deadline = iso; t = t.slice(0, d.index).trim(); }
+    }
+    if (!trekker) pakTrekker();
+    if (t) acties.push({ id:uid(), soort, tekst:t, klaar:false, deadline, status:soort === 'volg' ? 'loopt' : 'oppakken', trekker, log:[], aangemaakt:nu(), klaarOp:'' });
+  });
+  return acties;
+}
+function voegNotitieToe(it) {
+  let tekst = (ui.concept[it.id] ?? SJABLOON).trim();
+  const titel = (ui.conceptTitel[it.id] || '').trim();
+  if (tekst.replace(/\s+/g, '') === 'Aanwezig:') tekst = '';
+  if (!tekst && !titel) return;
+  const dv = ui.conceptDatum[it.id];
+  const datum = dv && !isNaN(new Date(dv)) ? new Date(dv).toISOString() : nu();
+  const acties = parseActies(tekst);
+  it.notities.unshift({ id:uid(), datum, titel, tekst, acties, verwerkt:acties.map(a => normA(a.tekst)) });
+  ui.concept[it.id] = SJABLOON; ui.conceptDatum[it.id] = ''; ui.conceptTitel[it.id] = '';
+  if (!itemsVoorFilter().includes(it)) ui.filter = 'alle';
+  ui.openNotitie = false; ui.focus = null;
+  wijzig();
+}
+/* Aantekening (met haar acties) naar een ander item verplaatsen, bijv. bij afsplitsen van een project uit beheer */
+function verplaatsNotitie(van, no, naarId) {
+  const naar = item(naarId); if (!naar || naar === van) return;
+  van.notities = van.notities.filter(n => n.id !== no.id);
+  naar.notities.push(no);
+  naar.notities.sort((a, b) => new Date(b.datum) - new Date(a.datum));
+  if (filterIsItem() && ui.filter === van.id) { ui.filter = naar.id; ui.gekozen = naar.id; }
+  ui.scrollNaar = no.id;
+  setStatus('Aantekening verplaatst naar ' + volledigeNaam(naar), 'st-ok');
+  wijzig();
+}
+function verwijderNotitie(it, no) {
+  bevestig('Deze aantekening verwijderen, inclusief ' + no.acties.length + ' actie(s)?\n\nDit kan niet ongedaan worden gemaakt.', () => {
+    it.notities = it.notities.filter(n => n.id !== no.id);
+    wijzig();
+  });
+}
+function voegActieToe(no, tekst, deadline, focusSleutel) {
+  tekst = tekst.trim(); if (!tekst) return;
+  no.acties.push({ id:uid(), soort:'actie', tekst, klaar:false, deadline:deadline || '', status:'oppakken', trekker:'', log:[], aangemaakt:nu(), klaarOp:'' });
+  ui.focus = focusSleutel;
+  wijzig();
+}
+function verwijderActie(no, a) {
+  bevestig('Actie "' + a.tekst + '" verwijderen?', () => {
+    no.acties = no.acties.filter(x => x.id !== a.id);
+    wijzig();
+  });
+}
+
+/* ---------- Tekenen ---------- */
+function tekenAlles() { tekenHoofd(); tekenStatus(); zetFocus(); scrollNaarNotitie(); }
+function scrollNaarNotitie() {
+  if (ui.scrollNaarActie) {
+    const aid = ui.scrollNaarActie; ui.scrollNaarActie = null;
+    setTimeout(() => {
+      const el = document.querySelector('[data-actie="' + aid + '"]');
+      if (!el) return;
+      el.scrollIntoView({ block:'center' });
+      el.classList.add('flits');
+      setTimeout(() => el.classList.remove('flits'), 2200);
+    }, 60);
+  }
+  if (!ui.scrollNaar) return;
+  const id = ui.scrollNaar; ui.scrollNaar = null;
+  setTimeout(() => {
+    const el = document.querySelector('[data-note="' + id + '"]');
+    if (!el) return;
+    /* Zoektreffer: naar de eerste markering; lange aantekening: bovenkant in beeld */
+    const mk = el.querySelector('mark');
+    if (mk) mk.scrollIntoView({ block:'center' });
+    else el.scrollIntoView({ block:el.offsetHeight > window.innerHeight * 0.7 ? 'start' : 'center' });
+    el.classList.add('flits');
+    setTimeout(() => el.classList.remove('flits'), 2200);
+  }, 60);
+}
+
+function zetFocus() {
+  if (!ui.focus) return;
+  const el = document.querySelector('[data-focus="' + ui.focus + '"]');
+  if (el) { el.focus(); if (ui.focus === 'nieuwe-notitie' && el.tagName === 'TEXTAREA' && el.value.startsWith('Overleg: ')) el.setSelectionRange(9, 9); }
+  ui.focus = null;
+}
+function autosize(t) { t.style.height = 'auto'; t.style.height = Math.max(t.scrollHeight, 52) + 'px'; }
+
+function tekenOverzicht(z) {
+  const nAfgerond = state.items.filter(i => i.afgerond).length;
+  z.append(h('div', { class:'hint', style:'display:flex;flex-wrap:wrap;gap:1.2rem;align-items:center;margin:0 0 .8rem' },
+    h('label', {}, h('input', { type:'checkbox', checked:ui.toonAfgerond, onchange:e => { ui.toonAfgerond = e.target.checked; tekenAlles(); } }),
+      ' Toon afgeronde (' + nAfgerond + ')'),
+    h('span', {}, ITEMSOORTEN.map(s => s.icoon + ' ' + s.uitleg).join('   ·   '))));
+
+  const raster = h('div', { class:'typen' });
+  z.append(raster);
+  const groepen = themaGroepen(ui.toonAfgerond);
+  groepen.forEach(({ thema:t, items:lijst }, ti) => {
+    const sleutel = t ? t.id : 'geen';
+    /* Compacte wisselknop voor de soort van het nieuwe item (◆ eindig / ↻ doorlopend) */
+    const soortVeld = { value: ui.nieuwSoort[sleutel] || 'eindig' };
+    const soortNu = soortInfo(soortVeld.value);
+    const soortWissel = h('button', { class:'soortnieuw', type:'button', title:soortNu.uitleg + ' (klik om te wisselen)', 'aria-label':'Soort nieuw onderwerp: ' + soortNu.label,
+      onclick:() => { ui.nieuwSoort[sleutel] = soortVeld.value === 'eindig' ? 'doorlopend' : 'eindig'; ui.conceptItem[sleutel] = veld.value; ui.focus = 'item-in-' + sleutel; tekenAlles(); } }, soortNu.icoon);
+    const veld = h('input', { type:'text', placeholder:(soortNu.key === 'doorlopend' ? 'Doorlopend onderwerp' : 'Onderwerp') + ' toevoegen…', 'data-focus':'item-in-' + sleutel, value:ui.conceptItem[sleutel] || '',
+      oninput:e => { ui.conceptItem[sleutel] = e.target.value; },
+      onkeydown:e => { if (e.key === 'Enter') { e.preventDefault(); voegItemToe(t ? t.id : '', veld.value, soortVeld.value, true); } } });
+    const kop = ui.hernoemThema === sleutel && t
+      ? h('h2', {}, h('input', { type:'text', value:t.naam, 'data-focus':'hernoem-' + t.id, 'aria-label':'Naam thema',
+          onkeydown:e => { if (e.key === 'Enter') e.target.blur(); else if (e.key === 'Escape') { e.target.value = t.naam; e.target.blur(); } },
+          onblur:e => { const v = e.target.value.trim(); ui.hernoemThema = null; if (v && v !== t.naam) { t.naam = v; wijzig(); } else tekenAlles(); } }))
+      : h('h2', {},
+          h('button', { class:'kopknop', title:'Toon alle aantekeningen van ' + (t ? t.naam : 'onderwerpen zonder thema'), onclick:() => { ui.filter = 'thema:' + (t ? t.id : ''); ui.weergave = 'notities'; tekenAlles(); } }, t ? t.naam : 'Zonder thema'),
+          h('span', { class:'themaknoppen' },
+            h('span', { class:'meta' }, String(lijst.length)),
+            t ? h('button', { class:'klein', title:'Thema hernoemen', onclick:() => { ui.hernoemThema = t.id; ui.focus = 'hernoem-' + t.id; tekenAlles(); } }, '✎') : null,
+            t ? h('button', { class:'klein', title:'Thema eerder tonen', disabled:ti === 0, onclick:() => verplaatsThema(t.id, -1) }, '◀') : null,
+            t ? h('button', { class:'klein', title:'Thema later tonen', disabled:ti === state.themas.length - 1, onclick:() => verplaatsThema(t.id, 1) }, '▶') : null,
+            t ? h('button', { class:'klein gevaar', title:'Thema verwijderen (onderwerpen blijven bestaan)', onclick:() => verwijderThema(t) }, '✕') : null));
+    raster.append(h('div', { class:'groep' },
+      kop,
+      h('div', { class:'toevoegen' }, soortWissel, veld, h('button', { class:'primair', title:'Toevoegen', onclick:() => voegItemToe(t ? t.id : '', veld.value, soortVeld.value, true) }, '+')),
+      lijst.length === 0 ? h('div', { class:'hint' }, 'Nog geen onderwerpen.') : null,
+      lijst.map((it, idx) => {
+        const n = openActies(it), so = soortInfo(it.soort);
+        const naarThema = h('select', { class:'themawissel ophover', title:'Verplaats naar ander thema', 'aria-label':'Verplaats naar ander thema',
+          onchange:e => { it.themaId = e.target.value === '__geen' ? '' : e.target.value; wijzig(); } },
+          h('option', { value:'', selected:true, disabled:true }, '⇄'),
+          state.themas.filter(x => x.id !== it.themaId).map(x => h('option', { value:x.id }, x.naam)),
+          thema(it.themaId) ? h('option', { value:'__geen' }, 'Zonder thema') : null);
+        return h('div', { class:'item' + (it.id === ui.gekozen ? ' gekozen' : '') + (it.afgerond ? ' afgerond' : '') },
+          h('button', { class:'klein soortitem', title:so.uitleg + ' (klik om te wisselen)', onclick:() => { it.soort = it.soort === 'doorlopend' ? 'eindig' : 'doorlopend'; if (it.soort === 'doorlopend') it.afgerond = false; wijzig(); } }, so.icoon),
+          h('button', { class:'naam', title:volledigeNaam(it), onclick:() => { ui.gekozen = it.id; ui.filter = it.id; ui.weergave = 'notities'; tekenAlles(); } }, it.naam),
+          n > 0 ? h('span', { class:'badge', title:'Open acties en volgpunten' }, String(n)) : null,
+          it.soort === 'eindig' ? h('button', { class:'klein' + (it.afgerond ? '' : ' ophover-v'), title:it.afgerond ? 'Heropenen' : 'Markeer als afgerond', onclick:() => { it.afgerond = !it.afgerond; wijzig(); } }, it.afgerond ? '↺' : '✓') : null,
+          naarThema,
+          h('button', { class:'klein ophover', title:'Omhoog', 'data-mv':it.id + ':-1', disabled:idx === 0, onclick:e => verplaats(it.id, -1, e.currentTarget) }, '▲'),
+          h('button', { class:'klein ophover', title:'Omlaag', 'data-mv':it.id + ':1', disabled:idx === lijst.length - 1, onclick:e => verplaats(it.id, 1, e.currentTarget) }, '▼'),
+          h('button', { class:'klein gevaar ophover', title:'Verwijderen', onclick:() => verwijderItem(it.id) }, '✕'));
+      })));
+  });
+  const themaVeld = h('input', { type:'text', placeholder:'Naam nieuw thema, bijv. ANPR', 'data-focus':'nieuw-thema',
+    onkeydown:e => { if (e.key === 'Enter') { e.preventDefault(); voegThemaToe(themaVeld.value); } } });
+  raster.append(h('div', { class:'groep nieuwthema' },
+    h('h2', {}, 'Nieuw thema'),
+    h('div', { class:'toevoegen' }, themaVeld, h('button', { class:'primair', title:'Thema toevoegen', onclick:() => voegThemaToe(themaVeld.value) }, '+')),
+    h('div', { class:'hint' }, 'Een thema bundelt samenhangende onderwerpen, eindig én doorlopend.')));
+}
+
+function tekenHoofd() {
+  const tabs = document.getElementById('tabs');
+  tabs.replaceChildren(...[
+    ['notities', 'Aantekeningen'],
+    ['acties', 'Acties (' + totaalOpen() + ')'],
+    ['week', 'Weekoverzicht'],
+    ['items', "Thema's en onderwerpen"],
+    ['config', 'Configuratie']
+  ].map(([k, l]) => h('button', { class:ui.weergave === k ? 'aan' : '', onclick:() => { ui.weergave = k; ui.markeer = null; tekenAlles(); } }, l)));
+  const m = document.getElementById('hoofd');
+  m.replaceChildren();
+  document.body.dataset.pagina = ui.weergave;
+  if (ui.weergave === 'notities') m.append(h('div', { class:'paginatitel' }, '📝 Aantekeningen'));
+  else if (ui.weergave === 'acties') m.append(h('div', { class:'paginatitel' }, '☑️ Acties'));
+  if (ui.weergave === 'acties') tekenActielijst(m, ui.actieWeergave);
+  else if (ui.weergave === 'items') tekenOverzicht(m);
+  else if (ui.weergave === 'week') tekenWeek(m);
+  else if (ui.weergave === 'config') tekenConfig(m);
+  else tekenNotities(m);
+}
+
+async function heropenLaatste() {
+  try {
+    if (laatsteHandle.kind === 'directory') await openWerkmap(laatsteHandle, false);
+    else await gebruikHandle(laatsteHandle, false);
+  }
+  catch (e) { setStatus('Openen mislukt: ' + e.message, 'st-fout'); tekenAlles(); }
+  /* In dezelfde klik ook de back-upmap weer toegankelijk maken (lukt dat niet, dan verschijnt een knop) */
+  if (backupDir && backupToestemming !== 'granted') { await backupRecht(true); tekenStatus(); }
+}
+
+function tekenConfig(m) {
+  m.append(h('div', { class:'kaart' },
+    h('h2', { style:'margin:0 0 .6rem;font-size:1.05rem' }, 'Opslagbestand'),
+    h('div', { style:'display:flex;flex-wrap:wrap;gap:.5rem;align-items:center' },
+      (laatsteHandle && !fileHandle) ? h('button', { class:'primair', onclick:heropenLaatste }, 'Openen: ' + laatsteHandle.name) : null,
+      h('button', { class:werkmap || laatsteHandle ? '' : 'primair', disabled:typeof window.showDirectoryPicker !== 'function', title:'Kies de map met ' + WERKBESTAND + ': één toestemming voor opslaan en back-ups', onclick:() => kiesWerkmap() }, werkmap ? 'Andere werkmap kiezen' : 'Werkmap kiezen'),
+      h('span', { class:'meta' }, 'of los bestand:'),
+      h('button', { class:'klein', disabled:!heeftApi, onclick:() => kiesNieuw() }, 'Nieuw bestand'),
+      h('button', { class:'klein', disabled:!heeftApi, onclick:() => kiesBestaand() }, 'Bestand openen'),
+      h('button', { title:'Download een kopie van alle gegevens als JSON', onclick:() => backup() }, 'Back-up downloaden')),
+    h('div', { class:'hint' }, fileHandle ? (werkmap ? 'Werkmap: ' + werkmap.name + ' › ' + fileHandle.name : 'Los bestand: ' + fileHandle.name + ' (back-up vraagt dan een aparte map-toestemming)') : 'Er is nog niets geopend.')));
+
+  const kanMap = typeof window.showDirectoryPicker === 'function';
+  const snaps = h('div', { class:'snaplijst' }, h('span', { class:'meta' }, 'Laden…'));
+  m.append(h('div', { class:'kaart' },
+    h('h2', { style:'margin:0 0 .6rem;font-size:1.05rem' }, 'Automatische back-up'),
+    h('div', { style:'display:flex;flex-wrap:wrap;gap:.5rem;align-items:center' },
+      werkmap ? null : h('button', { class:backupDir ? '' : 'primair', disabled:!kanMap, onclick:() => kiesBackupMap() }, backupDir ? 'Andere back-upmap kiezen' : 'Back-upmap kiezen'),
+      backupDir && backupToestemming !== 'granted' ? h('button', { class:'primair', onclick:() => activeerBackup() }, 'Back-ups activeren') : null,
+      werkmap ? h('span', { class:'meta' }, 'Back-ups komen in de werkmap "' + werkmap.name + '", naast ' + WERKBESTAND + (backupToestemming === 'granted' ? ' (actief)' : '')) : h('span', { class:'meta' }, backupDir ? 'Map: ' + backupDir.name + (backupToestemming === 'granted' ? ' (actief)' : ' (wacht op toestemming)') : 'Nog geen map gekozen')),
+    h('div', { class:'hint' }, 'Bij de eerste opslag van elke dag wordt de stand van de vorige keer bewaard als "JJMMDD aantekeningen.json". ' +
+      'De nieuwste ' + BACKUP_AANTAL + ' blijven staan; oudere bestanden met precies dat naampatroon worden automatisch opgeruimd. Andere bestanden in de map blijven altijd onaangeroerd.'),
+    backupMelding ? h('div', { class:'hint' }, backupMelding) : null,
+    h('div', { class:'hint', style:'margin-top:.7rem' }, 'Browserkopieën (vangnet, ook zonder back-upmap). Terugzetten: downloaden en daarna "Bestand openen".'),
+    snaps));
+  idbSleutels().then(ks => {
+    const l = ks.filter(k => /^snap:\d{6}$/.test(k)).sort().reverse();
+    snaps.replaceChildren(...(l.length ? l.map(k => h('button', { class:'klein', title:'Download browserkopie van ' + k.slice(5), onclick:() => downloadSnapshot(k) }, '⤓ ' + k.slice(5))) : [h('span', { class:'meta' }, 'Nog geen browserkopieën.')]));
+  }).catch(() => snaps.replaceChildren(h('span', { class:'meta' }, 'Niet beschikbaar in deze browser.')));
+}
+
+function itemFilterLabel(w, alleLabel) {
+  if (w === 'alle') return alleLabel;
+  if (w === 'geen') return 'Niet gekoppeld';
+  if (w === 'thema:') return 'Zonder thema (alle onderwerpen)';
+  if (w.startsWith('thema:')) { const t = thema(w.slice(6)); return t ? t.naam + ' (heel thema)' : alleLabel; }
+  const it = item(w);
+  return it ? volledigeNaam(it) : alleLabel;
+}
+function maakFilterMenu(waarde, alleLabel, kies, metGeen, ariaLabel) {
+  const wrap = h('div', { class:'fmenu' });
+  const knop = h('button', { class:'fknop', 'aria-haspopup':'listbox', 'aria-expanded':'false', 'aria-label':ariaLabel,
+    onclick:e => { e.stopPropagation(); const aan = !wrap.classList.contains('open'); document.querySelectorAll('.fmenu.open').forEach(x => x.classList.remove('open')); wrap.classList.toggle('open', aan); knop.setAttribute('aria-expanded', String(aan)); } },
+    itemFilterLabel(waarde, alleLabel) + '  ▾');
+  const optie = (w, tekst, klasse) => h('button', { class:'fopt ' + klasse + (waarde === w ? ' gekozen' : ''), role:'option', onclick:() => kies(w) }, tekst);
+  const lijst = h('div', { class:'flijst', role:'listbox' }, optie('alle', alleLabel, ''));
+  if (metGeen) lijst.append(optie('geen', 'Niet gekoppeld', ''));
+  themaGroepen(true).forEach(g => {
+    lijst.append(optie('thema:' + (g.thema ? g.thema.id : ''), g.thema ? g.thema.naam : 'Zonder thema', 'kopje'));
+    g.items.forEach(i => lijst.append(optie(i.id, soortInfo(i.soort).icoon + '  ' + i.naam + (i.afgerond ? ' (afgerond)' : ''), 'sub')));
+  });
+  wrap.append(knop, lijst);
+  return wrap;
+}
+document.addEventListener('click', () => document.querySelectorAll('.fmenu.open').forEach(x => x.classList.remove('open')));
+document.addEventListener('keydown', e => { if (e.key === 'Escape') document.querySelectorAll('.fmenu.open').forEach(x => x.classList.remove('open')); });
+
+function filterIsItem() { return ui.filter !== 'alle' && !ui.filter.startsWith('thema:'); }
+function itemsVoorFilter() {
+  if (ui.filter === 'alle') return state.items.slice();
+  if (ui.filter.startsWith('thema:')) return state.items.filter(i => itemInFilter(ui.filter, i));
+  const it = item(ui.filter);
+  return it ? [it] : state.items.slice();
+}
+/* Twee-staps keuze: eerst thema, dan onderwerp (alleen lopende onderwerpen).
+   ctx onthoudt per plek het laatst gekozen thema; heeft een thema maar één onderwerp, dan wordt dat direct gekozen. */
+function themaOnderwerpKeuze(ctx, gekozenId, kies, opties) {
+  opties = opties || {};
+  const open = state.items.filter(i => !i.afgerond || i.id === gekozenId);
+  const vanThema = tId => open.filter(i => tId === '__geen' ? !thema(i.themaId) : i.themaId === tId);
+  const themasMet = state.themas.filter(t => open.some(i => i.themaId === t.id));
+  const heeftLos = open.some(i => !thema(i.themaId));
+  const gk = item(gekozenId);
+  let tId = gk ? (thema(gk.themaId) ? gk.themaId : '__geen') : ui.kiesThema[ctx];
+  if (tId === undefined && opties.voorkeurThema && (opties.voorkeurThema === '__geen' || thema(opties.voorkeurThema))) tId = opties.voorkeurThema;
+  if (tId && tId !== '__geen' && !themasMet.some(t => t.id === tId)) tId = '';
+  const lijst = tId ? vanThema(tId) : [];
+  const themaSel = h('select', { class:'themakeuze', 'aria-label':'Thema', title:'Kies eerst het thema',
+    onchange:e => {
+      ui.kiesThema[ctx] = e.target.value;
+      const l = e.target.value ? vanThema(e.target.value) : [];
+      kies(l.length === 1 ? l[0].id : '');
+    } },
+    h('option', { value:'', selected:!tId }, 'Thema…'),
+    themasMet.map(t => h('option', { value:t.id, selected:t.id === tId }, t.naam)),
+    heeftLos ? h('option', { value:'__geen', selected:tId === '__geen' }, 'Zonder thema') : null);
+  const ondSel = h('select', { class:'onderwerpkeuze', 'aria-label':'Onderwerp', title:tId ? 'Kies het onderwerp' : 'Kies eerst een thema', disabled:!tId && !opties.nieuw,
+    onchange:e => { if (e.target.value === '__nieuw') { ui.kiesThema[ctx] = tId; opties.nieuw(tId); } else kies(e.target.value); } },
+    h('option', { value:'', selected:!gk }, tId ? 'Onderwerp…' : '← eerst thema'),
+    lijst.map(i => h('option', { value:i.id, selected:i.id === gekozenId }, soortInfo(i.soort).icoon + '  ' + i.naam + (i.afgerond ? ' (afgerond)' : ''))),
+    opties.nieuw ? h('option', { value:'__nieuw' }, '+ Nieuw onderwerp…') : null);
+  return { wrap:h('span', { class:'tokeuze' }, themaSel, ondSel), themaSel, ondSel };
+}
+/* Keuzelijst voor koppelen: alleen lopende onderwerpen (een al gekozen afgerond onderwerp blijft zichtbaar) */
+function itemOpties(gekozenId, behalve) {
+  return themaGroepen(true).map(g => {
+    const l = g.items.filter(i => i.id !== behalve && (!i.afgerond || i.id === gekozenId));
+    return l.length ? h('optgroup', { label:g.thema ? g.thema.naam : 'Zonder thema' }, l.map(i => h('option', { value:i.id, selected:i.id === gekozenId }, i.naam + (i.afgerond ? ' (afgerond)' : '')))) : null;
+  });
+}
+
+function tekenNotities(m) {
+  if (filterIsItem() && !item(ui.filter)) ui.filter = 'alle';
+  if (state.items.length === 0) {
+    m.append(h('div', { class:'leeg' }, 'Er zijn nog geen onderwerpen. Maak eerst een thema en onderwerp aan op het tabblad ',
+      h('button', { class:'link', onclick:() => { ui.weergave = 'items'; tekenAlles(); } }, "Thema's en onderwerpen"), '.'));
+    return;
+  }
+  const gekozenIt = filterIsItem() ? item(ui.filter) : null;
+  const notitieOpen = ui.openNotitie || ui.nieuwItem;
+  /* Bij open invoer met gekozen onderwerp: toon alleen de aantekeningen van dat onderwerp */
+  const invoerDoel = notitieOpen && !gekozenIt && !ui.nieuwItem ? item(ui.gekozen) : null;
+  const paren = [];
+  (invoerDoel ? [invoerDoel] : itemsVoorFilter()).forEach(it => it.notities.forEach(no => paren.push({ it, no })));
+  paren.sort((a, b) => new Date(b.no.datum) - new Date(a.no.datum));
+  m.append(h('div', { class:'kop' },
+    notitieOpen
+      ? h('button', { title:'Invoer sluiten (concept blijft bewaard)', onclick:() => { ui.openNotitie = false; ui.nieuwItem = false; tekenAlles(); } }, '✕ Sluiten')
+      : h('button', { class:'primair', title:'Nieuwe aantekening', onclick:() => { ui.openNotitie = true; ui.focus = 'nieuwe-notitie'; tekenAlles(); } }, '+ Nieuw'),
+    h('strong', {}, 'Toon:'),
+    maakFilterMenu(ui.filter, 'Alle aantekeningen', v => { ui.filter = v; const x = item(v); if (x) ui.gekozen = x.id; tekenAlles(); }, false, 'Filter aantekeningen'),
+    h('span', { class:'meta' }, paren.length + ' aantekening(en)' + (invoerDoel ? ' van ' + invoerDoel.naam : ''))));
+
+  /* Snel een nieuw item aanmaken vanuit Aantekeningen */
+  const nieuwFormulier = () => {
+    let stdThema = '', stdSoort = 'eindig';
+    if (ui.filter.startsWith('thema:')) stdThema = ui.filter.slice(6);
+    else if (item(ui.filter)) { stdThema = item(ui.filter).themaId; }
+    else if (item(ui.gekozen)) stdThema = item(ui.gekozen).themaId;
+    else if (ui.kiesThema.notitie && ui.kiesThema.notitie !== '__geen') stdThema = ui.kiesThema.notitie;
+    const themaKeuze = h('select', { style:'width:auto;flex:none', 'aria-label':'Thema' },
+      h('option', { value:'' }, 'Zonder thema'),
+      state.themas.map(t => h('option', { value:t.id, selected:t.id === stdThema }, t.naam)));
+    const soortKeuze = h('select', { style:'width:auto;flex:none', 'aria-label':'Soort' },
+      ITEMSOORTEN.map(s => h('option', { value:s.key, selected:s.key === stdSoort }, s.icoon + ' ' + s.label)));
+    const naamVeld = h('input', { type:'text', placeholder:'Naam, bijv. Doorontwikkeling software', 'data-focus':'nieuw-item', style:'flex:1 1 14rem;min-width:10rem' });
+    const sluit = () => { ui.nieuwItem = false; tekenAlles(); };
+    const maak = () => { if (!naamVeld.value.trim()) return; ui.nieuwItem = false; voegItemToe(themaKeuze.value, naamVeld.value, soortKeuze.value); };
+    naamVeld.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); maak(); } else if (e.key === 'Escape') { e.preventDefault(); sluit(); } });
+    return h('div', { style:'display:flex;flex-wrap:wrap;gap:.5rem;align-items:center' },
+      h('span', { class:'meta' }, 'Nieuw onderwerp:'), themaKeuze, soortKeuze, naamVeld,
+      h('button', { class:'primair', onclick:maak }, 'Aanmaken'),
+      h('button', { onclick:sluit }, 'Annuleren'));
+  };
+
+  if (gekozenIt) {
+    const it = gekozenIt, t = themaVan(it);
+    m.append(h('div', { class:'kop' },
+      t ? h('button', { class:'projectlabel', title:'Toon het hele thema', onclick:() => { ui.filter = 'thema:' + t.id; tekenAlles(); } }, t.naam) : null,
+      h('input', { type:'text', class:'titel', value:it.naam, 'aria-label':'Naam',
+        oninput:e => { it.naam = e.target.value; wijzig(false); },
+        onchange:() => tekenAlles() }),
+      h('span', { class:'meta' }, soortInfo(it.soort).icoon + ' ' + soortInfo(it.soort).label)));
+    if (it.afgerond) m.append(h('div', { class:'hint', style:'margin:-.4rem 0 .8rem' }, 'Dit onderwerp is afgerond.'));
+  }
+
+  /* Nieuwe aantekening */
+  const doel = gekozenIt || item(ui.gekozen);
+  const doelKeuze = gekozenIt ? null : ui.nieuwItem ? nieuwFormulier() : h('span', { style:'display:flex;flex-wrap:wrap;gap:.6rem;align-items:center' }, h('span', { class:'meta' }, 'Bij: '),
+    themaOnderwerpKeuze('notitie', ui.gekozen, v => { ui.gekozen = v || null; if (v) ui.focus = 'nieuwe-notitie'; tekenAlles(); },
+      { voorkeurThema:ui.filter.startsWith('thema:') ? (ui.filter.slice(6) || '__geen') : undefined,
+        nieuw:() => { ui.nieuwItem = true; ui.focus = 'nieuw-item'; tekenAlles(); } }).wrap,
+    h('button', { class:'link', title:'Nieuw onderwerp aanmaken', onclick:() => { ui.nieuwItem = true; ui.focus = 'nieuw-item'; tekenAlles(); } }, '+ nieuw'));
+  if (!notitieOpen) { /* invoer verborgen; opent via knop Nieuw */ }
+  else if (!doel) {
+    m.append(h('div', { class:'kaart nieuwkader' }, doelKeuze, h('div', { class:'hint' }, ui.nieuwItem ? 'Typ de naam en druk op Enter; daarna kun je direct de aantekening schrijven.' : 'Kies een onderwerp om een aantekening toe te voegen.')));
+  } else {
+    const titelVeld = h('input', { type:'text', class:'notitietitel', placeholder:'Overleg / titel…', 'data-focus':'nieuwe-notitie', 'aria-label':'Titel aantekening', value:ui.conceptTitel[doel.id] || '',
+      oninput:e => { ui.conceptTitel[doel.id] = e.target.value; },
+      onkeydown:e => {
+        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); voegNotitieToe(doel); }
+        else if (e.key === 'Enter') { e.preventDefault(); veld.focus(); }
+        else if (e.key === 'Escape') { e.preventDefault(); ui.openNotitie = false; tekenAlles(); }
+      } });
+    const veld = h('textarea', { placeholder:'Nieuwe aantekening…', style:'min-height:50vh', value:ui.concept[doel.id] ?? SJABLOON,
+      oninput:e => { ui.concept[doel.id] = e.target.value; autosize(e.target); },
+      onkeydown:e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); voegNotitieToe(doel); } else if (e.key === 'Escape') { e.preventDefault(); ui.openNotitie = false; tekenAlles(); } } });
+    m.append(h('div', { class:'kaart nieuwkader' },
+      doelKeuze ? h('div', { style:'margin-bottom:.4rem' }, doelKeuze) : null,
+      titelVeld,
+      veld,
+      h('div', { style:'display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin-top:.4rem' },
+        h('button', { class:'primair', onclick:() => voegNotitieToe(doel) }, 'Aantekening toevoegen'),
+        h('label', { class:'meta' }, 'Datum (leeg = nu): ',
+          h('input', { type:'datetime-local', style:'width:auto', 'aria-label':'Datum aantekening', value:ui.conceptDatum[doel.id] || '',
+            onchange:e => { ui.conceptDatum[doel.id] = e.target.value; } })),
+        h('span', { class:'hint', style:'margin:0' }, 'Ctrl+Enter. # aan het begin van een regel = kopje, **tekst** = vet. Regel met ACTIE wordt een eigen actie, regel met VOLG een volgpunt. Optioneel: @trekker en datum, bijv. VOLG Verplaatsen HOV06 @Dufec !01-11-2026'))));
+    requestAnimationFrame(() => autosize(veld));
+  }
+
+  if (paren.length === 0) m.append(h('div', { class:'leeg' }, 'Nog geen aantekeningen.'));
+
+  paren.forEach(({ it, no }) => {
+    const indicator = h('span', { class:'hint', style:'margin:0' });
+    let opslaanKnop = null;
+    const toonInd = () => {
+      const n = nieuweActiesIn(no).length;
+      if (opslaanKnop) opslaanKnop.classList.toggle('nodig', n > 0);
+      indicator.textContent = n ? n + ' nieuwe actie(s) in de tekst: klik op Opslaan' : '';
+      indicator.style.color = n ? 'var(--waarschuwing)' : '';
+      indicator.style.fontWeight = n ? '600' : '';
+    };
+    const opslaanNotitie = () => {
+      const n = werkActiesBij(no);
+      if (n > 0) wijzig(); else { clearTimeout(opslagTimer); opslaan(); setStatus('Geen nieuwe acties gevonden in deze aantekening', 'st-wacht'); }
+    };
+    const linkVak = h('div', { class:'linkvak' });
+    const toonLinks = () => {
+      const l = vindLinks(no.tekst);
+      linkVak.replaceChildren(...(l.length ? [h('span', { class:'meta' }, 'Links: '), ...l.map(x => h('a', { href:x.url, target:'_blank', rel:'noopener noreferrer', title:x.url }, x.label))] : []));
+    };
+    toonLinks();
+    const ta = h('textarea', { value:no.tekst, 'aria-label':'Aantekening', title:'Ctrl+klik op een link om die te openen. Esc = terug naar leesweergave', 'data-focus':'notitie-' + no.id,
+      onclick:e => { if (e.ctrlKey || e.metaKey) { const u = linkOpPositie(e.target.value, e.target.selectionStart); if (u) { e.preventDefault(); window.open(u, '_blank', 'noopener'); } } },
+      oninput:e => { no.tekst = e.target.value; autosize(e.target); toonInd(); toonLinks(); wijzig(false); },
+      onkeydown:e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); opslaanNotitie(); } else if (e.key === 'Escape') { e.preventDefault(); e.target.blur(); } },
+      onblur:() => naarLezen() });
+    /* Leesweergave: klik om te bewerken; klik op een link opent die link */
+    const lees = h('div', { class:'leesweergave', tabindex:'0', role:'button', title:'Klik om te bewerken',
+      onclick:e => { if (e.target.closest('a')) return; naarBewerken(); },
+      onkeydown:e => { if (e.key === 'Enter' && !e.target.closest('a')) { e.preventDefault(); naarBewerken(); } } });
+    const vulLees = () => {
+      lees.replaceChildren(...(no.tekst.trim() ? leesWeergave(no.tekst) : [h('span', { class:'meta' }, 'Klik om te schrijven…')]));
+      if (ui.markeer && ui.markeer.id === no.id) markeerIn(lees, ui.markeer.termen);
+    };
+    /* Lange aantekening: ingeklapt met vervaging en knop 'Toon alles' */
+    const uitklap = h('button', { class:'link uitklap', style:'display:none',
+      onclick:() => { ui.uitgeklapt[no.id] = !ui.uitgeklapt[no.id]; pasInklap(); if (!ui.uitgeklapt[no.id]) lees.closest('.kaart').scrollIntoView({ block:'nearest' }); } });
+    const pasInklap = () => {
+      if (lees.style.display === 'none' || !lees.isConnected) { uitklap.style.display = 'none'; return; }
+      const open = !!ui.uitgeklapt[no.id];
+      lees.classList.add('ingeklapt');
+      const teLang = lees.scrollHeight > lees.clientHeight + 4;
+      lees.classList.toggle('ingeklapt', teLang && !open);
+      uitklap.style.display = teLang ? '' : 'none';
+      uitklap.textContent = open ? '▴ Inklappen' : '▾ Toon alles';
+    };
+    const naarBewerken = () => {
+      ui.bewerkNotitie = no.id;
+      if (ui.markeer && ui.markeer.id === no.id) ui.markeer = null;
+      uitklap.style.display = 'none';
+      lees.style.display = 'none'; ta.style.display = ''; linkVak.style.display = '';
+      autosize(ta); ta.focus();
+    };
+    const naarLezen = () => {
+      if (ui.bewerkNotitie === no.id) ui.bewerkNotitie = null;
+      vulLees(); lees.style.display = ''; ta.style.display = 'none'; linkVak.style.display = 'none';
+      requestAnimationFrame(pasInklap);
+    };
+    vulLees();
+    if (ui.bewerkNotitie === no.id) { lees.style.display = 'none'; ui.focus = ui.focus || 'notitie-' + no.id; }
+    else { ta.style.display = 'none'; linkVak.style.display = 'none'; }
+    toonInd();
+    requestAnimationFrame(() => { autosize(ta); pasInklap(); });
+
+    const nieuweTekst = h('input', { type:'text', placeholder:'Actie toevoegen…', 'data-focus':'actie-' + no.id });
+    const nieuweDatum = h('input', { type:'date', 'aria-label':'Deadline' });
+    const voeg = () => voegActieToe(no, nieuweTekst.value, nieuweDatum.value, 'actie-' + no.id);
+    nieuweTekst.addEventListener('keydown', e => { if (e.key === 'Enter') voeg(); });
+
+    const aantalOpen = no.acties.filter(a => !a.klaar).length;
+    const actiesKolom = h('div', { class:'acties-kolom' },
+      h('div', { class:'acties-kop' },
+        h('span', { class:'meta' }, 'Acties (' + aantalOpen + ' open)'),
+        h('button', { class:'link', title:'Handmatig een actie toevoegen', onclick:() => { ui.actieNieuw[no.id] = !ui.actieNieuw[no.id]; if (ui.actieNieuw[no.id]) ui.focus = 'actie-' + no.id; tekenAlles(); } }, ui.actieNieuw[no.id] ? '− verberg' : '+ actie')),
+      no.acties.length === 0 ? h('div', { class:'hint' }, 'Nog geen acties. Begin een regel in de aantekening met ACTIE of VOLG.') : null,
+      no.acties.map(a => h('div', { class:'actie' + (a.klaar ? ' klaar' : '') },
+        h('input', { type:'checkbox', checked:a.klaar, onchange:e => { zetKlaar(a, e.target.checked); wijzig(); } }),
+        soortKnop(a),
+        statusSelect(a),
+        h('input', { type:'text', value:a.tekst, 'aria-label':'Actie', oninput:e => { a.tekst = e.target.value; wijzig(false); } }),
+        a.soort === 'volg' ? h('input', { type:'text', class:'trekker', value:a.trekker || '', placeholder:'trekker', 'aria-label':'Trekker', title:'Wie voert dit uit?', oninput:e => { a.trekker = e.target.value; wijzig(false); } }) : null,
+        h('input', { type:'date', value:a.deadline || '', 'aria-label':a.soort === 'volg' ? 'Checken op' : 'Deadline', title:a.soort === 'volg' ? 'Checken op' : 'Deadline', onchange:e => { a.deadline = e.target.value; wijzig(false); } }),
+        h('button', { class:'klein gevaar', title:'Actie verwijderen', onclick:() => verwijderActie(no, a) }, '✕'))),
+      ui.actieNieuw[no.id] ? h('div', { class:'nieuweactie' }, nieuweTekst, nieuweDatum, h('button', { onclick:voeg }, 'Toevoegen')) : null);
+
+    actiesKolom.prepend(h('div', { class:'notitieknoppen' },
+      indicator,
+      opslaanKnop = h('button', { class:'klein primair kh' + (nieuweActiesIn(no).length ? ' nodig' : ''), title:'Zet nieuwe ACTIE-regels om in acties (Ctrl+Enter)', onclick:opslaanNotitie }, 'Opslaan'),
+      state.items.length > 1 ? h('select', { class:'verplaatsnotitie kh', title:'Verplaats deze aantekening (met acties) naar een ander onderwerp', 'aria-label':'Verplaats aantekening naar',
+        onchange:e => verplaatsNotitie(it, no, e.target.value) },
+        h('option', { value:'', selected:true, disabled:true }, '⇄ Verplaats naar…'),
+        itemOpties(null, it.id)) : null,
+      h('button', { class:'klein gevaar kh', onclick:() => verwijderNotitie(it, no) }, 'Aantekening verwijderen')));
+    m.append(h('div', { class:'kaart', 'data-note':no.id },
+      h('div', { class:'notitiebody' },
+        h('div', { class:'notitie-links' },
+          h('div', { class:'notitiekop' },
+            gekozenIt ? null : h('span', {},
+              h('button', { class:'projectlabel', title:'Alleen aantekeningen van dit onderwerp tonen', onclick:() => { ui.filter = it.id; ui.gekozen = it.id; tekenAlles(); } }, volledigeNaam(it)),
+              it.afgerond ? h('small', { class:'meta' }, ' afgerond') : null),
+            h('input', { type:'text', class:'notitietitel' + (no.titel ? '' : ' leeg'), value:no.titel || '', placeholder:'+ titel', 'aria-label':'Titel aantekening', size:Math.max(6, (no.titel || '').length + 1),
+              oninput:e => { no.titel = e.target.value; e.target.size = Math.max(6, e.target.value.length + 1); e.target.classList.toggle('leeg', !e.target.value); wijzig(false); } }),
+            h('input', { type:'datetime-local', class:'notitiedatum', 'aria-label':'Datum aantekening', value:naarLokaal(no.datum),
+              onchange:e => { if (e.target.value && !isNaN(new Date(e.target.value))) { no.datum = new Date(e.target.value).toISOString(); wijzig(); } } })),
+          lees, uitklap, ta, linkVak),
+        actiesKolom)));
+  });
+}
+
+function tekenActielijst(m, variant) {
+  variant = variant === 'bord' ? 'bord' : 'planning';
+  const vandaag = vandaagISO();
+
+  /* ---- Bovenbalk: soort-schakelaar, themafilter, meer filters ---- */
+  const aantal = k => totaalOpen(k);
+  const schakel = h('div', { class:'segment', role:'group', 'aria-label':'Toon' },
+    [['alle', 'Alles', null], ...ACTIESOORTEN.map(s => [s.key, s.icoon + ' ' + s.label, aantal(s.key)])].map(([k, l, n]) =>
+      h('button', { class:ui.actieSoort === k ? 'aan' : '', onclick:() => { ui.actieSoort = k; tekenAlles(); } }, l, n !== null ? h('span', { class:'telling' }, String(n)) : null)));
+  const nAfwijkend = (ui.actieItem !== 'alle') + (ui.actieFilter !== 'open') + (ui.actieStatus !== 'alle');
+  const kiesWeergave = w => { ui.actieWeergave = w; try { localStorage.setItem('notitieboek.actieWeergave', w); } catch (e) { /* geen opslag */ } tekenAlles(); };
+  const weergaveKnoppen = h('div', { class:'segment', role:'group', 'aria-label':'Weergave' },
+    [['planning', '☰ Planning'], ['bord', '▦ Bord']].map(([k, l]) => h('button', { class:variant === k ? 'aan' : '', onclick:() => kiesWeergave(k) }, l)));
+  m.append(h('div', { class:'actiebalk' },
+    ui.openActie
+      ? h('button', { title:'Invoer sluiten', onclick:() => { ui.openActie = false; tekenAlles(); } }, '✕ Sluiten')
+      : h('button', { class:'primair', title:'Nieuwe actie of volgpunt', onclick:() => { ui.openActie = true; ui.focus = 'los-actie'; tekenAlles(); } }, '+ Nieuw'),
+    schakel,
+    weergaveKnoppen,
+    h('span', { class:'spacer' }),
+    h('button', { class:'filterknop' + (ui.meerFilters ? ' open' : '') + (nAfwijkend ? ' actief' : ''), 'aria-expanded':String(!!ui.meerFilters), title:'Filters tonen of verbergen',
+      onclick:() => { ui.meerFilters = !ui.meerFilters; tekenAlles(); } },
+      'Filter' + (nAfwijkend ? ' (' + nAfwijkend + ')' : '') + (ui.meerFilters ? ' ▴' : ' ▾'))));
+
+  if (ui.meerFilters) {
+    const sel = (aria, waarde, opties, kies) => h('label', { class:'meta' }, aria + ' ',
+      h('select', { style:'width:auto', 'aria-label':aria, onchange:e => kies(e.target.value) },
+        opties.map(([v, l]) => h('option', { value:v, selected:v === waarde }, l))));
+    m.append(h('div', { class:'meerfilters' },
+      maakFilterMenu(ui.actieItem, "Alle thema's", v => { ui.actieItem = v; tekenAlles(); }, true, 'Filter op thema of onderwerp'),
+      sel('Toon', ui.actieFilter, [['open', 'Open'], ['klaar', 'Afgerond'], ['alle', 'Open en afgerond']], v => { ui.actieFilter = v; tekenAlles(); }),
+      sel('Status', ui.actieStatus, [['alle', 'Alle statussen'], ['actief', 'Zonder slaapstand'], ...STATUSSEN.map(s => [s.key, s.icoon + '  ' + s.label])], v => { ui.actieStatus = v; tekenAlles(); }),
+      nAfwijkend ? h('button', { class:'link zacht', onclick:() => { ui.actieItem = 'alle'; ui.actieFilter = 'open'; ui.actieStatus = 'alle'; tekenAlles(); } }, 'wis filters') : null));
+  }
+
+  /* ---- Eén invoerregel, met dezelfde afkortingen als in aantekeningen ---- */
+  const tekstVeld = h('input', { type:'text', class:'nieuwregel', 'data-focus':'los-actie', value:ui.losConcept || '',
+    placeholder:'+ Nieuw…   bijv. Offerte opvragen !01-11   of   VOLG Verplaatsen HOV07 @Dufec !01-11',
+    oninput:e => { ui.losConcept = e.target.value; } });
+  const datumVeld = h('input', { type:'date', class:'nieuwdatum', value:ui.losDatum || '', 'aria-label':'Deadline / checken op', title:'Deadline (bij VOLG: checken op). Leeg = geen datum',
+    onchange:e => { ui.losDatum = e.target.value; } });
+  datumVeld.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); voegLos(); } });
+  const af = ui.actieItem;
+  const keuze = themaOnderwerpKeuze('actie', ui.losItem, v => { ui.losItem = v; ui.focus = 'los-actie'; tekenAlles(); },
+    { voorkeurThema:af.startsWith('thema:') ? (af.slice(6) || '__geen') : (item(af) ? (themaVan(item(af)) ? item(af).themaId : '__geen') : undefined) });
+  const itemKeuze = keuze.ondSel;
+  const voegLos = () => {
+    let t = tekstVeld.value.trim(); if (!t) return;
+    if (!itemKeuze.value) { const leeg = keuze.themaSel.value ? itemKeuze : keuze.themaSel; leeg.classList.add('fout'); leeg.focus(); setStatus('Kies eerst bij welk onderwerp dit hoort', 'st-fout'); return; }
+    /* Korte datum !1-11 aanvullen met het lopende (of volgende) jaar */
+    t = t.replace(/(^|\s)!(\d{1,2})[-\/.](\d{1,2})\s*$/, (x, v, d, mnd) => {
+      const nu = new Date(); let j = nu.getFullYear();
+      const iso = j + '-' + mnd.padStart(2, '0') + '-' + d.padStart(2, '0');
+      if (iso < vandaag) j++;
+      return v + '!' + d + '-' + mnd + '-' + j;
+    });
+    const regel = /^(actie|volg)(\s*:\s*|\s+)/i.test(t) ? t.replace(/^(actie|volg)/i, w => w.toUpperCase()) : 'ACTIE ' + t;
+    const [a] = parseActies(regel);
+    if (!a) return;
+    if (datumVeld.value) a.deadline = datumVeld.value;
+    state.losseActies.push(Object.assign(a, { itemId:itemKeuze.value }));
+    ui.losConcept = ''; ui.losDatum = '';
+    ui.focus = 'los-actie';
+    wijzig();
+  };
+  tekstVeld.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); voegLos(); } else if (e.key === 'Escape') { e.preventDefault(); ui.openActie = false; tekenAlles(); } });
+  if (ui.openActie) m.append(h('div', { class:'nieuwbalk' }, tekstVeld, datumVeld, keuze.wrap, h('button', { class:'primair', onclick:voegLos }, 'Toevoegen')));
+
+  /* ---- Rijen verzamelen en filteren ---- */
+  const alle = [];
+  state.items.forEach(it => it.notities.forEach(no => no.acties.forEach(a => alle.push({ a, no, it }))));
+  state.losseActies.forEach(a => alle.push({ a, no:null, it:item(a.itemId) }));
+  const klaarOk = a => !(ui.actieFilter === 'open' && a.klaar) && !(ui.actieFilter === 'klaar' && !a.klaar);
+  const statusOk = a => ui.actieStatus === 'alle' || (ui.actieStatus === 'actief' ? a.status !== 'slaap' : a.status === ui.actieStatus);
+  const itemOk = r => ui.actieItem === 'alle' || (ui.actieItem === 'geen' ? !r.it : itemInFilter(ui.actieItem, r.it));
+  const rijen = alle.filter(r => klaarOk(r.a) && statusOk(r.a) && itemOk(r));
+
+  const dlKey = a => a.deadline || '9999-99-99';
+  const stIdx = a => STATUSSEN.findIndex(s => s.key === a.status);
+
+  /* Onderwerp altijd met thema ervoor (grijs), behalve als er al op één thema/onderwerp gefilterd is */
+  const eenThema = ui.actieItem.startsWith('thema:') || !!item(ui.actieItem);
+  const onderwerpLabel = it => { const t = themaVan(it); return [t && !eenThema ? h('span', { class:'itemthema' }, t.naam + ' · ') : null, it.naam]; };
+  const gaNaarItem = it => { ui.gekozen = it.id; ui.filter = it.id; ui.weergave = 'notities'; tekenAlles(); };
+  const naarNotitie = (it, no) => { ui.filter = it.id; ui.gekozen = it.id; ui.weergave = 'notities'; ui.scrollNaar = no.id; tekenAlles(); };
+  const korteDatum = iso => { try { return new Date(iso).toLocaleDateString('nl-NL', { day:'numeric', month:'short' }); } catch (e) { return ''; } };
+
+  const datumCel = a => {
+    const volg = a.soort === 'volg';
+    const cel = h('span', { class:'dl' + ((!a.klaar && a.deadline && a.deadline < vandaag) ? ' laat' : '') + (a.deadline ? '' : ' leeg-dl'),
+      title:(volg ? 'Checken op' : 'Deadline') + (a.deadline ? ': klik om te wijzigen' : ': klik om toe te voegen'), tabindex:'0', role:'button' },
+      a.deadline ? [volg ? h('small', { class:'dlsoort' }, 'check ') : null, korteDatum(a.deadline + 'T00:00:00') + (a.deadline.slice(0, 4) !== vandaag.slice(0, 4) ? ' ' + a.deadline.slice(0, 4) : '')] : (volg ? '+ check' : '+ datum'));
+    const open = () => {
+      const inv = h('input', { type:'date', class:'dl-invoer', value:a.deadline || '', 'aria-label':volg ? 'Checken op' : 'Deadline',
+        onchange:e => { a.deadline = e.target.value; setTimeout(() => wijzig(), 0); },
+        onblur:() => setTimeout(() => { if (inv.isConnected) tekenAlles(); }, 0),
+        onkeydown:e => { if (e.key === 'Escape') setTimeout(() => tekenAlles(), 0); } });
+      cel.replaceChildren(inv);
+      inv.focus();
+      try { inv.showPicker(); } catch (e) { /* niet overal ondersteund */ }
+    };
+    cel.addEventListener('click', e => { if (!e.target.closest('input')) open(); });
+    cel.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('input')) { e.preventDefault(); open(); } });
+    return cel;
+  };
+
+  const sluitBewerk = () => { if (ui.bewerk) { ui.bewerk = null; tekenAlles(); } };
+  /* Logboek onder een geopende regel: nieuwe update bovenaan, oudere regels blijven bewaard */
+  const logPaneel = a => {
+    const nieuw = h('input', { type:'text', class:'lognieuw', placeholder:'+ update (Enter = toevoegen met datum van vandaag)…', 'aria-label':'Nieuwe update', 'data-focus':'update-' + a.id,
+      onkeydown:e => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const v = e.target.value.trim(); if (!v) return;
+          a.log.unshift({ id:uid(), datum:vandaagISO(), tekst:v });
+          ui.focus = 'update-' + a.id;
+          wijzig();
+        } else if (e.key === 'Escape') { e.preventDefault(); sluitBewerk(); }
+      } });
+    return h('div', { class:'logpaneel' },
+      nieuw,
+      a.log.map(x => h('div', { class:'logregel' },
+        h('input', { type:'date', class:'logdatum', value:x.datum, 'aria-label':'Datum update',
+          onchange:e => { if (e.target.value) { x.datum = e.target.value; a.log.sort((p, q) => q.datum.localeCompare(p.datum)); wijzig(); } } }),
+        h('input', { type:'text', class:'logtekst', value:x.tekst, 'aria-label':'Update',
+          oninput:e => { if (e.target.value.trim()) { x.tekst = e.target.value; wijzig(false); } },
+          onkeydown:e => { if (e.key === 'Enter' || e.key === 'Escape') { e.preventDefault(); sluitBewerk(); } } }),
+        h('button', { class:'klein gevaar', title:'Update verwijderen', 'aria-label':'Update verwijderen', onclick:() => {
+          bevestig('Update van ' + korteDatum(x.datum + 'T00:00:00') + ' verwijderen?\n\n"' + x.tekst + '"', () => { a.log = a.log.filter(y => y.id !== x.id); wijzig(); });
+        } }, '✕'))),
+      a.log.length ? null : h('div', { class:'hint', style:'margin:.2rem 0 0' }, 'Nog geen updates. Elke update krijgt automatisch de datum van vandaag; oudere regels blijven bewaard.'));
+  };
+  const rij = ({ a, no, it }) => {
+    const volg = a.soort === 'volg', bewerk = ui.bewerk === a.id;
+    const veld = (cls, waarde, ph, zet) => h('input', { type:'text', class:cls, value:waarde || '', placeholder:ph, 'aria-label':ph, 'data-focus':cls === 'b-tekst' ? 'bewerk-' + a.id : null,
+      oninput:e => { zet(e.target.value); wijzig(false); },
+      onkeydown:e => { if (e.key === 'Enter' || e.key === 'Escape') { e.preventDefault(); sluitBewerk(); } } });
+    const hoofd = bewerk
+      ? h('div', { class:'hoofdtekst bewerk' },
+          veld('b-tekst', a.tekst, 'Omschrijving', v => { if (v.trim()) a.tekst = v; }),
+          volg ? veld('b-trekker', a.trekker, 'Trekker (wie)', v => { a.trekker = v; }) : null)
+      : h('div', { class:'hoofdtekst', title:'Klik om te bewerken', tabindex:'0', role:'button',
+          onclick:() => { ui.bewerk = a.id; ui.focus = 'bewerk-' + a.id; tekenAlles(); },
+          onkeydown:e => { if (e.key === 'Enter') { ui.bewerk = a.id; ui.focus = 'bewerk-' + a.id; tekenAlles(); } } },
+          !it ? h('span', { class:'rodestip', title:'Nog niet gekoppeld aan een onderwerp' }, '●') : null,
+          h('span', { class:'t' }, a.tekst),
+          volg && a.trekker ? h('span', { class:'trekkertekst' }, ' · ' + a.trekker) : null,
+          a.log.length ? h('span', { class:'standtekst', title:a.log.length + ' update(s) in het logboek' }, ' — ' + korteDatum(a.log[0].datum + 'T00:00:00') + ': ' + a.log[0].tekst) : null,
+          a.log.length > 1 ? h('span', { class:'logteller', title:a.log.length + ' updates: klik om het logboek te zien' }, String(a.log.length)) : null);
+    const r = h('div', { class:'rij2' + (a.klaar ? ' klaar' : '') + (bewerk ? ' bewerkt' : ''), 'data-actie':a.id },
+      soortKnop(a),
+      statusSelect(a),
+      hoofd,
+      it ? h('button', { class:'itemlink', title:'Ga naar ' + volledigeNaam(it), onclick:() => gaNaarItem(it) }, onderwerpLabel(it)) : null,
+      datumCel(a),
+      h('span', { class:'tools' + (!it ? ' zichtbaar' : '') },
+        h('input', { type:'checkbox', checked:a.klaar, title:a.klaar ? 'Weer open zetten' : 'Afvinken', 'aria-label':'Afgerond', onchange:e => { zetKlaar(a, e.target.checked); wijzig(); } }),
+        soortKnop(a),
+        no ? h('button', { class:'klein', title:'Naar de aantekening' + (no.titel ? ' "' + no.titel + '"' : '') + ' van ' + korteDatum(no.datum), onclick:() => naarNotitie(it, no) }, '↗') : null,
+        !no ? h('select', { class:'koppel' + (it ? '' : ' fout'), 'aria-label':'Bij onderwerp', title:'Koppel aan een ander onderwerp', onchange:e => { a.itemId = e.target.value; wijzig(); } },
+          h('option', { value:'', selected:true, disabled:!!it }, it ? '⇄' : 'Bij onderwerp…'),
+          itemOpties(null, it ? it.id : null)) : null,
+        h('button', { class:'klein gevaar', title:'Verwijderen', 'aria-label':'Verwijderen', onclick:() => {
+          bevestig((volg ? 'Volgpunt' : 'Actie') + ' "' + a.tekst + '" verwijderen' + (a.log.length ? ', inclusief ' + a.log.length + ' logregel(s)' : '') + '?', () => {
+            if (no) no.acties = no.acties.filter(x => x.id !== a.id);
+            else state.losseActies = state.losseActies.filter(x => x.id !== a.id);
+            wijzig();
+          });
+        } }, '✕')),
+      bewerk ? logPaneel(a) : null);
+    if (bewerk) r.addEventListener('focusout', e => { if (!r.contains(e.relatedTarget)) setTimeout(() => { if (r.isConnected && ui.bewerk === a.id && !r.contains(document.activeElement)) sluitBewerk(); }, 0); });
+    return r;
+  };
+
+  const rijenSoort = rijen.filter(r => ui.actieSoort === 'alle' || r.a.soort === ui.actieSoort);
+  const plusDag = (iso, n) => { const d = new Date(iso + 'T00:00:00'); d.setDate(d.getDate() + n); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+
+  /* ---- Alternatief A: planning in tijdvakken ---- */
+  if (variant === 'planning') {
+    const morgen = plusDag(vandaag, 1);
+    const zondag = plusDag(vandaag, (7 - new Date(vandaag + 'T00:00:00').getDay()) % 7);
+    const zondagVolgend = plusDag(zondag, 7);
+    const vakken = [
+      { key:'laat',   kop:'Verlopen',            cls:'vak-laat' },
+      { key:'vandaag',kop:'Vandaag',             cls:'vak-nu' },
+      { key:'morgen', kop:'Morgen',              cls:'' },
+      { key:'week',   kop:'Rest van deze week',  cls:'' },
+      { key:'volgend',kop:'Volgende week',       cls:'' },
+      { key:'later',  kop:'Later',               cls:'' },
+      { key:'geen',   kop:'Zonder datum',        cls:'vak-zacht' },
+      { key:'slaap',  kop:'Zzz  Slaapstand',     cls:'vak-zacht', inklap:true },
+      { key:'klaar',  kop:'Afgerond',            cls:'vak-zacht' }
+    ];
+    const vakVan = a => {
+      if (a.klaar) return 'klaar';
+      if (a.status === 'slaap') return 'slaap';
+      const d = a.deadline;
+      if (!d) return 'geen';
+      if (d < vandaag) return 'laat';
+      if (d === vandaag) return 'vandaag';
+      if (d === morgen) return 'morgen';
+      if (d <= zondag) return 'week';
+      if (d <= zondagVolgend) return 'volgend';
+      return 'later';
+    };
+    let iets = false;
+    vakken.forEach(v => {
+      const l = rijenSoort.filter(r => vakVan(r.a) === v.key);
+      if (!l.length) return;
+      iets = true;
+      l.sort((x, y) => dlKey(x.a).localeCompare(dlKey(y.a)) || (stIdx(x.a) - stIdx(y.a)));
+      const dicht = v.inklap && !ui.toonSlaap;
+      m.append(h('section', { class:'vak ' + v.cls },
+        h('h2', { class:'vakkop' },
+          v.inklap ? h('button', { class:'kopknop', 'aria-expanded':String(!dicht), onclick:() => { ui.toonSlaap = !ui.toonSlaap; tekenAlles(); } }, (dicht ? '▸ ' : '▾ ') + v.kop) : v.kop,
+          h('span', { class:'telling' }, String(l.length))),
+        dicht ? null : l.map(rij)));
+    });
+    if (!iets) m.append(h('div', { class:'leeg' }, 'Niets te tonen.'));
+    return;
+  }
+
+  /* ---- Alternatief B: bord per status ---- */
+  if (variant === 'bord') {
+    const perId = new Map(alle.map(x => [x.a.id, x.a]));
+    const zetStatus = (a, st) => {
+      if (a.status === st) return;
+      if (st === 'wacht' && a.soort !== 'volg') a.soort = 'volg';          /* wachten op een ander = volgpunt */
+      else if (st === 'oppakken' && a.soort !== 'actie') a.soort = 'actie'; /* zelf oppakken = eigen actie */
+      a.status = st;
+      wijzig();
+    };
+    const kaartB = ({ a, no, it }) => {
+      const volg = a.soort === 'volg', bewerk = ui.bewerk === a.id;
+      const tekst = bewerk
+        ? h('input', { type:'text', class:'bk-invoer', value:a.tekst, 'aria-label':'Omschrijving', 'data-focus':'bewerk-' + a.id,
+            oninput:e => { if (e.target.value.trim()) { a.tekst = e.target.value; wijzig(false); } },
+            onkeydown:e => { if (e.key === 'Enter' || e.key === 'Escape') { e.preventDefault(); sluitBewerk(); } },
+            onblur:() => setTimeout(() => { if (ui.bewerk === a.id) sluitBewerk(); }, 0) })
+        : h('div', { class:'bk-tekst', title:'Klik om te bewerken', tabindex:'0', role:'button',
+            onclick:() => { ui.bewerk = a.id; ui.focus = 'bewerk-' + a.id; tekenAlles(); },
+            onkeydown:e => { if (e.key === 'Enter') { ui.bewerk = a.id; ui.focus = 'bewerk-' + a.id; tekenAlles(); } } },
+            !it ? h('span', { class:'rodestip', title:'Nog niet gekoppeld aan een onderwerp' }, '●') : null, a.tekst);
+      const k = h('div', { class:'bkaart bk-' + a.soort + (a.klaar ? ' klaar' : ''), 'data-actie':a.id, draggable:'true',
+          ondragstart:e => { e.dataTransfer.setData('text/plain', a.id); e.dataTransfer.effectAllowed = 'move'; k.classList.add('sleept'); },
+          ondragend:() => k.classList.remove('sleept') },
+        h('div', { class:'bk-boven' }, soortKnop(a), tekst),
+        volg && a.trekker ? h('div', { class:'trekkertekst bk-regel' }, '@ ' + a.trekker) : null,
+        a.log.length ? h('div', { class:'standtekst bk-regel', title:a.log.length + ' update(s)' }, korteDatum(a.log[0].datum + 'T00:00:00') + ': ' + a.log[0].tekst) : null,
+        h('div', { class:'bk-onder' },
+          it ? h('button', { class:'itemlink', title:'Ga naar ' + volledigeNaam(it), onclick:() => gaNaarItem(it) }, onderwerpLabel(it)) : h('span', { class:'meta' }, 'niet gekoppeld'),
+          h('span', { class:'spacer' }),
+          datumCel(a),
+          h('span', { class:'bk-tools' },
+            statusSelect(a),
+            h('input', { type:'checkbox', checked:a.klaar, title:a.klaar ? 'Weer open zetten' : 'Afvinken', 'aria-label':'Afgerond', onchange:e => { zetKlaar(a, e.target.checked); wijzig(); } }),
+            no ? h('button', { class:'klein', title:'Naar de aantekening', onclick:() => naarNotitie(it, no) }, '↗') : null)));
+      return k;
+    };
+    const dropDoel = (el, st) => {
+      el.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; el.classList.add('drop'); });
+      el.addEventListener('dragleave', e => { if (!el.contains(e.relatedTarget)) el.classList.remove('drop'); });
+      el.addEventListener('drop', e => { e.preventDefault(); el.classList.remove('drop'); const a = perId.get(e.dataTransfer.getData('text/plain')); if (a) zetStatus(a, st); });
+      return el;
+    };
+    const kolommen = ['prio', 'loopt', 'oppakken', 'wacht'].map(k => STATUSSEN.find(s => s.key === k));
+    const sorteer = l => l.sort((x, y) => (x.a.klaar - y.a.klaar) || dlKey(x.a).localeCompare(dlKey(y.a)));
+    m.append(h('div', { class:'bord' }, kolommen.map(st => {
+      const l = sorteer(rijenSoort.filter(r => r.a.status === st.key));
+      return dropDoel(h('section', { class:'bkolom' },
+        h('h2', { class:'bkop st-' + st.key }, st.icoon + '  ' + st.label, h('span', { class:'telling' }, String(l.length))),
+        l.length ? l.map(kaartB) : h('div', { class:'bk-leeg' }, 'Sleep hierheen')), st.key);
+    })));
+    const slaap = sorteer(rijenSoort.filter(r => r.a.status === 'slaap'));
+    m.append(dropDoel(h('section', { class:'bslaap' },
+      h('h2', { class:'bkop st-slaap' },
+        h('button', { class:'kopknop', 'aria-expanded':String(!!ui.toonSlaap), onclick:() => { ui.toonSlaap = !ui.toonSlaap; tekenAlles(); } }, (ui.toonSlaap ? '▾ ' : '▸ ') + 'Zzz  Slaapstand'),
+        h('span', { class:'telling' }, String(slaap.length))),
+      ui.toonSlaap ? h('div', { class:'bord bord-slaap' }, slaap.map(kaartB)) : null), 'slaap'));
+    m.append(h('div', { class:'hint' }, 'Sleep een kaart naar een andere kolom om de status te wijzigen. Naar "Wacht op anderen" maakt van een actie een volgpunt; naar "Nog oppakken" maakt van een volgpunt een eigen actie.'));
+    return;
+  }
+
+}
+
+/* ---------- Weekoverzicht ----------
+   Per week (ma t/m zo), per thema en onderwerp: aantekeningen, logboek-updates, afgeronde en nieuwe acties.
+   Plus een vooruitblik: verlopen en wat de week erna op de planning staat. Kopieerbaar als platte tekst. */
+function dagISO(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+function dagPlus(iso, n) { const d = new Date(iso + 'T00:00:00'); d.setDate(d.getDate() + n); return dagISO(d); }
+function maandagVan(iso) { const d = new Date(iso + 'T00:00:00'); return dagPlus(iso, -((d.getDay() + 6) % 7)); }
+function weekNr(iso) { const d = new Date(iso + 'T00:00:00'); d.setDate(d.getDate() + 3 - ((d.getDay() + 6) % 7)); const j = new Date(d.getFullYear(), 0, 4); return 1 + Math.round(((d - j) / 864e5 - 3 + ((j.getDay() + 6) % 7)) / 7); }
+function lokaleDag(ts) { return ts ? naarLokaal(ts).slice(0, 10) : ''; }
+function kortNL(iso, metDag) { try { return new Date(iso + 'T00:00:00').toLocaleDateString('nl-NL', metDag ? { weekday:'short', day:'numeric', month:'short' } : { day:'numeric', month:'short' }); } catch (e) { return iso; } }
+function naarActie(a, openLog) {
+  ui.weergave = 'acties'; ui.actieItem = 'alle'; ui.actieStatus = 'alle'; ui.actieSoort = 'alle';
+  ui.actieFilter = a.klaar ? 'alle' : 'open';
+  if (a.status === 'slaap') ui.toonSlaap = true;
+  ui.bewerk = openLog ? a.id : null;
+  ui.scrollNaarActie = a.id;
+  tekenAlles();
+}
+function weekGegevens(ma) {
+  const zo = dagPlus(ma, 6), inWeek = d => !!d && d >= ma && d <= zo;
+  const nMa = dagPlus(ma, 7), nZo = dagPlus(ma, 13), vandaag = vandaagISO();
+  const per = new Map();   /* itemId of '' (niet gekoppeld) -> regels */
+  const voeg = (it, r) => { const k = it ? it.id : ''; if (!per.has(k)) per.set(k, []); per.get(k).push(r); };
+  const alle = [];
+  state.items.forEach(it => it.notities.forEach(no => {
+    if (inWeek(lokaleDag(no.datum))) voeg(it, { soort:'not', dag:lokaleDag(no.datum), it, no });
+    no.acties.forEach(a => alle.push({ a, it }));
+  }));
+  state.losseActies.forEach(a => alle.push({ a, it:item(a.itemId) }));
+  alle.forEach(({ a, it }) => {
+    if (a.klaar && inWeek(lokaleDag(a.klaarOp))) voeg(it, { soort:'klaar', dag:lokaleDag(a.klaarOp), it, a });
+    else if (inWeek(lokaleDag(a.aangemaakt))) voeg(it, { soort:'nieuw', dag:lokaleDag(a.aangemaakt), it, a });
+    a.log.forEach((x, i) => { if (inWeek(x.datum)) voeg(it, { soort:'upd', dag:x.datum, it, a, x, oud:i > 0 }); });
+  });
+  const volgorde = { not:0, klaar:1, upd:2, nieuw:3 };
+  per.forEach(l => l.sort((p, q) => (volgorde[p.soort] - volgorde[q.soort]) || p.dag.localeCompare(q.dag)));
+  /* Groeperen per thema in vaste volgorde */
+  const groepen = themaGroepen(true)
+    .map(g => ({ thema:g.thema, onderwerpen:g.items.filter(i => per.has(i.id)).map(i => ({ it:i, regels:per.get(i.id) })) }))
+    .filter(g => g.onderwerpen.length);
+  if (per.has('')) groepen.push({ thema:null, los:true, onderwerpen:[{ it:null, regels:per.get('') }] });
+  /* Vooruitblik: nu verlopen, en deadlines/checks in de week erna (slaapstand telt niet mee) */
+  /* Alleen bij de lopende week: een vooruitblik vanuit een oude week zegt niets meer */
+  const open = ma === maandagVan(vandaag) ? alle.filter(({ a }) => !a.klaar && a.status !== 'slaap' && a.deadline) : [];
+  const laat = open.filter(({ a }) => a.deadline < vandaag).sort((p, q) => p.a.deadline.localeCompare(q.a.deadline));
+  const komt = open.filter(({ a }) => a.deadline >= nMa && a.deadline <= nZo && a.deadline >= vandaag).sort((p, q) => p.a.deadline.localeCompare(q.a.deadline));
+  const tel = s => [...per.values()].flat().filter(r => r.soort === s).length;
+  return { ma, zo, nMa, nZo, groepen, laat, komt, tellen:{ not:tel('not'), upd:tel('upd'), klaar:tel('klaar'), nieuw:tel('nieuw') } };
+}
+function weekAlsTekst(w) {
+  const r = [];
+  r.push('Weekoverzicht week ' + weekNr(w.ma) + ' (' + kortNL(w.ma) + ' – ' + kortNL(w.zo) + ' ' + w.zo.slice(0, 4) + ')', '');
+  const regelTekst = x => {
+    if (x.soort === 'not') return 'Aantekening: ' + (x.no.titel || '(zonder titel)') + ' (' + kortNL(x.dag) + ')';
+    if (x.soort === 'klaar') return 'Afgerond: ' + x.a.tekst;
+    if (x.soort === 'nieuw') return 'Nieuw: ' + x.a.tekst + (x.a.trekker ? ' (' + x.a.trekker + ')' : '') + (x.a.deadline ? ', ' + (x.a.soort === 'volg' ? 'check ' : 'deadline ') + kortNL(x.a.deadline) : '');
+    return x.a.tekst + ': ' + x.x.tekst + ' (' + kortNL(x.dag) + ')';
+  };
+  if (!w.groepen.length) r.push('Geen activiteit vastgelegd.', '');
+  w.groepen.forEach(g => {
+    r.push((g.thema ? g.thema.naam : (g.los ? 'Niet gekoppeld' : 'Zonder thema')).toUpperCase());
+    g.onderwerpen.forEach(o => {
+      if (o.it) r.push('  ' + o.it.naam);
+      o.regels.forEach(x => r.push('    - ' + regelTekst(x)));
+    });
+    r.push('');
+  });
+  if (w.laat.length || w.komt.length) {
+    r.push('VOORUITBLIK WEEK ' + weekNr(w.nMa));
+    w.laat.forEach(({ a, it }) => r.push('  - Verlopen (' + kortNL(a.deadline) + '): ' + a.tekst + (it ? ' [' + volledigeNaam(it) + ']' : '')));
+    w.komt.forEach(({ a, it }) => r.push('  - ' + kortNL(a.deadline, true) + (a.soort === 'volg' ? ' (check)' : '') + ': ' + a.tekst + (a.trekker ? ' – ' + a.trekker : '') + (it ? ' [' + volledigeNaam(it) + ']' : '')));
+  }
+  return r.join('\n').trim() + '\n';
+}
+async function kopieer(tekst) {
+  try { await navigator.clipboard.writeText(tekst); return true; }
+  catch (e) {
+    const t = h('textarea', { style:'position:fixed;opacity:0' }); t.value = tekst; document.body.appendChild(t); t.select();
+    let ok = false; try { ok = document.execCommand('copy'); } catch (e2) { /* niet gelukt */ }
+    t.remove(); return ok;
+  }
+}
+function tekenWeek(m) {
+  const deze = maandagVan(vandaagISO());
+  if (!ui.weekMa) ui.weekMa = deze;
+  const w = weekGegevens(ui.weekMa);
+  const ga = n => { ui.weekMa = n === 0 ? deze : dagPlus(ui.weekMa, 7 * n); tekenAlles(); };
+  const wrap = h('div', { class:'week' });
+  m.append(wrap);
+  wrap.append(h('div', { class:'weekbalk' },
+    h('button', { title:'Vorige week', 'aria-label':'Vorige week', onclick:() => ga(-1) }, '◀'),
+    h('button', { disabled:ui.weekMa === deze, onclick:() => ga(0) }, 'Deze week'),
+    h('button', { title:'Volgende week', 'aria-label':'Volgende week', disabled:ui.weekMa >= deze, onclick:() => ga(1) }, '▶'),
+    h('span', { class:'weeklabel' }, 'Week ' + weekNr(w.ma), h('small', {}, kortNL(w.ma, true) + ' – ' + kortNL(w.zo, true) + ' ' + w.zo.slice(0, 4))),
+    h('span', { class:'spacer' }),
+    h('button', { class:'primair', title:'Kopieer het overzicht als platte tekst, voor mail of Teams', onclick:async () => {
+      const ok = await kopieer(weekAlsTekst(w));
+      setStatus(ok ? 'Weekoverzicht gekopieerd: plak het in mail of Teams' : 'Kopiëren lukte niet', ok ? 'st-ok' : 'st-fout'); } }, '⧉ Kopieer als tekst')));
+
+  const t = w.tellen;
+  wrap.append(h('div', { class:'tegels' },
+    [[t.not, 'aantekeningen'], [t.upd, 'updates in logboek'], [t.klaar, 'afgerond'], [t.nieuw, 'nieuwe acties en volgpunten']]
+      .map(([n, l]) => h('div', { class:'tegel' }, h('b', {}, String(n)), h('span', {}, l)))));
+
+  const LABEL = { not:'Aantekening', upd:'Update', klaar:'Afgerond', nieuw:'Nieuw' };
+  const regel = x => {
+    let tekst;
+    if (x.soort === 'not') tekst = h('button', { class:'link', title:'Open de aantekening',
+      onclick:() => { ui.weergave = 'notities'; ui.filter = x.it.id; ui.gekozen = x.it.id; ui.scrollNaar = x.no.id; ui.uitgeklapt[x.no.id] = true; tekenAlles(); } }, x.no.titel || '(zonder titel)');
+    else {
+      const knop = h('button', { class:'link', title:'Toon in Acties', onclick:() => naarActie(x.a, x.soort === 'upd' && x.oud) }, actieSoort(x.a).icoon + ' ' + x.a.tekst);
+      tekst = [knop,
+        x.a.trekker ? h('span', { class:'trekkertekst' }, ' · ' + x.a.trekker) : null,
+        x.soort === 'nieuw' && x.a.deadline ? h('span', { class:'meta' }, '   ' + (x.a.soort === 'volg' ? 'check ' : 'deadline ') + kortNL(x.a.deadline)) : null,
+        x.soort === 'upd' ? h('div', { class:'wk-sub' }, x.x.tekst) : null];
+    }
+    return h('li', {}, h('span', { class:'wk-soort s-' + x.soort }, LABEL[x.soort]), h('span', { class:'wk-tekst' }, tekst), h('span', { class:'wk-datum' }, kortNL(x.dag, true)));
+  };
+  if (!w.groepen.length) wrap.append(h('div', { class:'kaart wk-leeg' }, 'Geen aantekeningen, updates of afgeronde acties in deze week.'));
+  w.groepen.forEach(g => {
+    const n = g.onderwerpen.reduce((s, o) => s + o.regels.length, 0);
+    wrap.append(h('div', { class:'kaart wk-thema' },
+      h('h2', {}, g.thema
+        ? h('button', { class:'kopknop', title:'Aantekeningen van dit thema', onclick:() => { ui.weergave = 'notities'; ui.filter = 'thema:' + g.thema.id; tekenAlles(); } }, g.thema.naam)
+        : (g.los ? 'Niet gekoppeld' : 'Zonder thema'), h('small', {}, n + (n === 1 ? ' regel' : ' regels'))),
+      g.onderwerpen.map(o => h('div', { class:'wk-ond' },
+        o.it ? h('h3', {}, soortInfo(o.it.soort).icoon + ' ', h('button', { class:'kopknop', title:'Aantekeningen van dit onderwerp', onclick:() => { ui.weergave = 'notities'; ui.filter = o.it.id; ui.gekozen = o.it.id; tekenAlles(); } }, o.it.naam)) : null,
+        h('ul', { class:'wk-lijst' }, o.regels.map(regel))))));
+  });
+
+  if (w.laat.length || w.komt.length) {
+    const vRegel = (cls, label, { a, it }) => h('li', {},
+      h('span', { class:'wk-soort ' + cls }, label),
+      h('span', { class:'wk-tekst' },
+        h('button', { class:'link', title:'Toon in Acties', onclick:() => naarActie(a, false) }, actieSoort(a).icoon + ' ' + a.tekst),
+        a.trekker ? h('span', { class:'trekkertekst' }, ' · ' + a.trekker) : null,
+        it ? h('span', { class:'meta' }, '   ' + volledigeNaam(it)) : null),
+      h('span', { class:'wk-datum' }, (a.soort === 'volg' ? 'check ' : '') + kortNL(a.deadline, true)));
+    wrap.append(h('div', { class:'kaart wk-thema' },
+      h('h2', {}, 'Vooruitblik week ' + weekNr(w.nMa), h('small', {}, kortNL(w.nMa) + ' – ' + kortNL(w.nZo) + ' · slaapstand niet meegeteld')),
+      h('ul', { class:'wk-lijst' }, w.laat.map(x => vRegel('s-laat', 'Verlopen', x)), w.komt.map(x => vRegel('s-komt', 'Gepland', x)))));
+  }
+  wrap.append(h('div', { class:'hint' }, 'Afrond- en aanmaakdatum van acties worden pas vastgelegd vanaf deze versie (18 okt 2026). Oudere acties tellen daarom nog niet mee bij "Afgerond" en "Nieuw"; aantekeningen en updates wel.'));
+}
+
+/* ---------- Zoeken ----------
+   Zoekt in onderwerpen, thema's, aantekeningen (titel + tekst), acties/volgpunten (tekst, trekker, logboek).
+   Alle woorden moeten voorkomen; hoofdletters en accenten tellen niet mee. */
+function zNorm(s) { return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); }
+function zTermen(q) { return zNorm(q).split(/\s+/).filter(Boolean); }
+function zPast(tekst, termen) { const n = zNorm(tekst); return termen.every(t => n.includes(t)); }
+/* Tekst met <mark> rond alle treffers (indexen van genormaliseerde tekst = origineel bij gewone NFC-tekst) */
+function zMarkeer(tekst, termen) {
+  tekst = String(tekst || ''); const n = zNorm(tekst);
+  if (n.length !== tekst.length || !termen.length) return [tekst];
+  const r = [];
+  termen.forEach(t => { let i = n.indexOf(t); while (i >= 0 && t) { r.push([i, i + t.length]); i = n.indexOf(t, i + t.length); } });
+  if (!r.length) return [tekst];
+  r.sort((a, b) => a[0] - b[0]);
+  const m = [r[0].slice()];
+  r.slice(1).forEach(([a, b]) => { const l = m[m.length - 1]; if (a <= l[1]) l[1] = Math.max(l[1], b); else m.push([a, b]); });
+  const uit = []; let p = 0;
+  m.forEach(([a, b]) => { if (a > p) uit.push(tekst.slice(p, a)); uit.push(h('mark', {}, tekst.slice(a, b))); p = b; });
+  if (p < tekst.length) uit.push(tekst.slice(p));
+  return uit;
+}
+/* Stukje tekst rond de eerste treffer */
+function zFragment(tekst, termen, lengte) {
+  lengte = lengte || 110;
+  const plat = String(tekst || '').replace(/\s+/g, ' ').trim(), n = zNorm(plat);
+  let pos = -1;
+  termen.forEach(t => { const i = n.indexOf(t); if (i >= 0 && (pos < 0 || i < pos)) pos = i; });
+  if (pos < 0) return plat.slice(0, lengte) + (plat.length > lengte ? '…' : '');
+  const start = Math.max(0, pos - 35);
+  return (start > 0 ? '…' : '') + plat.slice(start, start + lengte) + (start + lengte < plat.length ? '…' : '');
+}
+/* Treffers markeren in een al getekende leesweergave */
+function markeerIn(el, termen) {
+  if (!termen || !termen.length) return;
+  const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), knopen = [];
+  while (w.nextNode()) knopen.push(w.currentNode);
+  knopen.forEach(k => {
+    if (!termen.some(t => zNorm(k.nodeValue).includes(t))) return;
+    const delen = zMarkeer(k.nodeValue, termen);
+    if (delen.length > 1) k.replaceWith(...delen.map(d => d.nodeType ? d : document.createTextNode(d)));
+  });
+}
+function zoekResultaten(q) {
+  const termen = zTermen(q), uit = { onderwerpen:[], notities:[], acties:[] };
+  if (!termen.length) return { termen, uit };
+  state.themas.forEach(t => { if (zPast(t.naam, termen)) uit.onderwerpen.push({ soort:'thema', t }); });
+  state.items.forEach(it => {
+    if (zPast(volledigeNaam(it), termen)) uit.onderwerpen.push({ soort:'item', it });
+    it.notities.forEach(no => {
+      if (zPast(volledigeNaam(it) + ' ' + (no.titel || '') + ' ' + no.tekst, termen) && (zPast((no.titel || '') + ' ' + no.tekst, termen) || termen.some(t => zNorm((no.titel || '') + ' ' + no.tekst).includes(t))))
+        uit.notities.push({ it, no });
+      no.acties.forEach(a => uit.acties.push({ a, no, it }));
+    });
+  });
+  state.losseActies.forEach(a => uit.acties.push({ a, no:null, it:item(a.itemId) }));
+  uit.acties = uit.acties.filter(({ a, it }) => zPast([a.tekst, a.trekker, it ? volledigeNaam(it) : '', ...a.log.map(x => x.tekst)].join(' '), termen)
+    && termen.some(t => zNorm([a.tekst, a.trekker, ...a.log.map(x => x.tekst)].join(' ')).includes(t)));
+  uit.notities.sort((x, y) => new Date(y.no.datum) - new Date(x.no.datum));
+  uit.acties.sort((x, y) => (x.a.klaar - y.a.klaar) || (x.a.deadline || '9999').localeCompare(y.a.deadline || '9999'));
+  return { termen, uit };
+}
+const zoekVeld = document.getElementById('zoek');
+const zoekRes = document.getElementById('zoekres');
+let zoekKeuzes = [], zoekIdx = -1, zoekTimer = null;
+function sluitZoek() { zoekRes.classList.remove('open'); zoekIdx = -1; }
+function kiesZoek(i) {
+  zoekIdx = i;
+  const knoppen = zoekRes.querySelectorAll('.zr');
+  knoppen.forEach((k, j) => k.classList.toggle('act', j === i));
+  if (knoppen[i]) knoppen[i].scrollIntoView({ block:'nearest' });
+}
+function openZoekTreffer(doe) { sluitZoek(); zoekVeld.blur(); ui.nieuwItem = false; ui.openNotitie = false; doe(); tekenAlles(); }
+function tekenZoek() {
+  const q = zoekVeld.value.trim();
+  zoekKeuzes = []; zoekIdx = -1;
+  if (q.length < 2) { sluitZoek(); return; }
+  const { termen, uit } = zoekResultaten(q);
+  const kortD = iso => { try { return new Date(iso).toLocaleDateString('nl-NL', { day:'numeric', month:'short', year:'numeric' }); } catch (e) { return ''; } };
+  const MAX = 25, delen = [];
+  const optie = (doe, titel, ctx, snip) => {
+    const i = zoekKeuzes.length; zoekKeuzes.push(doe);
+    return h('button', { class:'zr', role:'option', onmousedown:e => e.preventDefault(), onclick:() => openZoekTreffer(doe), onmousemove:() => { if (zoekIdx !== i) kiesZoek(i); } },
+      h('div', { class:'zr-titel' }, titel), ctx ? h('div', { class:'zr-ctx' }, ctx) : null, snip ? h('div', { class:'zr-snip' }, snip) : null);
+  };
+  const kop = (tekst, n) => h('div', { class:'zr-kop' }, tekst, h('span', {}, n > MAX ? MAX + ' van ' + n : String(n)));
+  if (uit.onderwerpen.length) {
+    delen.push(kop("Thema's en onderwerpen", uit.onderwerpen.length));
+    uit.onderwerpen.slice(0, MAX).forEach(r => delen.push(r.soort === 'thema'
+      ? optie(() => { ui.weergave = 'notities'; ui.filter = 'thema:' + r.t.id; }, zMarkeer(r.t.naam, termen), 'Thema · alle aantekeningen tonen')
+      : optie(() => { ui.weergave = 'notities'; ui.filter = r.it.id; ui.gekozen = r.it.id; }, [soortInfo(r.it.soort).icoon + '  ', ...zMarkeer(volledigeNaam(r.it), termen)],
+          'Onderwerp · ' + r.it.notities.length + ' aantekening(en), ' + openActies(r.it) + ' open' + (r.it.afgerond ? ' · afgerond' : ''))));
+  }
+  if (uit.notities.length) {
+    delen.push(kop('Aantekeningen', uit.notities.length));
+    uit.notities.slice(0, MAX).forEach(({ it, no }) => delen.push(optie(
+      () => { ui.weergave = 'notities'; ui.filter = it.id; ui.gekozen = it.id; ui.scrollNaar = no.id; ui.uitgeklapt[no.id] = true; ui.bewerkNotitie = null; ui.markeer = { id:no.id, termen }; },
+      no.titel ? zMarkeer(no.titel, termen) : h('span', { class:'meta' }, '(zonder titel)'),
+      volledigeNaam(it) + ' — ' + kortD(no.datum),
+      zMarkeer(zFragment(no.tekst, termen), termen))));
+  }
+  if (uit.acties.length) {
+    delen.push(kop('Acties en volgpunten', uit.acties.length));
+    uit.acties.slice(0, MAX).forEach(({ a, no, it }) => {
+      const so = actieSoort(a);
+      const logTreffer = a.log.findIndex(x => termen.some(t => zNorm(x.tekst).includes(t)));
+      const snip = logTreffer >= 0 ? kortD(a.log[logTreffer].datum + 'T00:00:00') + ': ' + zFragment(a.log[logTreffer].tekst, termen, 90) : '';
+      delen.push(optie(() => {
+        ui.weergave = 'acties'; ui.actieItem = 'alle'; ui.actieStatus = 'alle'; ui.actieSoort = 'alle';
+        ui.actieFilter = a.klaar ? 'alle' : 'open';
+        if (a.status === 'slaap') ui.toonSlaap = true;
+        ui.bewerk = logTreffer > 0 ? a.id : null;   /* treffer in een ouder logbericht: logboek openklappen */
+        ui.scrollNaarActie = a.id;
+      },
+      [so.icoon + '  ', ...zMarkeer(a.tekst, termen), a.trekker ? h('span', { class:'trekkertekst' }, ' · ', ...zMarkeer(a.trekker, termen)) : null],
+      (it ? volledigeNaam(it) : 'niet gekoppeld') + (a.deadline ? ' — ' + (a.soort === 'volg' ? 'check ' : '') + kortD(a.deadline + 'T00:00:00') : '') + (a.klaar ? ' · afgerond' : ''),
+      snip ? zMarkeer(snip, termen) : null));
+    });
+  }
+  if (!delen.length) delen.push(h('div', { class:'zr-leeg' }, 'Niets gevonden voor "' + q + '".'));
+  else delen.push(h('div', { class:'zr-hint' }, '↑↓ kiezen · Enter openen · Esc sluiten'));
+  zoekRes.replaceChildren(...delen);
+  zoekRes.classList.add('open');
+  if (zoekKeuzes.length) kiesZoek(0);
+}
+zoekVeld.addEventListener('input', () => { clearTimeout(zoekTimer); zoekTimer = setTimeout(tekenZoek, 120); });
+zoekVeld.addEventListener('focus', () => { if (zoekVeld.value.trim().length >= 2) tekenZoek(); });
+zoekVeld.addEventListener('click', () => { if (!zoekRes.classList.contains('open') && zoekVeld.value.trim().length >= 2) tekenZoek(); });
+zoekVeld.addEventListener('keydown', e => {
+  if (e.key === 'ArrowDown') { e.preventDefault(); if (!zoekRes.classList.contains('open')) tekenZoek(); else if (zoekKeuzes.length) kiesZoek(Math.min(zoekIdx + 1, zoekKeuzes.length - 1)); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); if (zoekKeuzes.length) kiesZoek(Math.max(zoekIdx - 1, 0)); }
+  else if (e.key === 'Enter') { e.preventDefault(); clearTimeout(zoekTimer); if (!zoekRes.classList.contains('open')) tekenZoek(); if (zoekKeuzes[zoekIdx]) openZoekTreffer(zoekKeuzes[zoekIdx]); }
+  else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); if (zoekRes.classList.contains('open')) sluitZoek(); else if (zoekVeld.value) { zoekVeld.value = ''; ui.markeer = null; tekenAlles(); } else zoekVeld.blur(); }
+});
+zoekVeld.addEventListener('search', () => { if (!zoekVeld.value) { sluitZoek(); if (ui.markeer) { ui.markeer = null; tekenAlles(); } } });
+document.addEventListener('mousedown', e => { if (!e.target.closest('#zoekvak')) sluitZoek(); });
+document.addEventListener('keydown', e => {
+  const inVeld = e.target.closest && e.target.closest('input, textarea, select, [contenteditable="true"]');
+  /* Ctrl+F: naar het zoekveld. Nogmaals Ctrl+F in het zoekveld = zoeken van de browser zelf. */
+  if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey && e.key.toLowerCase() === 'f' && document.activeElement !== zoekVeld) { e.preventDefault(); zoekVeld.focus(); zoekVeld.select(); }
+  else if (e.key === '/' && !inVeld && !e.ctrlKey && !e.metaKey) { e.preventDefault(); zoekVeld.focus(); zoekVeld.select(); }
+});
+
+/* ---------- Opstarten ---------- */
+const naarAantekeningen = () => { ui.markeer = null; ui.uitgeklapt = {}; ui.weergave = 'notities'; ui.filter = 'alle'; ui.nieuwItem = false; tekenAlles(); window.scrollTo(0, 0); document.getElementById('hoofd').scrollTop = 0; };
+document.getElementById('logo').addEventListener('click', naarAantekeningen);
+document.getElementById('logo').addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); naarAantekeningen(); } });
+document.getElementById('btnOpslaan').addEventListener('click', () => { clearTimeout(opslagTimer); opslaan(); });
+
+window.addEventListener('beforeunload', e => { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
+document.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); clearTimeout(opslagTimer); opslaan(); } });
+
+(async function init() {
+  tekenAlles();
+  if (heeftApi) {
+    try {
+      const wm = await idbGet('werkmap');
+      if (wm) {
+        laatsteHandle = wm;
+        let perm = 'prompt';
+        try { perm = await wm.queryPermission({ mode:'readwrite' }); } catch (e) { /* negeren */ }
+        if (perm === 'granted') {
+          try { await openWerkmap(wm, false); return; }
+          catch (e) { setStatus('Automatisch openen mislukt: ' + e.message, 'st-fout'); }
+        }
+        /* Toestemming kan de browser alleen na een klik of toetsaanslag vragen:
+           de eerste interactie op de pagina opent daarom de werkmap (één vraag voor bestand én back-ups). */
+        const eerste = e => {
+          if (fileHandle) return;
+          if (e.target.closest && e.target.closest('#melding, #hoofd .kaart')) return;
+          document.removeEventListener('pointerdown', eerste, true);
+          document.removeEventListener('keydown', eerste, true);
+          heropenLaatste();
+        };
+        document.addEventListener('pointerdown', eerste, true);
+        document.addEventListener('keydown', eerste, true);
+        tekenAlles();
+        return;
+      }
+      /* Geen werkmap: losse back-upmap (oude werkwijze) blijft werken */
+      try { backupDir = (await idbGet('backupDir')) || null; if (backupDir) await backupRecht(false); } catch (e) { backupDir = null; }
+    } catch (e) { /* IndexedDB niet beschikbaar: geen probleem */ }
+  }
+  if (!fileHandle) { ui.weergave = 'config'; tekenAlles(); }
+})();
+})();
+</script>
+</body>
+</html>

@@ -48,4 +48,14 @@ window.DEMOS = [
     afbeelding: "img/demos/gebiedsprofiel-overschie.jpg",
     links: [{ tekst: "Open demo", url: "https://wksu.github.io/prototype-overschie/" }],
   },
+  {
+    titel: "Notitieboek: aantekeningen en acties",
+    thema: "Werkorganisatie",
+    gemeente: "Rotterdam",
+    beschrijving:
+      "Schrijf aantekeningen van overleggen in gewone tekst. Regels die beginnen met ACTIE of VOLG worden vanzelf acties of volgpunten, met trekker (@naam) en datum (!dd-mm-jjjj). Bekijk ze als planning of als bord, en kopieer een weekoverzicht naar mail of Teams. Werkt in Edge en Chrome; in de demo wordt niets bewaard tot je een werkmap kiest.",
+    gebouwdMet: "Eén HTML-bestand, zonder server of internet. Gegevens staan in een JSON-bestand in een map op je eigen computer.",
+    afbeelding: "img/demos/notitieboek.jpg",
+    links: [{ tekst: "Probeer het uit", url: "demos/notitieboek.html" }],
+  },
 ];
