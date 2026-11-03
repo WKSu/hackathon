@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="nl" class="presentatie">
+<html lang="nl">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -28,24 +28,25 @@
   </header>
 
   <main id="main">
-    <section class="hero slide">
+    <section class="hero">
       <div class="container">
         <p class="eyebrow">Themadag Mobiliteit · Rotterdam × Den Haag · 5 november 2026</p>
         <h1>Van vraagstuk naar <span class="nowrap">AI-prototype</span> in één dag</h1>
         <p class="lead">In gemengde teams werken we aan echte mobiliteitsvraagstukken. Jullie ontwerpen een oplossing, de AI-begeleiders bouwen er een prototype van, en 's middags testen jullie wat er gemaakt is.</p>
         <p class="hero-note">We gaan er vandaag mee aan de slag en kijken hoe ver we komen. Het gaat om het proces en de mogelijkheden van AI, niet om productieklare oplossingen.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="#ontwerpen">Hoe werkt de dag?</a>
+          <a class="btn btn-primary" href="#dag">Hoe werkt de dag?</a>
           <a class="btn" href="demos.html">Bekijk demo's</a>
         </div>
       </div>
     </section>
 
-    <section class="section slide" id="waarom" aria-labelledby="waarom-titel">
+    <section class="section" id="waarom" aria-labelledby="waarom-titel">
       <div class="container">
-        <p class="eyebrow">Waarom zijn we hier?</p>
-        <h2 id="waarom-titel" class="slide-title">Waarom zelf tools bouwen?</h2>
-        <p class="section-lead">Veel vragen in ons werk zijn te klein voor een ICT-project en te groot om steeds met de hand op te lossen. Met AI kun je daar nu zelf een hulpmiddel voor maken.</p>
+        <div class="section-head">
+          <h2 id="waarom-titel">Waarom zelf tools bouwen?</h2>
+          <p class="section-intro">Veel vragen in ons werk zijn te klein voor een ICT-project en te groot om steeds met de hand op te lossen. Met AI kun je daar nu zelf een hulpmiddel voor maken.</p>
+        </div>
         <ul class="reasons">
           <li><strong>Van vraag naar antwoord in minuten.</strong> Een analyse waar je normaal dagen op wacht, kan met AI soms in een kwartier.</li>
           <li><strong>Vakkennis aan het stuur.</strong> Wie de vraag kent, bouwt mee. Dat scheelt vertaalslagen tussen beleid, data en ICT.</li>
@@ -56,55 +57,60 @@
       </div>
     </section>
 
-    <section class="section slide" id="ontwerpen" aria-labelledby="ontwerpen-titel">
+    <section class="section" id="dag" aria-labelledby="dag-titel">
       <div class="container">
-        <p class="eyebrow"><span class="step-badge">1</span> Ochtend</p>
-        <h2 id="ontwerpen-titel" class="slide-title">Ontwerpen</h2>
-        <p class="section-lead">Jullie verkennen een casus en werken die uit tot een concreet ontwerp. Eerst breed, dan scherp.</p>
-        <div class="substeps">
-          <div class="substep">
-            <span class="substep-label">1a · Brainstormen</span>
-            <p>In groepjes ideeën verzamelen op whiteboard en post-its. Alles mag nog. De begeleiders lopen rond.</p>
-          </div>
-          <div class="substep">
-            <span class="substep-label">1b · Formulier invullen</span>
-            <p>Kies samen wat jullie willen laten bouwen en vul het ontwerpformulier in: probleem, gebruiker, doel, oplossing en wat we vandaag laten zien.</p>
-          </div>
+        <div class="section-head">
+          <h2 id="dag-titel">Zo werkt de dag</h2>
+          <p class="section-intro">Vier stappen, van een vraagstuk in de ochtend naar een werkend prototype in de middag.</p>
         </div>
-        <p class="section-note"><strong>Opname:</strong> we nemen het groepsgesprek alleen op als iedereen in de groep daarmee instemt. De transcriptie gebruiken we, samen met jullie formulier, als input voor het prototype en verwijderen we na de themadag.</p>
-        <div class="slide-actions">
-          <a class="btn btn-primary" href="ontwerp.html">Naar het ontwerpformulier</a>
-          <a class="btn" href="demos.html">Inspiratie nodig? Bekijk demo's</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section slide slide-builders" id="bouwen" aria-labelledby="bouwen-titel">
-      <div class="container">
-        <p class="eyebrow"><span class="step-badge">2</span> Tussen de sessies</p>
-        <h2 id="bouwen-titel" class="slide-title">Bouwen</h2>
-        <p class="section-lead">De AI-begeleiders bouwen op basis van jullie formulier en het gesprek een eerste prototype. We kiezen samen één onderdeel en kijken hoe ver we komen.</p>
-      </div>
-    </section>
-
-    <section class="section slide" id="testen" aria-labelledby="testen-titel">
-      <div class="container">
-        <p class="eyebrow"><span class="step-badge">3</span> Middag</p>
-        <h2 id="testen-titel" class="slide-title">Testen</h2>
-        <p class="section-lead">Jullie proberen het prototype uit en leggen vast wat werkt, wat beter kan en hoe nuttig het is voor jullie werk.</p>
-        <div class="slide-actions">
-          <a class="btn btn-primary" href="testen.html">Naar het testformulier</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="section slide" id="demos" aria-labelledby="demos-titel">
-      <div class="container">
-        <p class="eyebrow"><span class="step-badge">4</span> Afsluiting</p>
-        <h2 id="demos-titel" class="slide-title">Demo's</h2>
-        <p class="section-lead">Teams laten elkaar zien wat ze hebben gemaakt. Een paar aansprekende voorbeelden komen plenair aan bod. Alles wat vandaag gebouwd wordt, komt daarna samen bij de resultaten.</p>
-        <div class="slide-actions">
-          <a class="btn" href="resultaten.html">Naar de resultaten</a>
+        <ol class="dayflow">
+          <li class="dayflow-step">
+            <span class="dayflow-marker"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.4 1 1.1 1 1.8V16h5v-.3c0-.7.4-1.4 1-1.8A6 6 0 0 0 12 3z"/></svg></span>
+            <div class="dayflow-card">
+              <p class="dayflow-when">Ochtend</p>
+              <h3>1 · Ontwerpen</h3>
+              <ul class="dayflow-sub">
+                <li><b>1a Brainstormen</b> In groepjes ideeën verzamelen op whiteboard en post-its.</li>
+                <li><b>1b Formulier invullen</b> Samen kiezen wat we bouwen en dat vastleggen.</li>
+              </ul>
+              <p class="dayflow-output"><span>Oplevering</span> ontwerpformulier</p>
+              <a class="dayflow-link" href="ontwerp.html">Ontwerpformulier →</a>
+            </div>
+          </li>
+          <li class="dayflow-step is-builders">
+            <span class="dayflow-marker"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14"/></svg></span>
+            <div class="dayflow-card">
+              <p class="dayflow-when">Tussen de sessies</p>
+              <h3>2 · Bouwen</h3>
+              <p>De AI-begeleiders bouwen op basis van jullie formulier en het gesprek een eerste prototype van één onderdeel.</p>
+              <p class="dayflow-output"><span>Oplevering</span> eerste prototype</p>
+              <a class="dayflow-link" href="demos.html">Bekijk demo's →</a>
+            </div>
+          </li>
+          <li class="dayflow-step">
+            <span class="dayflow-marker"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.7 3h10.6a2 2 0 0 0 1.7-3l-5-9V3"/><path d="M7.5 15h9"/></svg></span>
+            <div class="dayflow-card">
+              <p class="dayflow-when">Middag</p>
+              <h3>3 · Testen</h3>
+              <p>Jullie proberen het prototype uit: wat werkt, wat kan beter en hoe nuttig is het voor jullie werk?</p>
+              <p class="dayflow-output"><span>Oplevering</span> testformulier</p>
+              <a class="dayflow-link" href="testen.html">Testformulier →</a>
+            </div>
+          </li>
+          <li class="dayflow-step">
+            <span class="dayflow-marker"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span>
+            <div class="dayflow-card">
+              <p class="dayflow-when">Afsluiting</p>
+              <h3>4 · Demo's</h3>
+              <p>Teams laten zien wat ze gemaakt hebben. Een paar aansprekende voorbeelden komen plenair aan bod.</p>
+              <p class="dayflow-output"><span>Oplevering</span> korte demo</p>
+              <a class="dayflow-link" href="resultaten.html">Resultaten →</a>
+            </div>
+          </li>
+        </ol>
+        <div class="callouts">
+          <p class="callout"><strong>Inleveren</strong> Mail het formulier naar het adres dat de begeleiders in de sessie geven. De knop <em>Open e-mail</em> op het formulier helpt daarbij.</p>
+          <p class="callout"><strong>Opname</strong> We nemen het groepsgesprek alleen op als iedereen in de groep daarmee instemt. De transcriptie gebruiken we, samen met jullie formulier, als input voor het prototype en verwijderen we na de themadag.</p>
         </div>
       </div>
     </section>

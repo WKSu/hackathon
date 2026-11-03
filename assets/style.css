@@ -468,110 +468,47 @@ h3 {
   color: var(--ink);
 }
 
-/* Startpagina als doorlopende presentatie: op een groot scherm vult elk onderdeel het beeld */
-html.presentatie {
-  scroll-snap-type: y proximity;
-  scroll-padding-top: 64px;
+/* Bij een sprong naar een sectie valt de kop niet onder de vaste header */
+section[id] {
+  scroll-margin-top: 72px;
 }
 
-.slide {
-  scroll-snap-align: start;
-}
-
-@media (min-width: 900px) and (min-height: 640px) {
-  .slide {
-    display: flex;
-    align-items: center;
-    min-height: calc(100vh - 64px);
-    padding: 48px 0;
-  }
-
-  .slide > .container {
-    width: 100%;
-  }
-}
-
-.slide + .slide:not(.hero) {
-  border-top: 1px solid var(--border);
-}
-
-.slide-title {
-  margin: 6px 0 12px;
-  font-size: clamp(2rem, 4.5vw, 3rem);
-}
-
-.section-lead {
-  max-width: 60ch;
-  margin: 0 0 20px;
-  font-size: 1.25rem;
+.section-head {
+  margin-bottom: 20px;
 }
 
 .section-note {
   max-width: 70ch;
-  margin: 20px 0 0;
+  margin: 16px 0 0;
   color: var(--muted);
 }
 
-.step-badge {
-  display: inline-grid;
-  place-items: center;
-  width: 1.8em;
-  height: 1.8em;
-  margin-right: 4px;
-  border-radius: 50%;
-  background: var(--primary);
-  color: #fff;
-  letter-spacing: 0;
-}
-
-.slide-builders {
-  background: var(--accent-soft);
-}
-
-.slide-builders .step-badge {
-  background: var(--dh-geel);
-  color: var(--ink);
-}
-
-.reasons,
-.substeps {
+.reasons {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   gap: 16px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.reasons li,
-.substep {
-  padding: 20px;
+.reasons li {
+  padding: 18px 20px;
   background: var(--surface);
   border: 1px solid var(--border);
+  border-top: 4px solid var(--rdam-groen);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
 
-.reasons li:nth-child(odd) {
-  border-top: 4px solid var(--rdam-groen);
-}
-
 .reasons li:nth-child(even) {
-  border-top: 4px solid var(--dh-geel);
+  border-top-color: var(--dh-geel);
 }
 
 .reasons strong {
   display: block;
   margin-bottom: 4px;
-  font-size: 1.1rem;
-}
-
-.substeps {
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-}
-
-.substep p {
-  margin: 6px 0 0;
+  font-size: 1.05rem;
 }
 
 .substep-label {
@@ -582,17 +519,192 @@ html.presentatie {
   text-transform: uppercase;
 }
 
-.slide-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 24px;
+/* ---------- Tijdlijn 'Zo werkt de dag' ---------- */
+
+.dayflow {
+  --marker: 56px;
+  --gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html.presentatie {
-    scroll-snap-type: none;
+.dayflow-step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Verbindingslijn naar de volgende stap */
+.dayflow-step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: calc(var(--marker) / 2 - 1.5px);
+  left: calc(var(--marker) + 8px);
+  right: calc(var(--gap) * -1 + 8px);
+  height: 3px;
+  border-radius: 2px;
+  background: var(--border-strong);
+}
+
+.dayflow-marker {
+  display: grid;
+  place-items: center;
+  width: var(--marker);
+  height: var(--marker);
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 0 0 6px var(--primary-soft);
+}
+
+.dayflow-marker svg {
+  width: 26px;
+  height: 26px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dayflow-card {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 18px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.dayflow-card h3 {
+  margin: 2px 0 8px;
+  font-size: 1.2rem;
+}
+
+.dayflow-card > p {
+  margin: 0 0 10px;
+  color: var(--muted);
+}
+
+.dayflow-when {
+  color: var(--primary-ink);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.dayflow-card > .dayflow-when {
+  margin: 0;
+  color: var(--primary-ink);
+}
+
+.dayflow-sub {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+  color: var(--muted);
+}
+
+.dayflow-sub b {
+  display: block;
+  color: var(--ink);
+  font-size: 0.9375rem;
+}
+
+.dayflow-output {
+  margin-top: auto !important;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border-strong);
+  color: var(--ink) !important;
+  font-weight: 600;
+}
+
+.dayflow-output span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.dayflow-link {
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+/* De bouwstap doen de AI-begeleiders: andere kleur en gestippelde kaart */
+.dayflow-step.is-builders .dayflow-marker {
+  background: var(--dh-geel);
+  color: var(--ink);
+  box-shadow: 0 0 0 6px var(--accent-soft);
+}
+
+.dayflow-step.is-builders .dayflow-card {
+  background: var(--accent-soft);
+  border: 1px dashed var(--accent-border);
+  box-shadow: none;
+}
+
+.dayflow-step.is-builders .dayflow-when {
+  color: var(--accent-ink);
+}
+
+@media (max-width: 900px) {
+  .dayflow {
+    grid-template-columns: 1fr;
   }
+
+  .dayflow-step {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .dayflow-marker {
+    flex: none;
+  }
+
+  .dayflow-step:not(:last-child)::after {
+    top: calc(var(--marker) + 8px);
+    bottom: calc(var(--gap) * -1 + 8px);
+    left: calc(var(--marker) / 2 - 1.5px);
+    right: auto;
+    width: 3px;
+    height: auto;
+  }
+}
+
+.callouts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.callout {
+  margin: 0;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: 8px;
+  color: var(--muted);
+}
+
+.callout strong {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--ink);
 }
 
 .rules {
