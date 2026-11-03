@@ -305,12 +305,18 @@
   }
 
   // Bestandsnaam volgens teamconventie: JJMMDD Auteur korte inhoud
-  function fileName() {
+  function teamLabel() {
     var team = form.elements.team.value.trim();
-    var author = /^team\b/i.test(team) ? "Team" + team.slice(4) : "Team " + team;
+    return /^team\b/i.test(team) ? "Team" + team.slice(4) : "Team " + team;
+  }
+
+  function topicValue() {
     var topicField = form.elements[form.dataset.fileTopic];
-    var topic = topicField ? topicField.value.trim() : "";
-    var name = [yymmdd(new Date()), author, form.dataset.fileLabel, topic].filter(Boolean).join(" ");
+    return topicField ? topicField.value.trim() : "";
+  }
+
+  function fileName() {
+    var name = [yymmdd(new Date()), teamLabel(), form.dataset.fileLabel, topicValue()].filter(Boolean).join(" ");
     name = name
       .replace(/[\\/:*?"<>|\u0000-\u001f]+/g, " ")
       .replace(/\s+/g, " ")
@@ -359,7 +365,7 @@
     setTimeout(function () {
       URL.revokeObjectURL(url);
     }, 1000);
-    toast("Gedownload als “" + link.download + "”. Zet het bestand in de Teams-chat of stuur het naar de AI-begeleiders.");
+    toast("Gedownload als “" + link.download + "”. Voeg het bestand toe aan een e-mail aan de begeleiders.");
   }
 
   function fallbackCopy(text) {
@@ -380,22 +386,28 @@
     return ok;
   }
 
-  // Kopieert opgemaakte tekst (voor Teams/Outlook) én platte Markdown (voor een AI-tool
+  // Kopieert opgemaakte tekst (voor Outlook of Teams) én platte Markdown (voor een AI-tool
   // of Kladblok); de plek waar je plakt kiest zelf de passende vorm.
-  function copy() {
+  // `then(gelukt, opmerking)` bepaalt wat er na het kopiëren gebeurt.
+  function copy(then) {
     if (!requireTeam()) return;
     var blocks = buildDocument();
     var text = toMarkdown(blocks);
     var html = toHtml(blocks);
     var warning = emptyStepsWarning();
+    var note = warning ? " Let op: " + warning.replace(/Stap /g, "stap ") : "";
+    then =
+      typeof then === "function"
+        ? then
+        : function (ok) {
+            toast(ok ? "Gekopieerd! Plak de tekst in een e-mail aan de begeleiders." + note : "Kopiëren lukte niet. Gebruik de knop Download.");
+          };
 
     var done = function () {
-      var note = warning ? " Let op: " + warning.replace(/Stap /g, "stap ") : "";
-      toast("Gekopieerd! Plak de tekst in de Teams-chat." + note);
+      then(true, note);
     };
     var failed = function () {
-      if (fallbackCopy(text)) done();
-      else toast("Kopiëren lukte niet. Gebruik de knop Download.");
+      then(fallbackCopy(text), note);
     };
     var plainOnly = function () {
       if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, failed);
@@ -415,6 +427,23 @@
     else plainOnly();
   }
 
+  // Nieuwe mail met ingevuld onderwerp. Het adres geven de begeleiders in de sessie,
+  // daarom laten we het leeg. De formuliertekst gaat via het klembord: lange tekst in
+  // een mailto-link wordt door Outlook zonder melding afgekapt.
+  function mail() {
+    copy(function (ok, note) {
+      var topic = topicValue();
+      var subject = "Themadag: " + form.dataset.fileLabel + " " + teamLabel() + (topic ? " – " + topic : "");
+      var body = ok ? "Plak hier het formulier (Ctrl+V)." : "Voeg hier het gedownloade formulier toe als bijlage.";
+      window.location.href = "mailto:?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+      toast(
+        ok
+          ? "Tekst gekopieerd. Vul in de mail het adres van de begeleiders in en plak het formulier (Ctrl+V)." + note
+          : "Kopiëren lukte niet. Klik op Download en voeg het bestand toe aan de mail."
+      );
+    });
+  }
+
   function reset() {
     var question = "Weet je zeker dat je alle antwoorden op dit formulier wilt wissen? Dit kan niet ongedaan worden gemaakt.";
     if (!window.confirm(question)) return;
@@ -432,7 +461,10 @@
 
   var actions = {
     download: download,
-    copy: copy,
+    copy: function () {
+      copy();
+    },
+    mail: mail,
     print: function () {
       window.print();
     },

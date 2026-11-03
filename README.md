@@ -9,6 +9,9 @@ Geen build-stap, geen externe scripts of fonts: gewone HTML, CSS en JavaScript.
 | `demos.html` | Inspiratie: bestaande AI-demo's, filterbaar op thema |
 | `ontwerp.html` | Ochtend: formulier *Van vraagstuk naar AI-prototype* |
 | `testen.html` | Middag: formulier *AI-prototype testen* |
+| `resultaten.html` | Archief: per team het concept, wat er gebouwd is en de reflectie |
+| `prototypes/` | De prototypes voor de deelsessies (met eigen overzicht in `prototypes/index.html`) |
+| `demos/` | Losse demo's die op de site zelf staan, zoals het Notitieboek |
 
 ## Lokaal bekijken
 
@@ -31,8 +34,9 @@ maar dat is geen beveiliging.
 
 ## Vóór de themadag nog invullen
 
-- **De Teams-chat waarin teams hun formulier plakken.** Zoek in `ontwerp.html` en
-  `testen.html` op `class="todo"` en vervang de gele placeholder door de naam van de chat.
+- **Het e-mailadres voor de formulieren** staat bewust niet op de site: dat geven de
+  begeleiders in de sessie. De knop *Open e-mail* opent een mail met ingevuld onderwerp en
+  een leeg adresveld.
 - **Bouwtijd en rol van AI** bij de demo's in `data/demos.js`, waar die nog ontbreken.
 - **De kleuren van Den Haag** in `assets/style.css` (zie *Huisstijl* hieronder).
 
@@ -76,7 +80,11 @@ kwijt. Dat is alleen een probleem als je dat op de dag zelf doet.
 
 - **Automatisch bewaren**: antwoorden staan in de `localStorage` van de browser op dat
   apparaat. Er wordt niets naar een server gestuurd. Met *Leegmaken* wis je ze.
-- **Kopieer tekst** (de hoofdroute): zet het formulier op het klembord in twee vormen.
+- **Open e-mail** (de hoofdroute): kopieert het formulier en opent een nieuwe mail met
+  het onderwerp al ingevuld. Deelnemers vullen het adres in en plakken het formulier.
+  De tekst gaat via het klembord, omdat Outlook lange tekst in een mail-link zonder
+  melding afkapt.
+- **Kopieer tekst**: zet het formulier op het klembord in twee vormen.
   Plak je in Teams of Outlook, dan komt het opgemaakt binnen (kopjes, vet). Plak je in
   een AI-tool of Kladblok, dan krijg je platte Markdown. Zo kunnen de AI-begeleiders de
   tekst uit de chat direct als bouwopdracht gebruiken.
@@ -85,6 +93,19 @@ kwijt. Dat is alleen een probleem als je dat op de dag zelf doet.
   als plakken niet lukt.
 - **Print / PDF**: nette afdruk van het ingevulde formulier.
 - **Teamnaam** wordt gedeeld tussen beide formulieren op hetzelfde apparaat.
+
+## Resultaten toevoegen
+
+Na de themadag: open `data/resultaten.js`, kopieer het voorbeeldblok per team en vul het
+in. Een prototype over een gevoelig onderwerp krijgt `gevoelig: true`: de kaart toont dan
+geen link en het prototype gaat als HTML-bestand rechtstreeks naar de ontvangers.
+
+## Prototypes voor de deelsessies
+
+De map `prototypes/` is overgenomen uit het aangeleverde archief, met twee aanpassingen:
+een `noindex` op elke pagina, en in de precedentenzoeker zijn e-mailadressen en
+telefoonnummers van ambtenaren uit de raadsstukken vervangen door `[e-mailadres]` en
+`[telefoonnummer]`. Ververs je die data met `prep_precedenten.py`, doe dat dan opnieuw.
 
 **Papieren back-up**: open het formulier in een privévenster (dus leeg) en print het.
 Lege velden worden dan invulvakken.

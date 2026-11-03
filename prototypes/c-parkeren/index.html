@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Parkeernorm-tweeling</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  .prog { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  .prog th { font-size: 11.5px; color: var(--ink-2); text-align: left; font-weight: 650; padding: 4px 4px; }
+  .prog td { padding: 3px 4px; }
+  .prog input[type=number] { width: 62px; padding: 4px 6px; }
+  .prog select { padding: 4px 4px; font-size: 13px; }
+  .prog .del { border: 0; background: transparent; color: var(--ink-3); cursor: pointer; font-size: 16px; }
+  .prog .del:hover { color: var(--bad); }
+  .citycols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 1100px) { .citycols { grid-template-columns: 1fr; } }
+  .cityhead { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .cityhead .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .bigres { font-size: 44px; font-weight: 750; letter-spacing: -.02em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .bigres small { font-size: 15px; font-weight: 600; color: var(--ink-2); letter-spacing: 0; }
+  .measure { border: 1px solid var(--line); border-radius: 9px; padding: 9px 11px; margin-top: 8px; background: #fff; }
+  .measure .mh { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .measure .mh b { font-size: 13.5px; }
+  .measure .applies { font-size: 11.5px; color: var(--ink-3); margin-top: 3px; }
+  .measure .applies span { font-weight: 700; }
+  .yes { color: var(--good); } .no { color: var(--ink-3); text-decoration: line-through; }
+  .steps td:nth-child(2) { font-size: 12px; color: var(--ink-3); }
+  .toggle-big { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 10px; border: 2px solid var(--bad); background: var(--bad-soft); cursor: pointer; font-weight: 650; }
+  .toggle-big input { width: 18px; height: 18px; accent-color: var(--bad); }
+  .toggle-big.off { border-color: var(--line-2); background: #fff; }
+  .loc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; }
+  .loc-grid label.field { margin-top: 4px; }
+  .loc-grid select { width: 100%; }
+  .chk { display: flex; gap: 6px; align-items: center; font-size: 13px; margin-top: 6px; }
+  .summary-line { font-size: 21px; font-weight: 650; line-height: 1.35; }
+  .summary-line .r { color: var(--rdam); } .summary-line .d { color: var(--dhaag); }
+  .citycols .panel + .panel { margin-top: 0; }
+  .loc-grid .span2 { grid-column: 1 / -1; }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a class="brand" href="../index.html">Themadag Mobiliteit · Rotterdam × Den Haag</a>
+  <span class="sep">/</span><span>C · Parkeren en deelmobiliteit</span>
+  <span class="spacer"></span>
+  <span class="small" style="color:#cfd3dc">Sessie 2 · Deelmobiliteit in gebiedsontwikkeling</span>
+</div>
+
+<div class="hero">
+  <div class="kicker">Inzichtprototype · parkeernorm-tweeling</div>
+  <h1>Eén project, twee parkeerregels: wat vraagt Rotterdam en wat vraagt Den Haag?</h1>
+  <p class="lead">Vul een woningprogramma in en kies de maatregelen. Het project gaat tegelijk door de Rotterdamse Beleidsregel Parkeernormen 2025 en de Haagse Nota Parkeernormen 2024. Zet daarna de knop ‘aanbieder valt weg’ aan: hoeveel plekken ontbreken dan?</p>
+</div>
+
+<div class="wrap">
+  <div class="grid side-main" style="grid-template-columns: minmax(340px, 430px) 1fr;">
+    <div>
+      <div class="panel">
+        <div class="panel-title"><span class="step">1</span><h2>Kies een voorbeeld</h2></div>
+        <div class="presets" id="presets"></div>
+        <p class="small" id="preset-note" style="margin-top:8px"></p>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><span class="step">2</span><h2>Woningprogramma</h2></div>
+        <div style="overflow-x:auto"><table class="prog">
+          <thead><tr><th>Aantal</th><th>Type</th><th>m² gbo</th><th>Eigendom</th><th></th></tr></thead>
+          <tbody id="prog"></tbody>
+        </table></div>
+        <div class="row" style="margin-top:8px; justify-content:space-between">
+          <button class="btn small" id="add">+ regel</button>
+          <span class="small" id="prog-sum"></span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><span class="step">3</span><h2>Locatie</h2></div>
+        <label class="field">Wat voor plek is het?</label>
+        <div class="seg" id="loctype">
+          <button data-v="centrum" class="on">Centrum</button>
+          <button data-v="stad">Vooroorlogse stadswijk</button>
+          <button data-v="buiten">Naoorlogse wijk</button>
+        </div>
+        <p class="small" style="margin-top:6px">Dit zet beide steden op een vergelijkbaar gebiedstype. Verfijn hieronder.</p>
+        <div class="loc-grid">
+          <div>
+            <label class="field" style="color:var(--rdam)">Rotterdam: gebiedstype</label>
+            <select id="r-zone"><option value="A">A · Hoogstedelijk</option><option value="B">B · Stadswijken</option><option value="C">C · Overig gebied</option></select>
+          </div>
+          <div>
+            <label class="field" style="color:var(--dhaag)">Den Haag: gebied</label>
+            <select id="d-zone"><option value="centrum">Centrummilieus</option><option value="voor">Vooroorlogse stadswijken</option><option value="na">Naoorlogse buitenwijken</option></select>
+          </div>
+          <div class="span2">
+            <label class="field" style="color:var(--rdam)">Rotterdam: dichtstbijzijnde OV-halte (korting 0–400 / 400–800 / 800–1200 m)</label>
+            <select id="r-ov"></select>
+          </div>
+          <div>
+            <label class="field" style="color:var(--rdam)">Hemelsbreed tot de halte</label>
+            <select id="r-dist"><option value="0">0–400 m</option><option value="1">400–800 m</option><option value="2">800–1200 m</option><option value="3">verder dan 1200 m</option></select>
+          </div>
+        </div>
+        <label class="chk"><input type="checkbox" id="r-betaald" checked> Rotterdam: (voorgenomen) betaald parkeergebied</label>
+        <label class="chk"><input type="checkbox" id="d-regul" checked> Den Haag: gereguleerd gebied (betaald parkeren)</label>
+        <label class="chk"><input type="checkbox" id="d-station"> Den Haag: nabij Moerwijk, Mariahoeve, Ypenburg, Laan van NOI of Leidschenveen</label>
+        <label class="chk"><input type="checkbox" id="d-zw"> Den Haag: transformatiegebied Zuidwest</label>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><span class="step">4</span><h2>Mobiliteitsmaatregelen</h2></div>
+        <div class="measure">
+          <div class="mh"><b>Deelauto's op eigen terrein</b><input type="number" id="m-deelauto" min="0" max="60" value="8"></div>
+          <div class="applies"><span class="yes">R'dam</span> art. 12 lid 1a: 4 plekken per deelauto, max 20% · <span class="yes">DH</span> art. 3:1 b: 4 plekken per deelauto, max 50% (Zuidwest 30%)</div>
+        </div>
+        <div class="measure">
+          <div class="mh"><b>MaaS-app met openbaar deelvervoer of hub</b><input type="checkbox" id="m-maas"></div>
+          <div class="applies"><span class="yes">R'dam</span> art. 12 lid 1b/c: tot 40% samen met deelauto's · <span class="yes">DH</span> art. 3:1 d: ander mobiliteitsalternatief, max 10%</div>
+        </div>
+        <div class="measure">
+          <div class="mh"><b>Extra fietsparkeerplaatsen (lang parkeren)</b><input type="number" id="m-fiets" min="0" max="400" value="32"></div>
+          <div class="applies"><span class="yes">R'dam</span> art. 11: 2 fietsplekken = 1 autoplek, max 10% · <span class="no">DH</span> geen korting</div>
+        </div>
+        <div class="measure">
+          <div class="mh"><b>Deelbakfietsen</b><input type="number" id="m-bak" min="0" max="40" value="0"></div>
+          <div class="applies"><span class="no">R'dam</span> geen aparte korting · <span class="yes">DH</span> art. 3:1 c: 1 plek per bakfiets, max 10%</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="panel">
+        <div class="summary-line" id="summary"></div>
+        <div style="margin-top:12px">
+          <label class="toggle-big off" id="fail-wrap"><input type="checkbox" id="fail"> Scenario: de deelmobiliteitsaanbieder valt weg</label>
+        </div>
+        <p class="small" id="fail-text" style="margin-top:8px"></p>
+      </div>
+
+      <div class="panel">
+        <h3>Van bruto parkeereis naar netto: stap voor stap</h3>
+        <div id="waterfall"></div>
+        <div class="legend"><span><span class="sw" style="background:#9aa1ad"></span>bruto eis</span><span><span class="sw" style="background:#56a35b"></span>korting</span><span><span class="sw" style="background:#7b4fa3"></span>correctie aanwezigheid (DH)</span><span><span class="sw" style="background:var(--ink)"></span>netto eis</span><span><span class="sw" style="background:repeating-linear-gradient(45deg,#b3261e,#b3261e 3px,#f9e1df 3px,#f9e1df 6px)"></span>tekort als aanbieder wegvalt</span></div>
+      </div>
+
+      <div class="citycols">
+        <div class="panel">
+          <div class="cityhead"><span class="dot" style="background:var(--rdam)"></span><h2>Rotterdam</h2></div>
+          <div class="bigres" id="r-net"></div>
+          <div class="small" id="r-sub"></div>
+          <table class="t steps" style="margin-top:10px"><thead><tr><th>Stap</th><th>Grondslag</th><th class="r">Plaatsen</th></tr></thead><tbody id="r-steps"></tbody></table>
+        </div>
+        <div class="panel">
+          <div class="cityhead"><span class="dot" style="background:var(--dhaag)"></span><h2>Den Haag</h2></div>
+          <div class="bigres" id="d-net"></div>
+          <div class="small" id="d-sub"></div>
+          <table class="t steps" style="margin-top:10px"><thead><tr><th>Stap</th><th>Grondslag</th><th class="r">Plaatsen</th></tr></thead><tbody id="d-steps"></tbody></table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Wat betekent het verschil?</h3>
+        <div class="kpis" id="impact"></div>
+        <p class="small" style="margin-top:8px">Indicatief: 25 m² per plek in een gebouwde garage (incl. rijbanen en hellingbaan) en €45.000 bouwkosten per plek.</p>
+      </div>
+
+      <details class="explain panel">
+        <summary>Rekenregels en aannames</summary>
+        <p><b>Rotterdam</b> (Beleidsregel Parkeernormen auto en fiets 2025, in werking 30 april 2025): normen per woning naar m² gbo en gebiedstype (tabel 5); sociale huur max. 0,6. Geen aparte bezoekersnorm. Kortingen OV-nabijheid (art. 10, tabel 2), extra fietsparkeren (art. 11) en deelauto/MaaS (art. 12) worden bij elkaar opgeteld als percentage van de bruto eis (art. 13 lid 2); er staat geen totaalplafond in de regeling. Afronden op hele plaatsen vanaf 0,50 (art. 3 lid 3).</p>
+        <p><b>Den Haag</b> (Nota Parkeernormen 2024, geldend sinds 22 januari 2025): normen per woning naar m², huur/koop en gebied, plus een bezoekersnorm (bijlage 3). Reducties (art. 3:1) gelden voor de bewonersvraag en tellen samen tot maximaal 75% (art. 3:3). Daarna de aanwezigheidspercentages (bijlage 5) voor het maatgevende moment, en afronden vanaf 0,5 (art. 1:6). Rond Centraal, HS en het CID geldt de aparte Nota Parkeernormen CID en Binckhorst; die zit niet in dit prototype.</p>
+        <p><b>Aannames</b>: de Haagse tabel gebruikt m²-klassen zonder vermelding van gbo of bvo; we nemen de ingevoerde m² over. Sociale huur telt in Den Haag als huur. Of de Rotterdamse deelautokorting (lid 1a) en MaaS (lid 1b) volledig stapelen, staat niet in de regeling; we volgen de toelichting (20% + 20%). Bij ‘aanbieder valt weg’ vervallen de kortingen voor deelauto’s, MaaS en deelbakfietsen.</p>
+        <p><b>Controle</b>: het voorbeeld Zomerhofkwartier geeft 159,20 bruto en 48 netto, gelijk aan de gepubliceerde parkeerbijlage (ter inzage 2026, nog onder de regeling 2022 met dezelfde normen voor gebied A).</p>
+      </details>
+    </div>
+  </div>
+
+  <div class="next-step">
+    <div class="box"><h3>Inzicht vandaag</h3>Laat zien hoe de regels van beide steden uitpakken voor hetzelfde project, en hoe kwetsbaar een lage eis is als hij leunt op deelmobiliteit.</div>
+    <div class="box"><h3>Werkproces morgen</h3><ul><li><b>Parkeertoets-assistent</b>: dezelfde rekenkern met vaste volgorde en artikelverwijzing, als bijlage bij het vergunningadvies.</li><li><b>Monitor afspraak versus praktijk</b>: register van toegezegde deelauto's per project naast de beschikbaarheid uit het Dashboard Deelmobiliteit (CROW).</li></ul></div>
+    <div class="box"><h3>Let op</h3><ul><li>Indicatief: toets elke uitkomst aan de geldende regeling en het gebiedskaartje (bijlagen met kaarten zitten hier niet in).</li><li>Het register met afspraken per project is interne data; die hoort in een werkproces met een eigenaar.</li></ul></div>
+  </div>
+</div>
+<div class="footer">Bronnen: <a href="https://lokaleregelgeving.overheid.nl/CVDR738708/">Beleidsregel Parkeernormen auto en fiets Rotterdam 2025</a> · <a href="https://lokaleregelgeving.overheid.nl/CVDR734438">Nota Parkeernormen Den Haag 2024</a> · <a href="https://repository.officiele-overheidspublicaties.nl/Bijlagen/TerInzageLegging/2026/til-2026-27063/1/bijlage/Bijlage_2_Parkeren.pdf">Parkeerbijlage Zomerhofkwartier</a></div>
+
+<script src="../assets/common.js"></script>
+<script>
+/* ======================= REGELS ======================= */
+// Rotterdam tabel 5 (per woning, m² gbo), kolommen A/B/C
+const R_NORM = [
+  { max: 40, v: { A: .10, B: .10, C: .10 } },
+  { max: 65, v: { A: .40, B: .50, C: .60 } },
+  { max: 85, v: { A: .60, B: .80, C: 1.00 } },
+  { max: 120, v: { A: 1.00, B: 1.00, C: 1.40 } },
+  { max: Infinity, v: { A: 1.20, B: 1.20, C: 1.80 } },
+];
+const R_SOCIAAL = .60;
+// Rotterdam art. 10 tabel 2: kortingspercentages OV-nabijheid [0-400, 400-800, 800-1200]
+const R_OV = [
+  { id: "rc", n: "Rotterdam Centraal", p: [50, 40, 30] },
+  { id: "bbas", n: "Beurs, Blaak, Alexander of Schiedam Centrum", p: [40, 30, 20] },
+  { id: "trein", n: "Ander treinstation", p: [30, 20, 10] },
+  { id: "metroAB", n: "Metro/RSR-station in gebied A of B", p: [30, 20, 10] },
+  { id: "tramA", n: "Tramhalte in gebied A", p: [30, 20, 10] },
+  { id: "metroC", n: "Metro/RSR-station in gebied C", p: [20, 10, 5] },
+  { id: "tramB", n: "Tramhalte in gebied B", p: [20, 10, 5] },
+  { id: "nessel", n: "Metrostation Nesselande", p: [10, 5, 0] },
+  { id: "tramC", n: "Tramhalte in gebied C", p: [10, 5, 0] },
+  { id: "geen", n: "Geen van deze", p: [0, 0, 0] },
+];
+// Den Haag bijlage 3 (per woning): [huur, koop, bezoek] per gebied, klassen <40, 40-70, 70-100, 100-160, >160
+const D_APP = {
+  centrum: [[.10, .20, .05], [.20, .33, .05], [.33, .50, .10], [.40, .75, .10], [.50, 1.00, .10]],
+  voor:    [[.20, .20, .10], [.33, .50, .10], [.50, .75, .10], [.50, 1.00, .10], [1.00, 1.00, .10]],
+  na:      [[.33, .33, .15], [.40, .66, .15], [.66, .80, .15], [.75, 1.00, .15], [1.00, 1.00, .15]],
+};
+const D_EGW = {
+  centrum: [[.20, .25, .05], [.33, .50, .05], [.40, .75, .10], [.50, 1.00, .10], [.60, 1.00, .10]],
+  voor:    [[.33, .40, .10], [.50, .50, .10], [.66, .80, .15], [.75, 1.00, .15], [.75, 1.00, .15]],
+  na:      [[.50, .50, .15], [.66, .66, .15], [.75, 1.00, .20], [1.00, 1.50, .20], [1.00, 2.00, .20]],
+};
+const D_CLASS_MAX = [40, 70, 100, 160, Infinity];
+// Den Haag bijlage 5: aanwezigheid wonen [bewoners, bezoekers] per moment
+const D_MOMENTS = [
+  ["werkdagochtend", .50, .10], ["werkdagmiddag", .50, .20], ["werkdagavond", .90, .80], ["werkdagnacht", 1.00, 0],
+  ["koopavond", .80, .70], ["zaterdagmiddag", .60, .60], ["zaterdagavond", .80, 1.00], ["zondagmiddag", .70, .70],
+];
+
+const r2 = v => Math.round(v * 100) / 100;
+const roundHalfUp = v => Math.floor(v + 0.5 + 1e-9);
+
+function rotterdam(st, failed) {
+  const zone = st.rZone;
+  let bruto = 0;
+  for (const row of st.prog) {
+    const cls = R_NORM.find(c => row.m2 < c.max);
+    let norm = cls.v[zone];
+    if (row.own === "sociaal") norm = Math.min(norm, R_SOCIAAL);
+    bruto += row.n * norm;
+  }
+  bruto = r2(bruto);
+  const steps = [{ k: "Bruto parkeereis", g: "tabel 5", v: bruto, type: "bruto" }];
+  const ovRow = R_OV.find(o => o.id === st.rOv);
+  const ovPct = st.rDist < 3 ? ovRow.p[st.rDist] : 0;
+  if (ovPct > 0) steps.push({ sh: "OV-nabijheid", k: `OV-nabijheid (${ovRow.n})`, g: "art. 10", v: -r2(bruto * ovPct / 100), type: "korting", pct: ovPct });
+  if (st.fiets > 0) {
+    if (st.rBetaald) {
+      const pct = Math.min(10, (st.fiets / 2) / bruto * 100);
+      steps.push({ sh: "Extra fiets", k: `${st.fiets} extra fietsplekken`, g: "art. 11", v: -r2(bruto * pct / 100), type: "korting", pct });
+    } else steps.push({ k: "Extra fietsplekken: alleen in betaald parkeergebied", g: "art. 11", v: 0, type: "info" });
+  }
+  let deelPct = 0;
+  if (st.deelauto > 0) {
+    deelPct = Math.min(20, st.deelauto * 4 / bruto * 100);
+    if (st.maas) deelPct = Math.min(40, deelPct * 2);
+    steps.push({ sh: st.maas ? "Deelauto + MaaS" : "Deelauto's", k: `${plural(st.deelauto, "deelauto", "deelauto's")}${st.maas ? " + MaaS (openbaar)" : ""}`, g: st.maas ? "art. 12 lid 1b" : "art. 12 lid 1a", v: -r2(bruto * deelPct / 100), type: "korting", pct: deelPct, deel: true });
+  } else if (st.maas) {
+    steps.push({ k: "MaaS zonder deelauto's: geen korting in dit model", g: "art. 12", v: 0, type: "info" });
+  }
+  const sumPct = steps.filter(s => s.type === "korting").reduce((a, s) => a + s.pct, 0);
+  const totalPct = Math.min(100, sumPct);
+  const netExact = Math.max(0, r2(bruto * (1 - totalPct / 100)));
+  const net = roundHalfUp(netExact);
+  const deelKorting = steps.filter(s => s.deel).reduce((a, s) => a - s.v, 0);
+  const netNoDeel = roundHalfUp(Math.max(0, r2(bruto * (1 - (totalPct - deelPct) / 100))));
+  steps.push({ k: "Netto parkeereis (afgerond)", g: "art. 3 lid 3", v: net, type: "netto", exact: netExact });
+  return { bruto, net, netExact, steps, sumPct, netNoDeel, gap: netNoDeel - net, deelKorting };
+}
+
+function denhaag(st) {
+  const z = st.dZone;
+  let R = 0, V = 0;
+  for (const row of st.prog) {
+    const tbl = row.type === "egw" ? D_EGW[z] : D_APP[z];
+    const ci = D_CLASS_MAX.findIndex(mx => row.m2 < mx);
+    const [huur, koop, bez] = tbl[ci];
+    R += row.n * (row.own === "koop" ? koop : huur);
+    V += row.n * bez;
+  }
+  R = r2(R); V = r2(V);
+  const steps = [
+    { k: "Bewoners (normatief)", g: "bijlage 3", v: R, type: "bruto" },
+    { k: "Bezoekers (normatief)", g: "bijlage 3", v: V, type: "bruto" },
+  ];
+  const red = [];
+  if (st.dStation) red.push({ sh: "Station", k: "Nabij station (25%)", g: "art. 3:1 a", amount: .25 * R });
+  if (st.deelauto > 0) {
+    const cap = st.dRegul ? (st.dZw ? .30 : .50) : .10;
+    red.push({ sh: "Deelauto's", k: `${plural(st.deelauto, "deelauto", "deelauto's")} (max ${cap * 100}%)`, g: "art. 3:1 b", amount: Math.min(cap * R, st.deelauto * 4), deel: true });
+  }
+  if (st.bak > 0) {
+    const cap = st.dRegul ? .10 : .05;
+    red.push({ sh: "Bakfietsen", k: `${plural(st.bak, "deelbakfiets", "deelbakfietsen")} (max ${cap * 100}%)`, g: "art. 3:1 c", amount: Math.min(cap * R, st.bak * 1), deel: true });
+  }
+  if (st.maas) {
+    if (st.dRegul) red.push({ sh: "MaaS", k: "Mobiliteitsalternatief/MaaS (10%)", g: "art. 3:1 d", amount: .10 * R, deel: true });
+    else steps.push({ k: "Mobiliteitsalternatief: alleen in gereguleerd gebied", g: "art. 3:1 d", v: 0, type: "info" });
+  }
+  let sum = red.reduce((a, r) => a + r.amount, 0);
+  const cap75 = .75 * R;
+  let capped = false;
+  if (sum > cap75) { const f = cap75 / sum; red.forEach(r => r.amount *= f); sum = cap75; capped = true; }
+  red.forEach(r => steps.push({ k: r.k, sh: r.sh, g: r.g, v: -r2(r.amount), type: "korting", deel: r.deel }));
+  if (capped) steps.push({ k: "Gemaximeerd op 75% van de bewonersvraag", g: "art. 3:3", v: 0, type: "info" });
+  const Rred = r2(R - sum);
+  const deelSum = red.filter(r => r.deel).reduce((a, r) => a + r.amount, 0);
+  const mg = (Rr) => D_MOMENTS.map(([n, pr, pv]) => ({ n, v: r2(Rr * pr + V * pv) })).reduce((a, b) => (b.v > a.v ? b : a));
+  const m = mg(Rred);
+  const corr = r2(m.v - (Rred + V));
+  steps.push({ k: `Maatgevend moment: ${m.n}`, g: "bijlage 5", v: corr, type: "aanw" });
+  const net = roundHalfUp(m.v);
+  steps.push({ k: "Autoparkeereis (afgerond)", g: "art. 1:6", v: net, type: "netto", exact: m.v });
+  const mNo = mg(r2(R - (sum - deelSum)));
+  const netNoDeel = roundHalfUp(mNo.v);
+  return { bruto: r2(R + V), R, V, net, netExact: m.v, steps, netNoDeel, gap: netNoDeel - net, moment: m.n };
+}
+
+/* ======================= STAAT ======================= */
+const PRESETS = [
+  {
+    id: "zoho", name: "Zomerhofkwartier", city: "rdam",
+    note: "Echt voorbeeld uit een gepubliceerde Rotterdamse parkeerbijlage: 296 appartementen, 400–800 m van Rotterdam Centraal. Rotterdam komt uit op 48 plaatsen, net als in de bijlage.",
+    st: { prog: [{ n: 117, type: "app", m2: 52, own: "huur" }, { n: 40, type: "app", m2: 52, own: "koop" }, { n: 62, type: "app", m2: 75, own: "huur" }, { n: 48, type: "app", m2: 75, own: "koop" }, { n: 4, type: "app", m2: 100, own: "huur" }, { n: 18, type: "app", m2: 100, own: "koop" }, { n: 7, type: "app", m2: 135, own: "koop" }],
+      loc: "centrum", rOv: "rc", rDist: 1, deelauto: 8, maas: false, fiets: 32, bak: 0, dStation: false, dZw: false },
+  },
+  {
+    id: "wijk", name: "Herontwikkeling stadswijk", city: null,
+    note: "Fictief: 180 woningen in een vooroorlogse wijk bij een tramhalte, met 4 deelauto's en een mobiliteitshub.",
+    st: { prog: [{ n: 60, type: "app", m2: 45, own: "sociaal" }, { n: 80, type: "app", m2: 70, own: "huur" }, { n: 40, type: "app", m2: 95, own: "koop" }],
+      loc: "stad", rOv: "tramB", rDist: 0, deelauto: 4, maas: true, fiets: 0, bak: 3, dStation: false, dZw: false },
+  },
+  {
+    id: "zuidwest", name: "Transformatie naoorlogse wijk", city: "dhaag",
+    note: "Fictief: 240 woningen in een naoorlogse wijk zoals Den Haag Zuidwest, waar de deelautoreductie is begrensd op 30%.",
+    st: { prog: [{ n: 100, type: "app", m2: 50, own: "sociaal" }, { n: 100, type: "app", m2: 75, own: "huur" }, { n: 40, type: "egw", m2: 110, own: "koop" }],
+      loc: "buiten", rOv: "metroC", rDist: 1, deelauto: 12, maas: true, fiets: 0, bak: 4, dStation: false, dZw: true },
+  },
+];
+const LOC = {
+  centrum: { rZone: "A", dZone: "centrum" },
+  stad: { rZone: "B", dZone: "voor" },
+  buiten: { rZone: "C", dZone: "na" },
+};
+let ST = {};
+
+function applyPreset(p) {
+  ST = JSON.parse(JSON.stringify(p.st));
+  Object.assign(ST, LOC[ST.loc], { rBetaald: true, dRegul: true });
+  $("#preset-note").textContent = p.note;
+  syncForm(); render();
+}
+
+/* ======================= FORMULIER ======================= */
+const ovSel = $("#r-ov");
+R_OV.forEach(o => { const op = document.createElement("option"); op.value = o.id; op.textContent = o.id === "geen" ? o.n : `${o.n} (−${o.p.join(" / −")}%)`; ovSel.appendChild(op); });
+
+function progRow(row, i) {
+  const tr = document.createElement("tr");
+  tr.innerHTML = `<td><input type="number" min="0" max="2000" value="${row.n}" data-k="n"></td>
+    <td><select data-k="type"><option value="app">appartement</option><option value="egw">eengezins</option></select></td>
+    <td><input type="number" min="15" max="300" value="${row.m2}" data-k="m2"></td>
+    <td><select data-k="own"><option value="huur">huur</option><option value="koop">koop</option><option value="sociaal">sociale huur</option></select></td>
+    <td><button class="del" title="Verwijder regel">×</button></td>`;
+  $("[data-k=type]", tr).value = row.type; $("[data-k=own]", tr).value = row.own;
+  $$("input,select", tr).forEach(el => el.addEventListener("input", () => {
+    const k = el.dataset.k; row[k] = (k === "n" || k === "m2") ? Math.max(0, +el.value || 0) : el.value; render();
+  }));
+  $(".del", tr).onclick = () => { ST.prog.splice(i, 1); syncForm(); render(); };
+  return tr;
+}
+function syncForm() {
+  const tb = $("#prog"); tb.innerHTML = ""; ST.prog.forEach((r, i) => tb.appendChild(progRow(r, i)));
+  locSeg.set(ST.loc);
+  $("#r-zone").value = ST.rZone; $("#d-zone").value = ST.dZone; $("#r-ov").value = ST.rOv; $("#r-dist").value = ST.rDist;
+  $("#r-betaald").checked = ST.rBetaald; $("#d-regul").checked = ST.dRegul; $("#d-station").checked = ST.dStation; $("#d-zw").checked = ST.dZw;
+  $("#m-deelauto").value = ST.deelauto; $("#m-maas").checked = ST.maas; $("#m-fiets").value = ST.fiets; $("#m-bak").value = ST.bak;
+}
+const locSeg = segmented($("#loctype"), v => { ST.loc = v; Object.assign(ST, LOC[v]); syncForm(); render(); });
+$("#add").onclick = () => { ST.prog.push({ n: 20, type: "app", m2: 70, own: "huur" }); syncForm(); render(); };
+[["r-zone", "rZone"], ["d-zone", "dZone"], ["r-ov", "rOv"]].forEach(([id, k]) => $("#" + id).addEventListener("input", e => { ST[k] = e.target.value; render(); }));
+$("#r-dist").addEventListener("input", e => { ST.rDist = +e.target.value; render(); });
+[["r-betaald", "rBetaald"], ["d-regul", "dRegul"], ["d-station", "dStation"], ["d-zw", "dZw"], ["m-maas", "maas"]].forEach(([id, k]) => $("#" + id).addEventListener("change", e => { ST[k] = e.target.checked; render(); }));
+[["m-deelauto", "deelauto"], ["m-fiets", "fiets"], ["m-bak", "bak"]].forEach(([id, k]) => $("#" + id).addEventListener("input", e => { ST[k] = Math.max(0, +e.target.value || 0); render(); }));
+$("#fail").addEventListener("change", e => { $("#fail-wrap").classList.toggle("off", !e.target.checked); render(); });
+
+/* ======================= WEERGAVE ======================= */
+function stepRows(res, failed) {
+  return res.steps.map(s => {
+    const cls = s.type === "netto" ? "total" : "";
+    const val = s.type === "info" ? "–" : (s.type === "netto" ? `<b>${fmt(s.v)}</b> <span class="faint">(${fmt(s.exact, 2)})</span>` : (s.v > 0 && s.type !== "bruto" ? "+" : "") + fmt(s.v, 2));
+    const strike = failed && s.deel ? ' style="text-decoration:line-through;color:var(--bad)"' : "";
+    return `<tr class="${cls}"><td${strike}>${s.k}${s.pct !== undefined ? ` <span class="faint">(${fmt(s.pct, s.pct % 1 ? 1 : 0)}%)</span>` : ""}</td><td>${s.g}</td><td class="r">${val}</td></tr>`;
+  }).join("");
+}
+
+function render() {
+  const failed = $("#fail").checked;
+  const units = ST.prog.reduce((a, r) => a + r.n, 0);
+  $("#prog-sum").textContent = `${fmt(units)} woningen`;
+  const R = rotterdam(ST), D = denhaag(ST);
+  const rShown = failed ? R.netNoDeel : R.net, dShown = failed ? D.netNoDeel : D.net;
+  const was = (shown, net) => failed && shown !== net ? ` <small style="color:var(--bad)">nodig zonder deelmobiliteit (was ${fmt(net)})</small>` : " <small>plaatsen</small>";
+  $("#r-net").innerHTML = `<span style="color:${failed && R.gap ? "var(--bad)" : "inherit"}">${fmt(rShown)}</span>${was(rShown, R.net)}`;
+  $("#d-net").innerHTML = `<span style="color:${failed && D.gap ? "var(--bad)" : "inherit"}">${fmt(dShown)}</span>${was(dShown, D.net)}`;
+  $("#r-sub").textContent = `${fmt(R.net / Math.max(units, 1), 2)} per woning · bruto ${fmt(R.bruto, 1)} · totale korting ${fmt(Math.min(100, R.sumPct))}%`;
+  $("#d-sub").textContent = `${fmt(D.net / Math.max(units, 1), 2)} per woning · normatief ${fmt(D.bruto, 1)} (waarvan ${fmt(D.V, 1)} bezoek)`;
+  $("#r-steps").innerHTML = stepRows(R, failed);
+  $("#d-steps").innerHTML = stepRows(D, failed);
+  const diff = R.net - D.net;
+  const more = diff > 0 ? `<span class="r">Rotterdam</span> vraagt ${plural(Math.abs(diff), "plaats", "plaatsen")} meer` : diff < 0 ? `<span class="d">Den Haag</span> vraagt ${plural(Math.abs(diff), "plaats", "plaatsen")} meer` : "Beide steden vragen evenveel";
+  $("#summary").innerHTML = failed
+    ? `Zonder deelmobiliteit: <span class="r">Rotterdam ${fmt(R.netNoDeel)}</span> en <span class="d">Den Haag ${fmt(D.netNoDeel)}</span> plaatsen nodig, terwijl er <span class="r">${fmt(R.net)}</span> en <span class="d">${fmt(D.net)}</span> gebouwd zijn.`
+    : `${fmt(units)} woningen: <span class="r">Rotterdam ${fmt(R.net)}</span> plaatsen, <span class="d">Den Haag ${fmt(D.net)}</span>. ${more}.`;
+  const fw = $("#fail-text");
+  if (failed) {
+    fw.innerHTML = `Zonder deelmobiliteit is de eis in Rotterdam <b>${fmt(R.netNoDeel)}</b> (+${fmt(R.gap)}) en in Den Haag <b>${fmt(D.netNoDeel)}</b> (+${fmt(D.gap)}). Die plekken zijn dan niet gebouwd. Bewoners krijgen in beide steden in principe geen vergunning op straat, dus het tekort komt bij de bewoners terecht of op straat bij de buren.`;
+  } else {
+    fw.textContent = `De netto eis leunt in Rotterdam voor ${fmt(R.gap)} plaatsen en in Den Haag voor ${fmt(D.gap)} plaatsen op deelmobiliteit. Zet de knop aan om te zien wat er gebeurt als die afspraak niet standhoudt.`;
+  }
+  renderWaterfall(R, D, failed);
+  const saveR = Math.round(R.bruto) - R.net;
+  $("#impact").innerHTML = `
+    <div class="kpi"><div class="k">${diff > 0 ? "Rotterdam vraagt meer" : diff < 0 ? "Den Haag vraagt meer" : "Verschil"}</div><div class="v num">${fmt(Math.abs(diff))} <small>plaatsen</small></div><div class="s">${fmt(Math.abs(diff) * 25)} m² garage · €${fmt(Math.abs(diff) * 45000 / 1e6, 1)} mln</div></div>
+    <div class="kpi good"><div class="k">Rotterdam: bespaard door kortingen</div><div class="v num">${fmt(saveR)} <small>plaatsen</small></div><div class="s">${fmt(saveR * 25)} m² · €${fmt(saveR * 45000 / 1e6, 1)} mln</div></div>
+    <div class="kpi ${R.gap + D.gap > 0 ? "warn" : ""}"><div class="k">Leunt op deelmobiliteit</div><div class="v num">${fmt(R.gap)} / ${fmt(D.gap)}</div><div class="s">plaatsen Rotterdam / Den Haag</div></div>
+    <div class="kpi"><div class="k">Plaatsen per woning</div><div class="v num">${fmt(R.net / Math.max(units, 1), 2)} / ${fmt(D.net / Math.max(units, 1), 2)}</div><div class="s">Rotterdam / Den Haag</div></div>`;
+}
+
+function renderWaterfall(R, D, failed) {
+  const el = $("#waterfall"); const W = el.clientWidth || 800, H = 300;
+  const svg = svgEl("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Waterval van bruto naar netto parkeereis" });
+  const m = { l: 44, r: 10, t: 22, b: 64 };
+  const groups = [
+    { city: "Rotterdam", color: "var(--rdam)", res: R },
+    { city: "Den Haag", color: "var(--dhaag)", res: D },
+  ];
+  const maxV = Math.max(R.bruto, D.bruto, R.netNoDeel, D.netNoDeel, 1) * 1.12;
+  const Y = v => m.t + (1 - v / maxV) * (H - m.t - m.b);
+  const plotW = W - m.l - m.r, gap = 28;
+  const gw = (plotW - gap) / 2;
+  // raster
+  const tick = maxV > 200 ? 50 : maxV > 80 ? 20 : 10;
+  for (let v = 0; v <= maxV; v += tick) {
+    svgEl("line", { x1: m.l, x2: W - m.r, y1: Y(v), y2: Y(v), stroke: "#000", opacity: .06 }, svg);
+    const t = svgEl("text", { x: m.l - 6, y: Y(v) + 4, "text-anchor": "end", "font-size": 11, fill: "#777" }, svg); t.textContent = fmt(v);
+  }
+  const yl = svgEl("text", { x: 12, y: (m.t + H - m.b) / 2, "text-anchor": "middle", "font-size": 11.5, fill: "#555", transform: `rotate(-90 12 ${(m.t + H - m.b) / 2})` }, svg); yl.textContent = "Parkeerplaatsen";
+  groups.forEach((g, gi) => {
+    const x0 = m.l + gi * (gw + gap);
+    const bars = [];
+    if (g.res === R) {
+      bars.push({ l: "Bruto", from: 0, to: R.bruto, c: "#9aa1ad" });
+      let cur = R.bruto;
+      R.steps.filter(s => s.type === "korting").forEach(s => { bars.push({ l: s.sh || s.k.split(" (")[0], from: cur + s.v, to: cur, c: "#56a35b", deel: s.deel, d: s.v }); cur += s.v; });
+      bars.push({ l: "Netto", from: 0, to: R.net, c: "#1d2330", net: true, gap: R.gap });
+    } else {
+      bars.push({ l: "Normatief", from: 0, to: D.bruto, c: "#9aa1ad" });
+      let cur = D.bruto;
+      D.steps.filter(s => s.type === "korting").forEach(s => { bars.push({ l: s.sh || s.k.split(" (")[0], from: cur + s.v, to: cur, c: "#56a35b", deel: s.deel, d: s.v }); cur += s.v; });
+      const a = D.steps.find(s => s.type === "aanw");
+      if (a && Math.abs(a.v) > 0.005) { bars.push({ l: "Aanwezigheid", from: Math.min(cur, cur + a.v), to: Math.max(cur, cur + a.v), c: "#7b4fa3", d: a.v }); cur += a.v; }
+      bars.push({ l: "Netto", from: 0, to: D.net, c: "#1d2330", net: true, gap: D.gap });
+    }
+    const bw = Math.min(64, (gw - 10) / bars.length - 8);
+    const step = (gw - 10) / bars.length;
+    const title = svgEl("text", { x: x0 + gw / 2, y: 14, "text-anchor": "middle", "font-size": 13.5, "font-weight": 700, fill: g.color }, svg); title.textContent = g.city;
+    bars.forEach((b, i) => {
+      const x = x0 + 5 + i * step + (step - bw) / 2;
+      const y1 = Y(b.to), y2 = Y(b.from);
+      const faded = failed && b.deel;
+      svgEl("rect", { x, y: y1, width: bw, height: Math.max(1, y2 - y1), fill: b.c, opacity: faded ? .25 : 1, rx: 2 }, svg);
+      if (b.net && failed && b.gap > 0) {
+        const pid = "hatch" + gi;
+        const defs = svgEl("defs", {}, svg);
+        const pat = svgEl("pattern", { id: pid, width: 6, height: 6, patternUnits: "userSpaceOnUse", patternTransform: "rotate(45)" }, defs);
+        svgEl("rect", { width: 6, height: 6, fill: "#f9e1df" }, pat);
+        svgEl("rect", { width: 3, height: 6, fill: "#b3261e" }, pat);
+        svgEl("rect", { x, y: Y(b.to + b.gap), width: bw, height: Y(b.to) - Y(b.to + b.gap), fill: `url(#${pid})`, stroke: "#b3261e", "stroke-width": 1.5 }, svg);
+        const tg = svgEl("text", { x: x + bw / 2, y: Y(b.to + b.gap) - 5, "text-anchor": "middle", "font-size": 12, "font-weight": 700, fill: "#b3261e" }, svg); tg.textContent = `+${fmt(b.gap)} tekort`;
+        const nv = svgEl("text", { x: x + bw / 2, y: y1 + 16, "text-anchor": "middle", "font-size": 13, "font-weight": 750, fill: "#fff" }, svg); nv.textContent = fmt(b.to);
+      }
+      if (i < bars.length - 1 && !bars[i + 1].net) {
+        const nextTop = b.c === "#9aa1ad" ? b.to : b.from;
+        svgEl("line", { x1: x + bw, x2: x + step, y1: Y(b.d !== undefined && b.d > 0 ? b.to : nextTop), y2: Y(b.d !== undefined && b.d > 0 ? b.to : nextTop), stroke: "#999", "stroke-dasharray": "2 2" }, svg);
+      }
+      const val = b.d !== undefined ? (b.d > 0 ? "+" : "−") + fmt(Math.abs(b.d), 1) : fmt(b.to, b.net ? 0 : 1);
+      if (!(b.net && failed && b.gap > 0)) {
+        const vt = svgEl("text", { x: x + bw / 2, y: y1 - 5, "text-anchor": "middle", "font-size": 12, "font-weight": b.net ? 750 : 600, fill: faded ? "#b3261e" : "#1d2330" }, svg); vt.textContent = val;
+      }
+      const lt = svgEl("text", { x: x + bw / 2, y: H - m.b + 14, "text-anchor": "middle", "font-size": 11, fill: faded ? "#b3261e" : "#555" }, svg);
+      const words = b.l.split(" "); let line = "", ln = 0;
+      words.forEach(wd => { if ((line + " " + wd).trim().length > 12 && line) { const ts = svgEl("tspan", { x: x + bw / 2, dy: ln ? 12 : 0 }, lt); ts.textContent = line; line = wd; ln++; } else line = (line + " " + wd).trim(); });
+      const ts = svgEl("tspan", { x: x + bw / 2, dy: ln ? 12 : 0 }, lt); ts.textContent = line;
+    });
+  });
+  el.innerHTML = ""; el.appendChild(svg);
+}
+
+/* presets */
+const pEl = $("#presets");
+PRESETS.forEach((p, i) => {
+  const b = document.createElement("button"); b.className = "preset" + (i === 0 ? " on" : "");
+  b.innerHTML = (p.city ? `<span class="tag ${p.city}">${p.city === "rdam" ? "R'dam" : "DH"}</span>` : "") + p.name;
+  b.onclick = () => { $$(".preset", pEl).forEach(x => x.classList.remove("on")); b.classList.add("on"); applyPreset(p); };
+  pEl.appendChild(b);
+});
+applyPreset(PRESETS[0]);
+// Locatie overnemen uit de bereikbaarheidsatlas (B): #ov=rc&dist=1
+function fromAtlas() {
+  const h = new URLSearchParams(location.hash.slice(1));
+  if (!h.has("ov")) return;
+  const ov = h.get("ov"), dist = +h.get("dist");
+  if (R_OV.some(o => o.id === ov)) ST.rOv = ov;
+  if (dist >= 0 && dist <= 3) ST.rDist = dist;
+  if (["A", "B", "C"].includes(h.get("zone"))) ST.rZone = h.get("zone");
+  const o = R_OV.find(x => x.id === ST.rOv);
+  $("#preset-note").innerHTML = `<b>Locatie uit de bereikbaarheidsatlas:</b> ${o ? o.n : "geen halte"}, ${["0–400", "400–800", "800–1200", "meer dan 1200"][ST.rDist]} m hemelsbreed. Het woningprogramma is dat van Zomerhofkwartier; pas het aan. Controleer het gebiedstype op de kaart van de beleidsregel (bijlage 1).`;
+  syncForm(); render();
+}
+fromAtlas();
+addEventListener("hashchange", fromAtlas);
+addEventListener("resize", render);
+</script>
+</body>
+</html>

@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Straatprofiel-casino</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  .editor { user-select: none; touch-action: none; }
+  .editor .strip { cursor: pointer; }
+  .editor .handle { cursor: ew-resize; }
+  .editor .handle:hover rect.grip, .editor .handle.drag rect.grip { fill: var(--accent); stroke: var(--accent); }
+  .editor .handle:hover line, .editor .handle.drag line { stroke: #fff; }
+  .toolbar { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; padding: 8px 10px; background: var(--panel-2); border-radius: 9px; margin-top: 8px; min-height: 46px; }
+  .toolbar select { padding: 5px 6px; }
+  .pot { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; border: 2px dashed var(--line-2); background: #fff; }
+  .pot .chipstack { display: flex; gap: 3px; flex-wrap: wrap; max-width: 220px; }
+  .pot .fiche { width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffd36b, #c48a00); border: 2px solid #8a5f00; }
+  .pot.empty { border-color: var(--good); }
+  .pot.full { border-color: var(--warn); background: var(--warn-soft); }
+  .scen-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+  .persp { display: grid; grid-template-columns: 130px 1fr 44px; gap: 6px 10px; align-items: center; font-size: 13px; }
+  .persp .bar { height: 12px; border-radius: 6px; background: var(--panel-2); overflow: hidden; position: relative; }
+  .persp .bar span { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 6px; }
+  .persp .bar i { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--ink); opacity: .5; }
+  .persp .sc { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .checks { list-style: none; padding: 0; margin: 0; font-size: 13px; }
+  .checks li { padding: 5px 0; border-bottom: 1px solid var(--line); display: flex; gap: 8px; }
+  .checks .dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 4px; flex: none; }
+  #topview svg { width: 100%; height: auto; display: block; border-radius: 8px; background: #efece4; }
+  .streetbtns { display: grid; gap: 6px; }
+  .streetbtn { text-align: left; font: inherit; font-size: 13.5px; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line-2); background: #fff; cursor: pointer; display: flex; gap: 8px; align-items: center; justify-content: space-between; }
+  .streetbtn.on { border-color: var(--accent); background: var(--accent-soft); font-weight: 650; }
+  .streetbtn .w { color: var(--ink-3); font-size: 12px; font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a class="brand" href="../index.html">Themadag Mobiliteit · Rotterdam × Den Haag</a>
+  <span class="sep">/</span><span>A · Straat- en kruispuntlab</span>
+  <span class="spacer"></span>
+  <span class="small" style="color:#cfd3dc">Sessie 1 · Het Ruimtecasino</span>
+</div>
+<div class="hero">
+  <div class="kicker">Inzichtprototype · straatprofiel-casino</div>
+  <h1>Faites vos jeux: wie krijgt hoeveel meter van de straat?</h1>
+  <p class="lead">Een echte straat uit de BGT, van gevel tot gevel. Sleep de grenzen tussen de stroken, of speel fiches van 0,5 m in en uit de pot. Je ziet direct of de minimummaten nog gehaald worden, hoeveel parkeerplaatsen en bomen het oplevert, en hoe elk perspectief erop vooruit- of achteruitgaat.</p>
+</div>
+<div class="wrap">
+  <div class="grid side-main" style="grid-template-columns: minmax(280px, 330px) 1fr;">
+    <div>
+      <div class="panel">
+        <div class="panel-title"><span class="step">1</span><h2>Kies een straat</h2></div>
+        <div class="streetbtns" id="streets"></div>
+      </div>
+      <div class="panel">
+        <h3>Bovenaanzicht (BGT, 100 m)</h3>
+        <div id="topview"></div>
+        <p class="small" style="margin-top:6px">De gele lijn is de doorsnede. Bron: Basisregistratie Grootschalige Topografie via PDOK.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="panel">
+        <div class="row" style="justify-content:space-between">
+          <div class="panel-title" style="margin:0"><span class="step">2</span><h2 id="title">Profiel</h2></div>
+          <div class="pot" id="pot"></div>
+        </div>
+        <div class="scen-btns" style="margin-top:10px;align-items:center">
+          <span class="small" style="font-weight:650;color:var(--ink-2)">Speel een scenario:</span>
+          <button class="btn small" data-s="groen">Parkeren eruit, bomen erin</button>
+          <button class="btn small" data-s="fiets">Fietspad op maat</button>
+          <button class="btn small" data-s="autoluw">Autoluw: één rijstrook</button>
+          <button class="btn small" data-s="voet">Breder trottoir</button>
+          <button class="btn small ghost" data-s="reset">↺ Terug naar BGT</button>
+        </div>
+        <div id="editor" class="editor" style="margin-top:6px"></div>
+        <div class="toolbar" id="toolbar"></div>
+      </div>
+
+      <div class="grid cols-2">
+        <div class="panel">
+          <h3>Wat levert het op? <span class="faint" style="font-weight:400">(per 100 m straat)</span></h3>
+          <div class="kpis" id="kpis"></div>
+          <h3 style="margin-top:14px">Ruimteverdeling: BGT nu tegen jouw ontwerp</h3>
+          <div id="share"></div>
+        </div>
+        <div class="panel">
+          <h3>Perspectieven aan tafel</h3>
+          <p class="small">Hoe tevreden is elke speler? Het streepje is de score in de huidige straat.</p>
+          <div class="persp" id="persp"></div>
+          <h3 style="margin-top:14px">Toets aan minimummaten</h3>
+          <ul class="checks" id="checks"></ul>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>Hoeveel mensen kan dit profiel per uur verwerken? <span class="faint" style="font-weight:400">(orde van grootte)</span></h3>
+        <div id="cap"></div>
+        <p class="small">Vuistregels: voetpad 1.200 personen per uur per meter vrije breedte (maximaal 6 m per voetpad meegeteld), fietspad 1.500 per meter, rijstrook 900 auto's × 1,3 personen, trambaan 20 trams × 150 reizigers per spoor. Parkeren verwerkt geen verplaatsingen.</p>
+      </div>
+      <details class="explain panel">
+        <summary>Minimummaten en aannames</summary>
+        <p>Minimummaten zijn afgerond uit de CROW-praktijk voor stedelijke straten (indicatief, geen toets): voetpad 1,80 m (comfortabel 2,40 m); fietspad eenrichting 1,50 m (goed 2,00 m), tweerichting 2,50 m (goed 3,50 m); rijbaan tweerichting 5,50 m, rijstrook eenrichting 2,75 m, met tram 6,20 m; trambaan 2,90 m per spoor (dubbel spoor 5,60 m, goed 6,20 m); parkeren langs 1,80 m (haaks vanaf 4,50 m); bomen vanaf 1,50 m groenstrook. Een voetpad smaller dan 1,00 m naast parkeren telt als uitstapstrook.</p>
+        <p>Parkeren langs: 18 plaatsen per 100 m (5,50 m per vak), haaks: 40. Bomen: 11 per 100 m per groenstrook (9 m onderlinge afstand).</p>
+        <p>De BGT legt vlakken vast, geen strookbreedtes; de doorsnede is automatisch gelegd en kan op details afwijken.</p>
+      </details>
+    </div>
+  </div>
+  <div class="next-step">
+    <div class="box"><h3>Inzicht vandaag</h3>Het gesprek over ruimteverdeling in vierkante meters in plaats van in meningen. Elke inzet heeft een prijs die je direct ziet.</div>
+    <div class="box"><h3>Werkproces morgen: nulmeting ruimteverdeling</h3>Dezelfde rekenkern bij elk herinrichtingsproject: de huidige m² per functie automatisch in de startnotitie. Stadsbreed per buurt opgeteld: een monitor van de mobiliteitstransitie in vierkante meters.</div>
+    <div class="box"><h3>Let op</h3><ul><li>Doorsneden uit BGT-vlakken vragen validatie per project.</li><li>Bomen, kabels en leidingen, inritten en laad- en losplekken zitten niet in de berekening.</li></ul></div>
+  </div>
+</div>
+<div class="footer">Data: BGT (PDOK, CC0), opgehaald november 2026. Prototype themadag Mobiliteit Rotterdam × Den Haag.</div>
+
+<script src="../assets/common.js"></script>
+<script src="data.js"></script>
+<script>
+const FN = {
+  voetpad: { n: "Voetpad", c: "#e39b2d" }, fietspad: { n: "Fietspad", c: "#c8473c" }, ov: { n: "Tram/bus", c: "#7b4fa3" },
+  rijbaan: { n: "Rijbaan", c: "#4a4f57" }, parkeren: { n: "Parkeren", c: "#8f98a8" }, groen: { n: "Groen", c: "#4c9a2a" },
+  berm: { n: "Berm/eiland", c: "#9cc28a" }, overig: { n: "Plein/overig", c: "#d8d2c4" },
+};
+const STEP = 0.5;
+let PI = 0, strips = [], orig = [], pot = 0, sel = null;
+
+/* ---------------- straatkeuze ---------------- */
+function loadStreet(i) {
+  PI = i; const P = PROFIELEN[i];
+  orig = P.stroken.map(s => ({ ...s }));
+  inferDirections(orig);
+  strips = orig.map(s => ({ ...s })); pot = 0; sel = null;
+  $$(".streetbtn").forEach((b, j) => b.classList.toggle("on", j === i));
+  $("#title").textContent = `${P.naam} · ${fmt(P.breedte, 1)} m van gevel tot gevel`;
+  drawTop(); render();
+}
+function inferDirections(arr) {
+  const nf = arr.filter(s => s.f === "fietspad").length;
+  const nr = arr.filter(s => s.f === "rijbaan").length;
+  arr.forEach(s => {
+    if (s.f === "fietspad") s.two = nf === 1;
+    if (s.f === "rijbaan") s.two = nr === 1 || s.w >= 5.5;
+  });
+}
+PROFIELEN.forEach((p, i) => {
+  const b = document.createElement("button"); b.className = "streetbtn";
+  b.innerHTML = `<span><span class="tag ${p.stad}" style="font-size:10.5px;font-weight:700;padding:1px 5px;border-radius:4px;color:#fff;margin-right:6px">${p.stad === "rdam" ? "R'dam" : "DH"}</span>${p.naam}</span><span class="w">${fmt(p.breedte, 1)} m</span>`;
+  b.onclick = () => loadStreet(i); $("#streets").appendChild(b);
+});
+
+/* ---------------- bovenaanzicht ---------------- */
+function drawTop() {
+  const P = PROFIELEN[PI];
+  const v0 = P.v0 - 6, v1 = P.v1 + 6, u0 = -50, u1 = 50;
+  const W = 300, H = W * (u1 - u0) / (v1 - v0) > 420 ? 420 : W * (u1 - u0) / (v1 - v0);
+  const sx = W / (v1 - v0), sy = H / (u1 - u0);
+  const svg = svgEl("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Bovenaanzicht BGT" });
+  const col = { ...Object.fromEntries(Object.entries(FN).map(([k, v]) => [k, v.c])), pand: "#3a3d44", water: "#8fbfe0" };
+  P.boven.forEach(s => {
+    const d = s.p.map(([u, v], i) => `${i ? "L" : "M"}${((v - v0) * sx).toFixed(1)},${((u1 - u) * sy).toFixed(1)}`).join("") + "Z";
+    svgEl("path", { d, fill: col[s.f] || "#ccc", stroke: "#fff", "stroke-width": .4 }, svg);
+  });
+  svgEl("line", { x1: (P.v0 - v0) * sx, x2: (P.v1 - v0) * sx, y1: (u1 - 0) * sy, y2: (u1 - 0) * sy, stroke: "#ffd400", "stroke-width": 4 }, svg);
+  svgEl("line", { x1: (P.v0 - v0) * sx, x2: (P.v1 - v0) * sx, y1: (u1 - 0) * sy, y2: (u1 - 0) * sy, stroke: "#1d2330", "stroke-width": 1, "stroke-dasharray": "3 3" }, svg);
+  $("#topview").innerHTML = ""; $("#topview").appendChild(svg);
+}
+
+/* ---------------- regels ---------------- */
+function isUitstap(i, arr) {
+  const s = arr[i]; if (s.f !== "voetpad" || s.w >= 1.0) return false;
+  return (arr[i - 1] && arr[i - 1].f === "parkeren") || (arr[i + 1] && arr[i + 1].f === "parkeren");
+}
+function minFor(s) {
+  switch (s.f) {
+    case "voetpad": return { min: 1.8, good: 2.4 };
+    case "fietspad": return s.two ? { min: 2.5, good: 3.5 } : { min: 1.5, good: 2.0 };
+    case "rijbaan": return s.tram ? { min: 6.2, good: 6.5 } : s.two ? { min: 5.5, good: 6.0 } : { min: 2.75, good: 3.1 };
+    case "ov": return s.w >= 5 ? { min: 5.6, good: 6.2 } : { min: 2.9, good: 3.1 };
+    case "parkeren": return { min: 1.8, good: 2.0 };
+    case "groen": return { min: 1.5, good: 2.0 };
+    default: return null;
+  }
+}
+function status(s, i, arr) {
+  if (isUitstap(i, arr)) return { lvl: "good", txt: "uitstapstrook" };
+  const m = minFor(s); if (!m) return { lvl: "none" };
+  if (s.w + 1e-6 < m.min) return { lvl: "bad", txt: `${fmt(s.w, 2)} m < minimaal ${fmt(m.min, 2)} m` };
+  if (s.w + 1e-6 < m.good) return { lvl: "warn", txt: `krap: ${fmt(s.w, 2)} m (goed vanaf ${fmt(m.good, 2)} m)` };
+  return { lvl: "good", txt: `${fmt(s.w, 2)} m` };
+}
+function lanesOf(s) {
+  if (s.w < 2.6) return 0;
+  if (s.two) return clamp(Math.floor(s.w / 2.75), 1, 6);
+  return clamp(Math.round(s.w / 3.1), 1, 4);
+}
+function metrics(arr, potW = 0) {
+  const m = { parkeren: 0, bomen: 0, cap: { lopen: 0, fiets: 0, ov: 0, auto: 0 }, m2: {} };
+  if (potW > 0.001) m.m2.pot = potW * 100;
+  arr.forEach((s, i) => {
+    m.m2[s.f] = (m.m2[s.f] || 0) + s.w * 100;
+    if (s.f === "parkeren" && s.w >= 1.8) m.parkeren += s.w >= 4.5 ? 40 : 18;
+    if (s.f === "groen" && s.w >= 1.5) m.bomen += 11;
+    if (s.f === "voetpad" && !isUitstap(i, arr)) m.cap.lopen += clamp(s.w - 0.5, 0, 6) * 1200; // breder dan 6 m = verblijfsruimte
+    if (s.f === "fietspad") m.cap.fiets += s.w * 1500;
+    if (s.f === "rijbaan") { m.cap.auto += lanesOf(s) * 1170; if (s.tram) m.cap.ov += 2 * 3000 * 0.7; }
+    if (s.f === "ov") m.cap.ov += (s.w >= 5 ? 2 : 1) * 3000;
+  });
+  m.capTot = Object.values(m.cap).reduce((a, b) => a + b, 0);
+  const tot = arr.reduce((a, s) => a + s.w, 0) + potW; // pot telt mee in de noemer
+  const share = f => arr.filter(s => f.includes(s.f)).reduce((a, s) => a + s.w, 0) / Math.max(tot, 1);
+  m.stomp = share(["voetpad", "fietspad", "ov", "groen"]);
+  return m;
+}
+const sides = arr => arr.map((s, i) => ({ s, i })).filter(x => x.s.f === "voetpad" && !isUitstap(x.i, arr));
+function perspectives(arr) {
+  const sc = (v, a, b) => clamp((v - a) / (b - a), 0, 1);
+  const vp = sides(arr).map(x => x.s.w);
+  const voet = vp.length ? sc(Math.min(...vp), 1.2, 3.0) * .7 + sc(Math.max(...vp), 1.8, 4.5) * .3 : 0;
+  const fp = arr.filter(s => s.f === "fietspad");
+  const fiets = fp.length ? fp.reduce((a, s) => a + sc(s.w, s.two ? 2.0 : 1.4, s.two ? 4.0 : 2.8), 0) / fp.length : (arr.some(s => s.f === "rijbaan" && !s.two) ? .35 : .15);
+  const ovS = arr.filter(s => s.f === "ov"), tramR = arr.some(s => s.f === "rijbaan" && s.tram);
+  const ov = ovS.length ? ovS.reduce((a, s) => a + sc(s.w, 2.6, s.w >= 5 ? 6.2 : 3.1), 0) / ovS.length : tramR ? .5 : null;
+  const rb = arr.filter(s => s.f === "rijbaan").reduce((a, s) => a + s.w, 0);
+  const auto = sc(rb, 2.8, 7.0);
+  const mm = metrics(arr);
+  const bewoner = sc(mm.bomen, 0, 22) * .55 + sc(mm.parkeren, 0, 36) * .45;
+  const ondernemer = sc(vp.length ? Math.max(...vp) : 0, 2.0, 5.0) * .6 + (arr.some(s => s.f === "parkeren") ? .4 : arr.some(s => s.f === "rijbaan") ? .15 : 0);
+  return [
+    { k: "Voetganger", v: voet, c: FN.voetpad.c },
+    { k: "Fietser", v: fiets, c: FN.fietspad.c },
+    { k: "OV-reiziger", v: ov, c: FN.ov.c },
+    { k: "Automobilist", v: auto, c: FN.rijbaan.c },
+    { k: "Bewoner (groen, parkeren)", v: bewoner, c: FN.groen.c },
+    { k: "Ondernemer (terras, laden)", v: ondernemer, c: "#b07a2a" },
+  ];
+}
+
+/* ---------------- editor ---------------- */
+let dragging = null;
+function startDrag(e, i, sc) {
+  e.preventDefault(); tip.hide();
+  dragging = { i, x: e.clientX, a: strips[i].w, b: strips[i + 1].w, sc };
+  addEventListener("pointermove", onDrag);
+  addEventListener("pointerup", endDrag);
+  addEventListener("pointercancel", endDrag);
+}
+function onDrag(e) {
+  if (!dragging) return;
+  const { i } = dragging;
+  let d = (e.clientX - dragging.x) / dragging.sc; d = Math.round(d / 0.05) * 0.05;
+  const a = clamp(dragging.a + d, 0.1, dragging.a + dragging.b - 0.1);
+  strips[i].w = r2(a); strips[i + 1].w = r2(dragging.a + dragging.b - a);
+  drawEditor(); drawResults(); drawToolbar();
+}
+function endDrag() {
+  dragging = null;
+  removeEventListener("pointermove", onDrag); removeEventListener("pointerup", endDrag); removeEventListener("pointercancel", endDrag);
+  render();
+}
+function render() {
+  drawEditor(); drawToolbar(); drawPot(); drawResults();
+}
+function drawEditor() {
+  tip.hide();
+  const el = $("#editor"); const W = el.clientWidth || 900, H = 250;
+  const tot = strips.reduce((a, s) => a + s.w, 0) + pot;
+  const fac = 26, x0 = fac, avail = W - 2 * fac;
+  const sc = avail / tot;
+  const G = 160; // maaiveld
+  const svg = svgEl("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}` });
+  // lucht en gevels
+  svgEl("rect", { x: 0, y: 0, width: W, height: G, fill: "#f4f6f8" }, svg);
+  const P = PROFIELEN[PI];
+  [[0, P.begrensd[0]], [W - fac, P.begrensd[1]]].forEach(([x, b]) => {
+    svgEl("rect", { x, y: 20, width: fac, height: G - 20, fill: b ? "#3a3d44" : "#cfd3da" }, svg);
+    for (let wy = 34; wy < G - 16; wy += 22) svgEl("rect", { x: x + 7, y: wy, width: fac - 14, height: 10, fill: b ? "#6c7380" : "#e6e8ec" }, svg);
+  });
+  let x = x0;
+  strips.forEach((s, i) => {
+    const w = s.w * sc;
+    const g = svgEl("g", { class: "strip" }, svg);
+    const st = status(s, i, strips);
+    svgEl("rect", { x, y: G, width: w, height: 34, fill: FN[s.f].c, stroke: sel === i ? "#1d2330" : "#fff", "stroke-width": sel === i ? 3 : 1 }, g);
+    if (s.f === "fietspad" && s.two && w > 30) svgEl("line", { x1: x + 3, x2: x + w - 3, y1: G + 17, y2: G + 17, stroke: "#fff", "stroke-dasharray": "5 4", "stroke-width": 1.5 }, g);
+    if (s.f === "rijbaan" && s.two && w > 40) svgEl("line", { x1: x + w / 2, x2: x + w / 2, y1: G + 4, y2: G + 30, stroke: "#fff", "stroke-dasharray": "4 4", "stroke-width": 1.5 }, g);
+    drawFigures(g, s, x, w, G, sc);
+    // label
+    const narrow = w < 54;
+    if (!narrow || w >= 14) {
+      const lab = svgEl("text", narrow ? { x: x + w / 2 - 3, y: G + 44, "font-size": 11, fill: "#333", transform: `rotate(60 ${x + w / 2 - 3} ${G + 44})` } : { x: x + w / 2, y: G + 50, "text-anchor": "middle", "font-size": 12, fill: "#333", "font-weight": 600 }, g);
+      lab.textContent = narrow ? fmt(s.w, 1) : FN[s.f].n + (s.f === "fietspad" && s.two ? " ⇆" : "");
+    }
+    if (!narrow) { const wt = svgEl("text", { x: x + w / 2, y: G + 66, "text-anchor": "middle", "font-size": 12, fill: "#555" }, g); wt.textContent = fmt(s.w, 2) + " m"; }
+    if (st.lvl !== "none") svgEl("circle", { cx: x + w / 2, cy: G + (narrow ? 82 : 80), r: 5, fill: st.lvl === "good" ? "#2e7d32" : st.lvl === "warn" ? "#e08a00" : "#b3261e" }, g);
+    g.addEventListener("click", () => { sel = sel === i ? null : i; render(); });
+    g.addEventListener("mousemove", e => { if (!dragging) tip.show(`<b>${FN[s.f].n}${s.f === "fietspad" ? (s.two ? " (tweerichting)" : " (eenrichting)") : ""}</b> ${fmt(s.w, 2)} m${st.txt ? "<br>" + st.txt : ""}<br><span style="opacity:.7">klik om te wijzigen</span>`, e); });
+    g.addEventListener("mouseleave", () => tip.hide());
+    x += w;
+  });
+  if (pot > 0.001) {
+    const w = pot * sc;
+    svgEl("rect", { x, y: G, width: w, height: 34, fill: "url(#potpat)", stroke: "#c48a00", "stroke-dasharray": "4 3" }, svg);
+    const defs = svgEl("defs", {}, svg);
+    const pat = svgEl("pattern", { id: "potpat", width: 8, height: 8, patternUnits: "userSpaceOnUse", patternTransform: "rotate(45)" }, defs);
+    svgEl("rect", { width: 8, height: 8, fill: "#fff7e0" }, pat); svgEl("rect", { width: 3, height: 8, fill: "#f3d27a" }, pat);
+    const t = svgEl("text", { x: x + w / 2, y: G + 50, "text-anchor": "middle", "font-size": 11.5, fill: "#8a5f00", "font-weight": 700 }, svg); t.textContent = `pot ${fmt(pot, 1)} m`;
+  }
+  // grepen
+  x = x0;
+  strips.forEach((s, i) => {
+    x += s.w * sc;
+    if (i === strips.length - 1) return;
+    const h = svgEl("g", { class: "handle" + (dragging && dragging.i === i ? " drag" : "") }, svg);
+    svgEl("rect", { x: x - 6, y: G - 10, width: 12, height: 54, fill: "transparent" }, h);
+    svgEl("rect", { class: "grip", x: x - 5, y: G - 6, width: 10, height: 46, rx: 4, fill: "#fff", stroke: "#1d2330", "stroke-width": 1.5 }, h);
+    [-1.5, 1.5].forEach(dx => svgEl("line", { x1: x + dx, x2: x + dx, y1: G + 6, y2: G + 28, stroke: "#1d2330", "stroke-width": 1.2 }, h));
+    h.addEventListener("pointerdown", e => startDrag(e, i, sc));
+    h.addEventListener("mousemove", e => { if (!dragging) tip.show("Sleep om de grens te verschuiven", e); });
+    h.addEventListener("mouseleave", () => tip.hide());
+  });
+  // maatlat
+  const t = svgEl("text", { x: W / 2, y: 14, "text-anchor": "middle", "font-size": 12, fill: "#555" }, svg);
+  t.textContent = `← ${fmt(tot, 1)} m van gevel tot gevel →`;
+  el.innerHTML = ""; el.appendChild(svg);
+}
+function person(g, cx, G, col) { svgEl("circle", { cx, cy: G - 30, r: 4.2, fill: col }, g); svgEl("path", { d: `M${cx},${G - 25}L${cx},${G - 12}M${cx},${G - 12}L${cx - 4},${G - 1}M${cx},${G - 12}L${cx + 4},${G - 1}M${cx - 5},${G - 20}L${cx + 5},${G - 20}`, stroke: col, "stroke-width": 2.2, fill: "none", "stroke-linecap": "round" }, g); }
+function bike(g, cx, G, col) { svgEl("circle", { cx: cx - 7, cy: G - 6, r: 5.5, fill: "none", stroke: "#333", "stroke-width": 1.6 }, g); svgEl("circle", { cx: cx + 7, cy: G - 6, r: 5.5, fill: "none", stroke: "#333", "stroke-width": 1.6 }, g); svgEl("path", { d: `M${cx - 7},${G - 6}L${cx},${G - 14}L${cx + 7},${G - 6}M${cx},${G - 14}L${cx - 1},${G - 24}`, stroke: "#333", "stroke-width": 1.6, fill: "none" }, g); svgEl("circle", { cx: cx - 1, cy: G - 30, r: 3.8, fill: col }, g); }
+function car(g, cx, G, col, w) { const L = Math.min(w, 34); svgEl("rect", { x: cx - L / 2, y: G - 15, width: L, height: 11, rx: 4, fill: col }, g); svgEl("rect", { x: cx - L / 3, y: G - 22, width: L * .6, height: 9, rx: 3, fill: col, opacity: .85 }, g); svgEl("circle", { cx: cx - L / 3, cy: G - 4, r: 3.5, fill: "#222" }, g); svgEl("circle", { cx: cx + L / 3, cy: G - 4, r: 3.5, fill: "#222" }, g); }
+function tram(g, cx, G, w) { const L = Math.min(w - 4, 40); svgEl("rect", { x: cx - L / 2, y: G - 40, width: L, height: 36, rx: 6, fill: "#7b4fa3" }, g); svgEl("rect", { x: cx - L / 2 + 4, y: G - 34, width: L - 8, height: 10, rx: 2, fill: "#e6dcf0" }, g); svgEl("line", { x1: cx, x2: cx, y1: G - 40, y2: G - 52, stroke: "#555", "stroke-width": 1.5 }, g); }
+function tree(g, cx, G, r) { svgEl("rect", { x: cx - 2.5, y: G - 30, width: 5, height: 30, fill: "#6b4a2b" }, g); svgEl("circle", { cx, cy: G - 30 - r * .6, r, fill: "#4c9a2a", opacity: .9 }, g); }
+function drawFigures(g, s, x, w, G, sc) {
+  if (s.f === "voetpad") { const n = s.w < 1 ? 0 : Math.min(4, Math.max(1, Math.floor(s.w / 1.4))); for (let k = 0; k < n; k++) person(g, x + w * (k + .5) / n, G, "#a26412"); }
+  if (s.f === "fietspad") { const n = Math.min(3, Math.max(1, Math.floor(s.w / 1.3))); for (let k = 0; k < n; k++) bike(g, x + w * (k + .5) / n, G, "#c8473c"); }
+  if (s.f === "rijbaan") { const n = Math.max(1, Math.min(4, Math.round(s.w / 3.2))); for (let k = 0; k < n; k++) { const cx = x + w * (k + .5) / n; if (s.tram && k === 0) tram(g, cx, G, w / n); else car(g, cx, G, "#5b6574", w / n - 6); } }
+  if (s.f === "parkeren" && s.w >= 1.6) car(g, x + w / 2, G, "#9aa3b2", w - 4);
+  if (s.f === "ov") { const n = s.w >= 5 ? 2 : 1; for (let k = 0; k < n; k++) tram(g, x + w * (k + .5) / n, G, w / n); }
+  if (s.f === "groen") { if (s.w >= 1.5) tree(g, x + w / 2, G, clamp(s.w * sc * .45, 9, 26)); else svgEl("path", { d: `M${x + 3},${G}q${w / 4},-8 ${w / 2 - 3},0q${w / 4},-8 ${w / 2 - 3},0`, fill: "#4c9a2a" }, g); }
+}
+
+function drawToolbar() {
+  const el = $("#toolbar");
+  if (sel === null || !strips[sel]) {
+    el.innerHTML = pot > 0.001 || !strips.length
+      ? `<span class="small"><b>${fmt(pot, 1)} m in de pot.</b> Klik een strook om de pot daar in te zetten, of voeg een nieuwe strook toe:</span>
+         ${["groen", "fietspad", "voetpad", "parkeren", "ov"].map(f => `<button class="btn small" data-add="${f}" ${pot < 0.3 ? "disabled" : ""}>+ ${FN[f].n}</button>`).join("")}`
+      : `<span class="small">Klik op een strook om hem te wijzigen, of sleep de witte grepen tussen twee stroken.</span>`;
+    $$("[data-add]", el).forEach(b => b.onclick = () => { addStrip(b.dataset.add, null); });
+    return;
+  }
+  const s = strips[sel];
+  el.innerHTML = `<b style="font-size:13.5px">${FN[s.f].n} · ${fmt(s.w, 2)} m</b>
+    <button class="btn small" id="t-minus" title="0,5 m naar de pot">− 0,5 m naar pot</button>
+    <button class="btn small" id="t-plus" ${pot < STEP - 1e-6 ? "disabled" : ""} title="0,5 m uit de pot">+ 0,5 m uit pot</button>
+    <select id="t-type">${Object.entries(FN).map(([k, v]) => `<option value="${k}" ${k === s.f ? "selected" : ""}>${v.n}</option>`).join("")}</select>
+    ${s.f === "fietspad" || s.f === "rijbaan" ? `<label class="small" style="display:flex;gap:4px;align-items:center"><input type="checkbox" id="t-two" ${s.two ? "checked" : ""}> tweerichting</label>` : ""}
+    ${s.f === "rijbaan" ? `<label class="small" style="display:flex;gap:4px;align-items:center"><input type="checkbox" id="t-tram" ${s.tram ? "checked" : ""}> tram in rijbaan</label>` : ""}
+    <button class="btn small" id="t-left" title="Verplaats naar links">←</button><button class="btn small" id="t-right" title="Verplaats naar rechts">→</button>
+    <button class="btn small" id="t-all" ${pot < 0.05 ? "disabled" : ""}>hele pot (${fmt(pot, 1)} m) hierheen</button>
+    <button class="btn small" id="t-add" ${pot < 0.3 ? "disabled" : ""}>+ nieuwe strook uit pot</button>
+    <button class="btn small" id="t-del" style="color:var(--bad)">verwijder</button>`;
+  $("#t-minus").onclick = () => { const d = Math.min(STEP, s.w - 0.1); if (d <= 0) return; s.w = r2(s.w - d); pot = r2(pot + d); render(); };
+  $("#t-plus").onclick = () => { const d = Math.min(STEP, pot); s.w = r2(s.w + d); pot = r2(pot - d); render(); };
+  $("#t-type").onchange = e => { s.f = e.target.value; if (s.f === "fietspad") s.two = false; render(); };
+  $("#t-two") && ($("#t-two").onchange = e => { s.two = e.target.checked; render(); });
+  $("#t-tram") && ($("#t-tram").onchange = e => { s.tram = e.target.checked; render(); });
+  $("#t-left").onclick = () => { if (sel > 0) { [strips[sel - 1], strips[sel]] = [strips[sel], strips[sel - 1]]; sel--; render(); } };
+  $("#t-right").onclick = () => { if (sel < strips.length - 1) { [strips[sel + 1], strips[sel]] = [strips[sel], strips[sel + 1]]; sel++; render(); } };
+  $("#t-all").onclick = () => { s.w = r2(s.w + pot); pot = 0; render(); };
+  $("#t-add").onclick = () => addStrip("groen", sel);
+  $("#t-del").onclick = () => { pot = r2(pot + s.w); strips.splice(sel, 1); sel = null; render(); };
+}
+const r2 = v => Math.round(v * 100) / 100;
+function addStrip(f, after) {
+  const w = r2(Math.min(pot, f === "rijbaan" ? 3.25 : f === "ov" ? 3.1 : 2.5));
+  if (w < 0.3) return;
+  let at;
+  if (after !== null && after !== undefined) at = after + 1;
+  else { const tot = strips.reduce((a, x) => a + x.w, 0); let x = 0; at = strips.findIndex(sv => (x += sv.w) >= tot / 2) + 1; if (at <= 0) at = strips.length; }
+  strips.splice(at, 0, { f, w, two: f === "fietspad" ? false : undefined });
+  pot = r2(pot - w); sel = at; render();
+}
+function drawPot() {
+  const el = $("#pot");
+  const n = Math.round(pot / STEP);
+  el.className = "pot " + (pot > 0.001 ? "full" : "empty");
+  el.innerHTML = `<div><div style="font-size:12px;font-weight:650;color:var(--ink-2)">Fiches in de pot</div><div style="font-size:20px;font-weight:750">${fmt(pot, 1)} m</div></div>
+    <div class="chipstack">${Array.from({ length: Math.min(n, 24) }, () => '<span class="fiche"></span>').join("")}</div>
+    <div class="small" style="max-width:190px">${pot > 0.001 ? "Nog te verdelen. Klik een strook en zet in met ‘+ 0,5 m’." : "Alle meters zijn verdeeld."}</div>`;
+}
+
+/* ---------------- resultaten ---------------- */
+function drawResults() {
+  const m0 = metrics(orig), m1 = metrics(strips, pot);
+  const d = (a, b, unit = "") => { const x = b - a; return x === 0 ? `<span class="faint">gelijk aan nu</span>` : `<span style="color:${x > 0 ? "var(--good)" : "var(--bad)"}">${x > 0 ? "+" : "−"}${fmt(Math.abs(x))}${unit} t.o.v. nu</span>`; };
+  $("#kpis").innerHTML = `
+    <div class="kpi"><div class="k">Parkeerplaatsen</div><div class="v num">${fmt(m1.parkeren)}</div><div class="s">${d(m0.parkeren, m1.parkeren)}</div></div>
+    <div class="kpi"><div class="k">Bomen (plek voor)</div><div class="v num">${fmt(m1.bomen)}</div><div class="s">${d(m0.bomen, m1.bomen)}</div></div>
+    <div class="kpi"><div class="k">Ruimte voor lopen, fiets, OV, groen</div><div class="v num">${fmt(m1.stomp * 100)}<small>%</small></div><div class="s">${d(Math.round(m0.stomp * 100), Math.round(m1.stomp * 100), " procentpunt")}</div></div>
+    <div class="kpi"><div class="k">Capaciteit personen/uur</div><div class="v num">${fmt(Math.round(m1.capTot / 100) * 100)}</div><div class="s">${d(Math.round(m0.capTot / 100) * 100, Math.round(m1.capTot / 100) * 100)}</div></div>`;
+  // ruimteverdeling
+  const keys = ["voetpad", "fietspad", "ov", "groen", "berm", "overig", "parkeren", "rijbaan", "pot"];
+  const COL = k => k === "pot" ? "repeating-linear-gradient(45deg,#f3d27a,#f3d27a 4px,#fff7e0 4px,#fff7e0 8px)" : FN[k].c;
+  const NAME = k => k === "pot" ? "Pot (nog te verdelen)" : FN[k].n;
+  const bar = (m, label) => {
+    const tot = Object.values(m.m2).reduce((a, b) => a + b, 0) || 1;
+    return `<div style="display:grid;grid-template-columns:90px 1fr;gap:8px;align-items:center;margin:6px 0"><span class="small">${label}</span><div style="display:flex;height:22px;border-radius:5px;overflow:hidden">${keys.map(k => m.m2[k] ? `<span title="${NAME(k)}: ${fmt(m.m2[k])} m² (${fmt(m.m2[k] / tot * 100)}%)" style="width:${m.m2[k] / tot * 100}%;background:${COL(k)};color:${k === "pot" ? "#8a5f00" : "#fff"};font-size:10.5px;display:grid;place-items:center;overflow:hidden">${m.m2[k] / tot > .08 ? fmt(m.m2[k] / tot * 100) + "%" : ""}</span>` : "").join("")}</div></div>`;
+  };
+  $("#share").innerHTML = bar(m0, "BGT nu") + bar(m1, "Jouw ontwerp") + `<div class="legend" style="margin-top:6px">${keys.filter(k => m0.m2[k] || m1.m2[k]).map(k => `<span><span class="sw" style="background:${COL(k)}"></span>${NAME(k)}</span>`).join("")}</div>`;
+  // perspectieven
+  const p0 = perspectives(orig), p1 = perspectives(strips);
+  $("#persp").innerHTML = p1.map((p, i) => p.v === null ? `<span>${p.k}</span><span class="faint small">geen OV in dit profiel</span><span></span>` :
+    `<span>${p.k}</span><div class="bar"><span style="width:${p.v * 100}%;background:${p.c}"></span>${p0[i].v !== null ? `<i style="left:${p0[i].v * 100}%"></i>` : ""}</div><span class="sc" style="color:${p0[i].v !== null && p.v > p0[i].v + .02 ? "var(--good)" : p0[i].v !== null && p.v < p0[i].v - .02 ? "var(--bad)" : "var(--ink)"}">${fmt(p.v * 100)}</span>`).join("");
+  // checks
+  const items = strips.map((s, i) => ({ s, i, st: status(s, i, strips) })).filter(x => x.st.lvl !== "none");
+  const order = { bad: 0, warn: 1, good: 2 };
+  items.sort((a, b) => order[a.st.lvl] - order[b.st.lvl]);
+  const side = i => i < strips.length / 2 ? "links" : "rechts";
+  $("#checks").innerHTML = items.map(x => `<li><span class="dot" style="background:${x.st.lvl === "good" ? "#2e7d32" : x.st.lvl === "warn" ? "#e08a00" : "#b3261e"}"></span><span><b>${FN[x.s.f].n}${x.s.f === "fietspad" ? (x.s.two ? " (tweerichting)" : " (eenrichting)") : ""}</b> ${side(x.i)}: ${x.st.txt}${x.st.lvl === "bad" && x.s.f === "voetpad" ? ". Rolstoel en kinderwagen kunnen elkaar niet passeren." : ""}${x.st.lvl === "bad" && x.s.f === "fietspad" ? ". Inhalen is niet veilig mogelijk." : ""}</span></li>`).join("") + (pot > 0.001 ? `<li><span class="dot" style="background:#c48a00"></span><span><b>Pot</b>: nog ${fmt(pot, 1)} m niet ingezet.</span></li>` : "");
+  // capaciteit
+  const capRow = (m, label) => {
+    const max = Math.max(metrics(orig).capTot, metrics(strips, pot).capTot, 1);
+    const parts = [["lopen", FN.voetpad.c, "lopen"], ["fiets", FN.fietspad.c, "fiets"], ["ov", FN.ov.c, "OV"], ["auto", FN.rijbaan.c, "auto"]];
+    return `<div style="display:grid;grid-template-columns:90px 1fr 80px;gap:8px;align-items:center;margin:6px 0"><span class="small">${label}</span><div style="display:flex;height:22px;border-radius:5px;overflow:hidden;background:var(--panel-2)">${parts.map(([k, c, n]) => m.cap[k] ? `<span title="${n}: ${fmt(m.cap[k])} per uur" style="width:${m.cap[k] / max * 100}%;background:${c};color:#fff;font-size:10.5px;display:grid;place-items:center;overflow:hidden">${m.cap[k] / max > .1 ? n : ""}</span>` : "").join("")}</div><b class="num" style="text-align:right">${fmt(Math.round(m.capTot / 100) * 100)}</b></div>`;
+  };
+  $("#cap").innerHTML = capRow(m0, "BGT nu") + capRow(m1, "Jouw ontwerp");
+}
+
+/* ---------------- scenario's ---------------- */
+function centers() { let x = 0; return strips.map(sv => { const c = x + sv.w / 2; x += sv.w; return c; }); }
+// Donoren voor strook t: eerst op soort (volgorde in kinds), dan dezelfde straatkant, dan dichtstbij.
+function donorsFor(t, kinds) {
+  const c = centers(), mid = strips.reduce((a, sv) => a + sv.w, 0) / 2, side = Math.sign(c[t] - mid);
+  return strips.map((sv, i) => ({ sv, i })).filter(d => d.i !== t && kinds.includes(d.sv.f))
+    .sort((A, B) => kinds.indexOf(A.sv.f) - kinds.indexOf(B.sv.f)
+      || (Math.sign(c[A.i] - mid) === side ? 0 : 1) - (Math.sign(c[B.i] - mid) === side ? 0 : 1)
+      || Math.abs(c[A.i] - c[t]) - Math.abs(c[B.i] - c[t]))
+    .map(d => d.sv);
+}
+// Verbreed target tot goal. Ronde 1: alleen overmaat (boven het minimum, parkeren blijft >= 1,80 m).
+// Ronde 2: een hele parkeerstrook opheffen als dat nog nodig is.
+function widen(target, goal, kinds) {
+  let need = r2(goal - target.w); if (need <= 0) return;
+  const t = strips.indexOf(target);
+  const give = (d, spare) => { const take = Math.min(spare, need); if (take <= 0) return; d.w = r2(d.w - take); target.w = r2(target.w + take); need = r2(need - take); };
+  for (const d of donorsFor(t, kinds)) {
+    if (need <= 0) break;
+    const m = minFor(d);
+    give(d, r2(d.w - (d.f === "parkeren" ? 1.8 : m ? m.min : 0.5)));
+  }
+  for (const d of donorsFor(t, ["parkeren"])) {
+    if (need <= 0.1) break; // 10 cm tekort is goed genoeg: geen hele parkeerstrook opofferen
+    give(d, d.w); // rest van de strook wordt in normalize() groen
+  }
+}
+function scenario(k) {
+  if (k === "reset") { strips = orig.map(sv => ({ ...sv })); pot = 0; sel = null; return; }
+  if (k === "groen") strips.forEach(sv => { if (sv.f === "parkeren") sv.f = "groen"; });
+  if (k === "fiets") strips.filter(sv => sv.f === "fietspad").forEach(sv => widen(sv, sv.two ? 3.5 : 2.5, ["overig", "berm", "parkeren", "rijbaan"]));
+  if (k === "voet") sides(strips).map(x => x.s).forEach(v => widen(v, 2.4, ["overig", "berm", "parkeren", "rijbaan"]));
+  if (k === "autoluw") {
+    const rb = strips.filter(sv => sv.f === "rijbaan");
+    const total = rb.reduce((a, sv) => a + sv.w, 0), keep = rb.some(sv => sv.tram) ? 6.2 : 3.25;
+    if (total > keep + 0.05) {
+      rb.forEach((sv, i) => { if (i === 0) { sv.w = keep; sv.two = false; } else sv.w = 0; });
+      pot = r2(pot + total - keep);
+    }
+  }
+  strips = strips.filter(sv => sv.w >= 0.05);
+  sel = null;
+}
+// Opruimen na een scenario: restjes parkeren en losse uitstapstroken opgaan in de buren.
+function normalize() {
+  for (let pass = 0; pass < 4; pass++) {
+    strips.forEach((sv, i) => {
+      const L = strips[i - 1], R = strips[i + 1];
+      if (sv.f === "parkeren" && sv.w < 1.8) sv.f = sv.w >= 1.5 ? "groen" : "berm"; // te smal om te parkeren
+      if (sv.f === "voetpad" && sv.w < 1.0 && !isUitstap(i, strips)) {
+        const nb = [L, R].find(n => n && ["groen", "berm", "voetpad"].includes(n.f)) || [L, R].find(n => n && n.f === "fietspad");
+        if (nb) { nb.w = r2(nb.w + sv.w); sv.w = 0; if (nb.f === "berm" && nb.w >= 1.5) nb.f = "groen"; }
+      }
+      // smal 'voetpad' tussen fietspad en rijbaan is in feite een berm
+      if (sv.f === "voetpad" && sv.w < 1.6 && L && R && L.f !== "voetpad" && R.f !== "voetpad" && !isUitstap(i, strips)) sv.f = sv.w >= 1.5 ? "groen" : "berm";
+      if (sv.f === "groen" && sv.w < 1.0) {
+        const nb = [L, R].find(n => n && ["groen", "voetpad", "berm"].includes(n.f));
+        if (nb) { nb.w = r2(nb.w + sv.w); sv.w = 0; }
+      }
+    });
+    strips = strips.filter(sv => sv.w >= 0.05);
+    const merged = [];
+    strips.forEach(sv => {
+      const last = merged[merged.length - 1];
+      if (last && last.f === sv.f && !!last.two === !!sv.two && !!last.tram === !!sv.tram && sv.f !== "rijbaan" && sv.f !== "ov") last.w = r2(last.w + sv.w);
+      else merged.push(sv);
+    });
+    strips = merged;
+  }
+}
+const NOCHANGE = {
+  groen: "Er ligt geen parkeerstrook in dit profiel.",
+  fiets: "De fietspaden zijn al op maat, of er is geen ruimte meer te halen.",
+  autoluw: "Er is al maar één rijstrook.",
+  voet: "De trottoirs zijn al 2,40 m, of er is geen ruimte meer te halen.",
+};
+$$("[data-s]").forEach(b => b.onclick = () => {
+  const k = b.dataset.s, before = JSON.stringify(strips) + pot, m0 = metrics(strips, pot);
+  scenario(k);
+  if (k !== "reset") normalize();
+  render();
+  if (k === "reset") return toast("Terug naar de huidige straat uit de BGT.");
+  if (JSON.stringify(strips) + pot === before) return toast("Dit scenario verandert hier niets. " + NOCHANGE[k], 3500);
+  const m1 = metrics(strips, pot), parts = [];
+  if (m1.parkeren !== m0.parkeren) parts.push(`${m1.parkeren > m0.parkeren ? "+" : "−"}${Math.abs(m1.parkeren - m0.parkeren)} parkeerplaatsen`);
+  if (m1.bomen !== m0.bomen) parts.push(`${m1.bomen > m0.bomen ? "+" : "−"}${Math.abs(m1.bomen - m0.bomen)} bomen`);
+  if (pot > 0.001) parts.push(`${fmt(pot, 1)} m in de pot om in te zetten`);
+  toast((parts.length ? parts.join(" · ") : "Meters verschoven") + ".", 3500);
+});
+addEventListener("resize", render);
+loadStreet(PROFIELEN.findIndex(p => p.id === "laanvm") >= 0 ? PROFIELEN.findIndex(p => p.id === "laanvm") : 0);
+</script>
+</body>
+</html>

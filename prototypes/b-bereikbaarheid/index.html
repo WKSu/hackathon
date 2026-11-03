@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Bereikbaarheidsatlas</title>
+<link rel="stylesheet" href="../assets/vendor/leaflet.css">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  html, body { height: 100%; }
+  body { display: flex; flex-direction: column; }
+  .app { flex: 1; display: grid; grid-template-columns: 400px 1fr; min-height: 0; }
+  .side { overflow-y: auto; padding: 14px 16px 30px; border-right: 1px solid var(--line); background: var(--bg); }
+  #map { height: 100%; min-height: 520px; background: #e8e6df; }
+  @media (max-width: 980px) { .app { grid-template-columns: 1fr; } #map { height: 70vh; } }
+  .side h1 { font-size: 21px; margin: 2px 0 6px; }
+  .side .lead { font-size: 13.5px; color: var(--ink-2); margin-bottom: 10px; }
+  .bivar { display: grid; grid-template-columns: 22px repeat(3, 1fr); grid-template-rows: repeat(3, 34px) 22px; gap: 3px; margin: 6px 0 4px; }
+  .bivar .c { border-radius: 4px; cursor: pointer; border: 2px solid transparent; position: relative; }
+  .bivar .c.sel { border-color: var(--ink); }
+  .bivar .c.dim { opacity: .25; }
+  .bivar .c span { position: absolute; inset: 0; display: grid; place-items: center; font-size: 10.5px; font-weight: 700; color: #fff; text-shadow: 0 0 3px rgba(0,0,0,.5); text-align: center; line-height: 1.1; }
+  .bivar .ylab { writing-mode: vertical-rl; transform: rotate(180deg); font-size: 11px; color: var(--ink-2); grid-row: 1 / 4; text-align: center; }
+  .bivar .xlab { grid-column: 2 / 5; font-size: 11px; color: var(--ink-2); text-align: center; }
+  .stelling { border: 1px solid var(--line); background: #fff; border-radius: 9px; padding: 10px 12px; margin-top: 8px; cursor: pointer; }
+  .stelling:hover { border-color: var(--accent); }
+  .stelling.on { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+  .stelling q { font-weight: 650; font-size: 13.5px; quotes: "“" "”"; display: block; }
+  .stelling .ans { font-size: 12.5px; color: var(--ink-2); margin-top: 4px; }
+  .stelling .ans b { color: var(--ink); }
+  .cityseg { display: flex; gap: 6px; margin: 8px 0; }
+  .cityseg button { flex: 1; font: inherit; font-weight: 650; padding: 8px; border-radius: 8px; border: 1px solid var(--line-2); background: #fff; cursor: pointer; }
+  .cityseg button.on[data-v=rotterdam] { background: var(--rdam); color: #fff; border-color: var(--rdam); }
+  .cityseg button.on[data-v=denhaag] { background: var(--dhaag); color: #fff; border-color: var(--dhaag); }
+  .info { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin-top: 10px; }
+  .info h3 { margin-bottom: 4px; }
+  .info table { width: 100%; font-size: 13px; border-collapse: collapse; }
+  .info td { padding: 3px 0; border-bottom: 1px solid var(--line); }
+  .info td.r { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+  .search { position: relative; }
+  .search input { width: 100%; padding: 8px 10px; }
+  .search .res { position: absolute; left: 0; right: 0; top: 100%; background: #fff; border: 1px solid var(--line-2); border-radius: 0 0 8px 8px; z-index: 1000; box-shadow: var(--shadow); }
+  .search .res div { padding: 7px 10px; font-size: 13px; cursor: pointer; }
+  .search .res div:hover { background: var(--panel-2); }
+  .leaflet-container { font-family: var(--font); }
+  .maplegend { background: rgba(255,255,255,.95); padding: 8px 10px; border-radius: 8px; font-size: 12px; box-shadow: var(--shadow); line-height: 1.5; }
+  .maplegend .ramp { display: flex; height: 10px; width: 180px; border-radius: 3px; overflow: hidden; margin: 3px 0; }
+  .maplegend .ramp span { flex: 1; }
+  .sec { margin-top: 16px; }
+  .sec > h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-2); margin-bottom: 4px; }
+  .linkbtn { display: inline-block; margin-top: 8px; font-size: 13px; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a class="brand" href="../index.html">Themadag Mobiliteit · Rotterdam × Den Haag</a>
+  <span class="sep">/</span><span>B · Bereikbaarheidsatlas</span>
+  <span class="spacer"></span>
+  <span class="small" style="color:#cfd3dc">Sessies 3 en 7 · Bereikbaarheid en OV in de verdichtende stad</span>
+</div>
+<div class="app">
+  <aside class="side">
+    <div class="kicker" style="font-size:12px;font-weight:650;text-transform:uppercase;letter-spacing:.08em;color:var(--accent)">Omgekeerde verdichtingskaart</div>
+    <h1>Waar is de bereikbaarheid al goed genoeg om te verdichten?</h1>
+    <p class="lead">Elk vierkant is 100 × 100 m. De kleur combineert de OV-bediening in de ochtendspits (lopend over het echte looppadennetwerk) met het aantal woningen. Klik op de kaart of zoek een adres.</p>
+
+    <div class="cityseg" id="city"><button data-v="rotterdam" class="on">Rotterdam</button><button data-v="denhaag">Den Haag</button></div>
+    <div class="search"><input type="text" id="q" placeholder="Zoek een adres, straat of buurt…" autocomplete="off"><div class="res" id="qres" hidden></div></div>
+
+    <div class="sec">
+      <h3>Kaartlaag</h3>
+      <div class="seg" id="layer" style="width:100%;display:grid;grid-template-columns:repeat(4,1fr)">
+        <button data-v="bivar" class="on">Verdichting</button><button data-v="ov">OV</button><button data-v="won">Woningen</button><button data-v="loop">Halte</button>
+      </div>
+    </div>
+
+    <div class="sec" id="bivar-box">
+      <h3>Legenda · klik een vak om te filteren</h3>
+      <div class="bivar" id="bivar"></div>
+      <div class="small" id="bivar-sel"></div>
+    </div>
+
+    <div class="sec">
+      <h3>Wat noem jij goed?</h3>
+      <div class="slider"><span class="lbl">Goed bereikbaar vanaf</span><span class="val" id="v-ovt"></span><input type="range" id="ovt" min="6" max="60" step="2" value="24"><span class="hint">OV-vertrekken per uur (07–09 uur, alle lijnen en richtingen) binnen 400 m lopen van bus/tram of 800 m van metro/trein.</span></div>
+      <div class="slider"><span class="lbl">Dicht bebouwd vanaf</span><span class="val" id="v-dt"></span><input type="range" id="dt" min="30" max="150" step="5" value="75"><span class="hint">Woningen per hectare (= per vierkant).</span></div>
+    </div>
+
+    <div class="sec">
+      <h3>Stellingen uit de sessie, getoetst</h3>
+      <div id="stellingen"></div>
+    </div>
+
+    <div class="info" id="info"><h3>Klik op een vierkant</h3><p class="small">Je ziet dan de OV-bediening, de woningdichtheid, voorzieningen in de buurt en de indicatieve OV-korting op de parkeernorm.</p></div>
+
+    <div class="next-step" style="grid-template-columns:1fr;gap:8px;margin-top:16px">
+      <div class="box"><h3>Werkproces morgen</h3><b>Bereikbaarheidsparagraaf</b> per gebiedsontwikkeling (standaardkaarten en kengetallen, gelijk voor beide steden) en een <b>netwerkmonitor</b> die elke nieuwe dienstregeling vergelijkt met de vorige.</div>
+      <div class="box"><h3>Let op</h3><ul><li>Woningbouwlocaties zijn niet landelijk open; die komen uit de eigen planregistratie.</li><li>Alleen frequentie, geen reistijd naar banen; dat is de volgende stap (r5py/OTP).</li><li>GTFS-id's wisselen per versie; koppel op haltenaam en locatie.</li></ul></div>
+    </div>
+    <p class="small" id="meta" style="margin-top:12px"></p>
+  </aside>
+  <div id="map"></div>
+</div>
+
+<script src="../assets/vendor/leaflet.js"></script>
+<script src="../assets/common.js"></script>
+<script src="data.js"></script>
+<script>
+const D = window.BEREIK;
+const BIV = [ // [dichtheid][ov] 0=laag..2=hoog  (Stevens-palet)
+  ["#e8e8e8", "#ace4e4", "#5ac8c8"],
+  ["#dfb0d6", "#a5add3", "#5698b9"],
+  ["#be64ac", "#8c62aa", "#3b4994"],
+];
+const BIV_LABEL = { "0,2": "kansrijk", "2,0": "risico", "2,2": "dicht én goed" };
+const MODE_COL = { trein: "#003082", metro: "#e3001b", tram: "#7b4fa3", bus: "#5b6170", veer: "#0b8fbf" };
+const S = { city: "rotterdam", layer: "bivar", ovt: 24, dt: 75, sel: null, stelling: null };
+
+const map = L.map("map", { preferCanvas: true, zoomControl: true, minZoom: 11, maxZoom: 18 });
+L.tileLayer("https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/grijs/EPSG:3857/{z}/{x}/{y}.png", {
+  maxZoom: 19, attribution: 'Kaart © <a href="https://www.kadaster.nl">Kadaster</a> · Data: CBS, OVapi GTFS, © OpenStreetMap',
+}).addTo(map);
+const renderer = L.canvas({ padding: 0.3 });
+let cellLayer = L.layerGroup().addTo(map), stopLayer = L.layerGroup(), borderLayer = L.layerGroup().addTo(map), pinLayer = L.layerGroup().addTo(map);
+let rects = [];
+
+const ovClass = v => v >= S.ovt ? 2 : v >= S.ovt / 3 ? 1 : 0;
+const dClass = w => (w || 0) >= S.dt ? 2 : (w || 0) >= S.dt / 2.5 ? 1 : 0;
+const seqOV = ["#f1eef6", "#d0d1e6", "#a6bddb", "#74a9cf", "#2b8cbe", "#045a8d"];
+const seqW = ["#fef0d9", "#fdd49e", "#fdbb84", "#fc8d59", "#e34a33", "#b30000"];
+const seqL = ["#1a9850", "#91cf60", "#d9ef8b", "#fee08b", "#fc8d59", "#d73027"];
+const bin = (v, edges) => { let i = 0; while (i < edges.length && v >= edges[i]) i++; return i; };
+
+function cellColor(c, i) {
+  const ov = c.ov[i], won = c.won[i];
+  if (S.layer === "bivar") return BIV[dClass(won)][ovClass(ov)];
+  if (S.layer === "ov") return seqOV[bin(ov, [1, 6, 12, 24, 48])];
+  if (S.layer === "won") return seqW[bin(won || 0, [10, 30, 50, 75, 120])];
+  const d = c.d_halte[i];
+  return d == null ? "#d73027" : seqL[bin(d, [150, 300, 400, 600, 800])];
+}
+function visible(c, i) {
+  if (S.stelling) return STELLINGEN[S.stelling].filter(c, i);
+  if (S.layer === "bivar" && S.sel) return dClass(c.won[i]) === S.sel[0] && ovClass(c.ov[i]) === S.sel[1];
+  return true;
+}
+
+function drawCells() {
+  cellLayer.clearLayers(); rects = [];
+  const c = D.steden[S.city].cells;
+  for (let i = 0; i < c.code.length; i++) {
+    const vis = visible(c, i);
+    const r = L.rectangle([[c.s[i], c.w[i]], [c.n[i], c.e[i]]], {
+      renderer, stroke: false, fillColor: cellColor(c, i), fillOpacity: vis ? .82 : .08, interactive: true,
+    });
+    r.on("click", () => showCell(i));
+    r.addTo(cellLayer); rects.push(r);
+  }
+  renderMapLegend();
+}
+function restyle() {
+  const c = D.steden[S.city].cells;
+  rects.forEach((r, i) => r.setStyle({ fillColor: cellColor(c, i), fillOpacity: visible(c, i) ? .82 : .08 }));
+  renderMapLegend();
+}
+
+function drawStops() {
+  stopLayer.clearLayers();
+  D.haltes[S.city].forEach(h => {
+    const top = ["trein", "metro", "tram", "veer", "bus"].find(m => h.modes.includes(m));
+    const m = L.circleMarker([h.lat, h.lon], { renderer, radius: 2.5 + Math.sqrt(h.per_uur) * .9, color: "#fff", weight: 1.2, fillColor: MODE_COL[top], fillOpacity: .95 });
+    m.bindTooltip(`<b>${h.naam.replace(/^\[.*?\]\s*/, "")}</b><br>${h.modes.join(", ")} · ${fmt(h.per_uur, 1)} vertrekken/u<br><span style="color:#666">${h.lijnen.slice(0, 12).join(", ")}${h.lijnen.length > 12 ? "…" : ""}</span>`, { sticky: true });
+    m.addTo(stopLayer);
+  });
+}
+map.on("zoomend", () => { if (map.getZoom() >= 13) stopLayer.addTo(map); else map.removeLayer(stopLayer); });
+
+function drawBorder() {
+  borderLayer.clearLayers();
+  L.geoJSON(D.steden[S.city].grens, { style: { color: "#1d2330", weight: 2, fill: false, dashArray: "5 4", opacity: .7 }, interactive: false }).addTo(borderLayer);
+}
+
+/* ---------------- legenda ---------------- */
+function renderBivar() {
+  const el = $("#bivar"); el.innerHTML = "";
+  const yl = document.createElement("div"); yl.className = "ylab"; yl.textContent = "meer woningen →"; el.appendChild(yl);
+  for (let d = 2; d >= 0; d--) for (let o = 0; o <= 2; o++) {
+    const b = document.createElement("div"); b.className = "c";
+    b.style.background = BIV[d][o];
+    const lab = BIV_LABEL[`${d},${o}`]; if (lab) b.innerHTML = `<span>${lab}</span>`;
+    if (S.sel) b.classList.toggle(S.sel[0] === d && S.sel[1] === o ? "sel" : "dim", true);
+    b.title = `${["weinig", "middel", "veel"][d]} woningen, ${["matige", "redelijke", "goede"][o]} OV-bediening`;
+    b.onclick = () => { S.stelling = null; S.sel = S.sel && S.sel[0] === d && S.sel[1] === o ? null : [d, o]; renderBivar(); renderStellingen(); restyle(); };
+    el.appendChild(b);
+  }
+  const xl = document.createElement("div"); xl.className = "xlab"; xl.textContent = "betere OV-bediening →"; el.appendChild(xl);
+  // telling van selectie
+  const c = D.steden[S.city].cells;
+  if (S.sel) {
+    let n = 0, won = 0, inw = 0;
+    for (let i = 0; i < c.code.length; i++) if (dClass(c.won[i]) === S.sel[0] && ovClass(c.ov[i]) === S.sel[1]) { n++; won += c.won[i] || 0; inw += c.inw[i] || 0; }
+    $("#bivar-sel").innerHTML = `Selectie: <b>${fmt(n)} ha</b> met ${fmt(won)} woningen en ${fmt(inw)} inwoners. <a href="#" id="clearsel">Wis filter</a>`;
+    $("#clearsel").onclick = e => { e.preventDefault(); S.sel = null; renderBivar(); restyle(); };
+  } else $("#bivar-sel").innerHTML = `Kansrijk = goed OV (≥ ${S.ovt}/u) en minder dan ${fmt(S.dt / 2.5)} woningen/ha. Risico = veel woningen (≥ ${S.dt}/ha) en matig OV (< ${fmt(S.ovt / 3)}/u).`;
+}
+let legendCtl = L.control({ position: "bottomright" });
+legendCtl.onAdd = () => { const d = L.DomUtil.create("div", "maplegend"); d.id = "maplegend"; return d; };
+legendCtl.addTo(map);
+let chipCtl = L.control({ position: "topright" });
+chipCtl.onAdd = () => { const d = L.DomUtil.create("div", "maplegend"); d.id = "mapchip"; d.style.display = "none"; L.DomEvent.disableClickPropagation(d); return d; };
+chipCtl.addTo(map);
+function renderChip() {
+  const el = $("#mapchip"); if (!el) return;
+  const txt = S.stelling ? `Stelling: “${STELLINGEN[S.stelling].q}”` : S.sel && S.layer === "bivar" ? `Filter: ${["weinig", "middel", "veel"][S.sel[0]]} woningen, ${["matig", "redelijk", "goed"][S.sel[1]]} OV` : "";
+  el.style.display = txt ? "" : "none";
+  el.innerHTML = `<span style="font-weight:650">${txt}</span> <button class="btn small" id="chipx" style="margin-left:6px">× wis</button>`;
+  const x = $("#chipx"); if (x) x.onclick = () => { S.stelling = null; S.sel = null; renderStellingen(); renderBivar(); restyle(); };
+}
+function renderMapLegend() {
+  renderChip();
+  const el = $("#maplegend"); if (!el) return;
+  const ramp = (cols, labels, title) => `<b>${title}</b><div class="ramp">${cols.map(c => `<span style="background:${c}"></span>`).join("")}</div><div style="display:flex;justify-content:space-between;width:180px;color:#666">${labels.map(l => `<span>${l}</span>`).join("")}</div>`;
+  const stops = `<div style="margin-top:6px">${Object.entries(MODE_COL).map(([m, c]) => `<span style="display:inline-flex;align-items:center;gap:3px;margin-right:6px"><span style="width:9px;height:9px;border-radius:50%;background:${c};display:inline-block"></span>${m}</span>`).join("")}</div><div style="color:#666">haltes vanaf zoomniveau 13 · grootte = vertrekken/u</div>`;
+  el.innerHTML = (S.layer === "bivar" ? `<b>OV-bediening × woningdichtheid</b><br><span style="color:#666">zie legenda links</span>` :
+    S.layer === "ov" ? ramp(seqOV, ["0", "6", "24", "48+"], "OV-vertrekken per uur binnen loopafstand") :
+    S.layer === "won" ? ramp(seqW, ["0", "30", "75", "120+"], "Woningen per hectare") :
+    ramp(seqL, ["0", "300", "600", "800+ m"], "Looproute naar dichtstbijzijnde halte")) + stops;
+}
+
+/* ---------------- stellingen ---------------- */
+const STELLINGEN = {
+  frequent: {
+    q: "De meeste inwoners wonen op loopafstand van goed OV.",
+    filter: (c, i) => ovClass(c.ov[i]) === 2,
+    answer(city) {
+      const c = D.steden[city].cells; let t = 0, g = 0;
+      for (let i = 0; i < c.code.length; i++) { const w = c.inw[i] || 0; t += w; if (ovClass(c.ov[i]) === 2) g += w; }
+      return { ok: g / t >= .5, pct: g / t, txt: p => `${fmt(p * 100)}% van de inwoners heeft ≥ ${S.ovt} vertrekken per uur op loopafstand.` };
+    },
+  },
+  ruimte: {
+    q: "Waar het OV al goed is, is nog ruimte om te verdichten.",
+    filter: (c, i) => ovClass(c.ov[i]) === 2 && dClass(c.won[i]) < 2,
+    answer(city) {
+      const c = D.steden[city].cells; let ha = 0, extra = 0;
+      for (let i = 0; i < c.code.length; i++) if (ovClass(c.ov[i]) === 2 && dClass(c.won[i]) < 2) { ha++; extra += Math.max(0, S.dt - (c.won[i] || 0)); }
+      return { ok: extra >= 1000, txt: () => `${fmt(ha)} ha met goed OV is nog niet dicht. Op ${fmt(S.dt)} woningen/ha past daar theoretisch ruim <b>${fmt(Math.round(extra / 1000) * 1000)}</b> woningen extra.` };
+    },
+  },
+  risico: {
+    q: "Dichtbebouwde wijken zijn ook goed bereikbaar met het OV.",
+    filter: (c, i) => dClass(c.won[i]) === 2 && ovClass(c.ov[i]) < 2,
+    answer(city) {
+      const c = D.steden[city].cells; let tot = 0, slecht = 0, won = 0;
+      for (let i = 0; i < c.code.length; i++) if (dClass(c.won[i]) === 2) { tot++; if (ovClass(c.ov[i]) < 2) { slecht++; won += c.won[i] || 0; } }
+      const pct = tot ? 1 - slecht / tot : 0;
+      return { ok: pct >= .5, pct, txt: p => `${fmt(p * 100)}% van de dichte vierkanten heeft goed OV. De rest telt ${fmt(won)} woningen met minder dan ${S.ovt} vertrekken per uur.` };
+    },
+  },
+  ouderen: {
+    q: "Ouderen wonen vaker op grotere afstand van een halte.",
+    filter: (c, i) => (c.d_halte[i] == null || c.d_halte[i] > 400) && (c.inw65[i] || 0) >= 20,
+    answer(city) {
+      const c = D.steden[city].cells; let o = 0, oFar = 0, a = 0, aFar = 0;
+      for (let i = 0; i < c.code.length; i++) {
+        const far = c.d_halte[i] == null || c.d_halte[i] > 400;
+        const w = c.inw[i] || 0, w65 = c.inw65[i] || 0;
+        a += w; o += w65; if (far) { aFar += w; oFar += w65; }
+      }
+      return { ok: oFar / o > aFar / a + .02, txt: () => `${fmt(oFar / o * 100)}% van de 65-plussers woont verder dan 400 m lopen van een halte, tegen ${fmt(aFar / a * 100)}% van alle inwoners.` };
+    },
+  },
+};
+function renderStellingen() {
+  const el = $("#stellingen"); el.innerHTML = "";
+  Object.entries(STELLINGEN).forEach(([k, st]) => {
+    const a = st.answer(S.city), other = st.answer(S.city === "rotterdam" ? "denhaag" : "rotterdam");
+    const div = document.createElement("div"); div.className = "stelling" + (S.stelling === k ? " on" : "");
+    const verdict = a.ok ? `<span class="badge good">klopt</span> ` : `<span class="badge bad">klopt niet</span> `;
+    const otherName = S.city === "rotterdam" ? "Den Haag" : "Rotterdam";
+    div.innerHTML = `<q>${st.q}</q><div class="ans">${verdict}${a.txt(a.pct)}<br><span class="faint">${otherName}: ${other.txt(other.pct).replace(/<\/?b>/g, "")}</span></div>`;
+    div.onclick = () => {
+      S.sel = null; S.stelling = S.stelling === k ? null : k;
+      if (S.stelling && S.layer !== "bivar") { S.layer = "bivar"; layerSeg.set("bivar"); $("#bivar-box").style.display = ""; }
+      renderStellingen(); renderBivar(); restyle();
+    };
+    el.appendChild(div);
+  });
+}
+
+/* ---------------- info bij klik ---------------- */
+const hav = (a, b, c, d) => { const R = 6371000, r = Math.PI / 180; const x = (d - b) * r * Math.cos((a + c) / 2 * r), y = (c - a) * r; return R * Math.hypot(x, y); };
+function parkeerkorting(lat, lon) {
+  // Rotterdam art. 10, tabel 2 (indicatief: tramhaltes en gebiedstype C niet meegenomen)
+  if (S.city !== "rotterdam") return null;
+  const tiers = [];
+  D.haltes.rotterdam.forEach(h => {
+    const n = h.naam.replace(/^\[.*?\]\s*/, "");
+    let p = null, id = null;
+    if (h.modes.includes("trein")) {
+      if (/Rotterdam Centraal/.test(n)) { p = [50, 40, 30]; id = "rc"; }
+      else if (/Blaak|Alexander|Schiedam Centrum/.test(n)) { p = [40, 30, 20]; id = "bbas"; }
+      else { p = [30, 20, 10]; id = "trein"; }
+    } else if (h.modes.includes("metro")) {
+      if (/Beurs/.test(n)) { p = [40, 30, 20]; id = "bbas"; }
+      else if (/Nesselande/.test(n)) { p = [10, 5, 0]; id = "nessel"; }
+      else { p = [30, 20, 10]; id = "metroAB"; }
+    }
+    if (!p) return;
+    const d = hav(lat, lon, h.lat, h.lon);
+    const band = d < 400 ? 0 : d < 800 ? 1 : d < 1200 ? 2 : 3;
+    if (band < 3) tiers.push({ pct: p[band], name: n, d, id, band });
+  });
+  if (!tiers.length) return { pct: 0 };
+  return tiers.sort((a, b) => b.pct - a.pct || a.d - b.d)[0];
+}
+function showCell(i, quiet) {
+  const c = D.steden[S.city].cells;
+  const lat = (c.s[i] + c.n[i]) / 2, lon = (c.w[i] + c.e[i]) / 2;
+  pinLayer.clearLayers();
+  L.rectangle([[c.s[i], c.w[i]], [c.n[i], c.e[i]]], { color: "#1d2330", weight: 3, fill: false, interactive: false }).addTo(pinLayer);
+  const oc = ovClass(c.ov[i]), dc = dClass(c.won[i]);
+  const label = BIV_LABEL[`${dc},${oc}`] || `${["weinig", "middel", "veel"][dc]} woningen, ${["matig", "redelijk", "goed"][oc]} OV`;
+  const near = D.haltes[S.city].map(h => ({ h, d: hav(lat, lon, h.lat, h.lon) })).sort((a, b) => a.d - b.d).slice(0, 3);
+  const pk = parkeerkorting(lat, lon);
+  const km = v => v == null ? "–" : fmt(v, 1) + " km";
+  if (!quiet) L.popup({ autoPan: true, closeButton: true, offset: [0, -2] }).setLatLng([lat, lon])
+    .setContent(`<b>${label}</b><br>${fmt(c.ov[i], 0)} OV-vertrekken per uur · ${fmt(c.won[i])} woningen<br>${c.d_halte[i] == null ? "halte verder dan 800 m" : `halte op ${fmt(c.d_halte[i])} m lopen`}<br><span style="color:#0b6e69">Meer in het paneel links ←</span>`)
+    .openOn(map);
+  $("#info").innerHTML = `<h3>Vierkant ${c.code[i]}</h3>
+    <div style="display:flex;gap:8px;align-items:center;margin:4px 0 8px"><span style="width:16px;height:16px;border-radius:4px;background:${BIV[dc][oc]}"></span><b>${label}</b></div>
+    <table>
+      <tr><td>OV-vertrekken per uur (spits) binnen loopafstand</td><td class="r">${fmt(c.ov[i], 1)}</td></tr>
+      <tr><td>Verschillende lijnen</td><td class="r">${c.lijnen[i]}</td></tr>
+      <tr><td>Lopen naar dichtstbijzijnde halte</td><td class="r">${c.d_halte[i] == null ? "> 800 m" : fmt(c.d_halte[i]) + " m"}</td></tr>
+      <tr><td>Lopen naar tram, metro of trein</td><td class="r">${c.d_hov[i] == null ? "> 800 m" : fmt(c.d_hov[i]) + " m"}</td></tr>
+      <tr><td>Woningen / inwoners</td><td class="r">${fmt(c.won[i])} / ${fmt(c.inw[i])}</td></tr>
+      <tr><td>Supermarkt · huisarts · basisschool</td><td class="r">${km(c.d_super[i])} · ${km(c.d_huisarts[i])} · ${km(c.d_school[i])}</td></tr>
+      <tr><td>Treinstation (CBS, over de weg)</td><td class="r">${km(c.d_trein[i])}</td></tr>
+    </table>
+    <div class="small" style="margin-top:6px">Haltes in de buurt (hemelsbreed): ${near.map(n => `${n.h.naam.replace(/^\[.*?\]\s*/, "").replace(/^(Rotterdam|Den Haag|'s-Gravenhage), /, "")} (${fmt(n.d)} m, ${fmt(n.h.per_uur, 0)}/u)`).join(" · ")}</div>
+    ${pk ? `<div style="margin-top:10px;padding:8px 10px;background:var(--accent-soft);border-radius:8px;font-size:13px"><b>Parkeernorm Rotterdam:</b> ${pk.pct ? `OV-korting <b>−${pk.pct}%</b> (${pk.name}, ${fmt(pk.d)} m hemelsbreed)` : "geen OV-korting via trein of metro"}<br><span class="faint">Indicatief, art. 10; tramhaltes en gebiedstype niet meegenomen.</span><br><a class="linkbtn" href="../c-parkeren/index.html#ov=${pk.id || "geen"}&dist=${pk.band ?? 3}${pk.id === "rc" || pk.id === "bbas" ? "&zone=A" : pk.id === "nessel" ? "&zone=C" : ""}">Reken een project door in de parkeernorm-tweeling →</a></div>` : ""}`;
+}
+function cellAt(lat, lng) {
+  const c = D.steden[S.city].cells;
+  for (let i = 0; i < c.code.length; i++) if (lat >= c.s[i] && lat <= c.n[i] && lng >= c.w[i] && lng <= c.e[i]) return i;
+  return -1;
+}
+function nearestCell(lat, lng, maxM) {
+  const c = D.steden[S.city].cells; let best = -1, bd = Infinity;
+  for (let i = 0; i < c.code.length; i++) { const d = hav(lat, lng, (c.s[i] + c.n[i]) / 2, (c.w[i] + c.e[i]) / 2); if (d < bd) { bd = d; best = i; } }
+  return bd <= maxM ? { i: best, d: bd } : null;
+}
+function pick(lat, lng, label) {
+  const i = cellAt(lat, lng);
+  if (i >= 0) { showCell(i); }
+  else {
+    const n = nearestCell(lat, lng, 400);
+    pinLayer.clearLayers();
+    L.popup().setLatLng([lat, lng]).setContent(`<b>${label || "Hier"}</b><br>Geen bewoners in dit vierkant (CBS), dus geen kleur.${n ? `<br>Het dichtstbijzijnde bewoonde vierkant ligt op ${fmt(n.d)} m; de gegevens staan links.` : ""}`).openOn(map);
+    if (n) showCell(n.i, true);
+  }
+  $("#info").scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+map.on("click", e => pick(e.latlng.lat, e.latlng.lng));
+
+/* ---------------- zoeken (PDOK Locatieserver) ---------------- */
+let qTimer;
+const searchPin = L.layerGroup().addTo(map);
+$("#q").addEventListener("keydown", e => { if (e.key === "Enter") { const first = $("#qres div"); if (first && first.onclick) first.onclick(); } });
+$("#q").addEventListener("input", e => {
+  clearTimeout(qTimer);
+  const q = e.target.value.trim(); if (q.length < 3) { $("#qres").hidden = true; return; }
+  qTimer = setTimeout(async () => {
+    try {
+      const gm = S.city === "rotterdam" ? "Rotterdam" : "'s-Gravenhage";
+      const r = await fetch(`https://api.pdok.nl/bzk/locatieserver/search/v3_1/free?q=${encodeURIComponent(q)}&fq=gemeentenaam:"${gm}"&rows=6&fl=weergavenaam,centroide_ll`);
+      const j = await r.json();
+      const box = $("#qres"); box.innerHTML = ""; box.hidden = false;
+      (j.response.docs || []).forEach(d => {
+        const m = /POINT\(([\d.]+) ([\d.]+)\)/.exec(d.centroide_ll); if (!m) return;
+        const div = document.createElement("div"); div.textContent = d.weergavenaam;
+        div.onclick = () => {
+          box.hidden = true; $("#q").value = d.weergavenaam; const ll = L.latLng(+m[2], +m[1]);
+          map.setView(ll, 16); searchPin.clearLayers();
+          L.circleMarker(ll, { radius: 8, color: "#fff", weight: 3, fillColor: "#e3001b", fillOpacity: 1 }).addTo(searchPin);
+          pick(ll.lat, ll.lng, d.weergavenaam);
+        };
+        box.appendChild(div);
+      });
+      if (!box.children.length) box.innerHTML = `<div class="faint">Niets gevonden in ${S.city === "rotterdam" ? "Rotterdam" : "Den Haag"}</div>`;
+    } catch (err) { $("#qres").hidden = false; $("#qres").innerHTML = `<div class="faint">Zoeken vraagt internet (PDOK Locatieserver).</div>`; }
+  }, 250);
+});
+
+/* ---------------- bediening ---------------- */
+function setCity(city) {
+  S.city = city; S.sel = null; S.stelling = null;
+  const c = D.steden[city].cells;
+  const q = (arr, f) => { const v = [...arr].sort((x, y) => x - y); return v[Math.floor(f * (v.length - 1))]; };
+  map.fitBounds([[q(c.s, .01), q(c.w, .01)], [q(c.n, .99), q(c.e, .99)]], { padding: [10, 10] });
+  drawBorder(); drawCells(); drawStops(); renderBivar(); renderStellingen();
+  $("#info").innerHTML = `<h3>Klik op een vierkant</h3><p class="small">Je ziet dan de OV-bediening, de woningdichtheid, voorzieningen in de buurt${city === "rotterdam" ? " en de indicatieve OV-korting op de parkeernorm" : ""}.</p>`;
+  pinLayer.clearLayers(); searchPin.clearLayers(); map.closePopup();
+}
+segmented($("#city"), setCity);
+const layerSeg = segmented($("#layer"), v => {
+  S.layer = v; $("#bivar-box").style.display = v === "bivar" ? "" : "none";
+  if (v !== "bivar" && (S.stelling || S.sel)) { S.stelling = null; S.sel = null; renderStellingen(); renderBivar(); }
+  restyle();
+});
+[["ovt", v => fmt(v) + " /u"], ["dt", v => fmt(v) + " /ha"]].forEach(([id, f]) => {
+  const el = $("#" + id); $("#v-" + id).textContent = f(+el.value);
+  el.addEventListener("input", () => { S[id] = +el.value; $("#v-" + id).textContent = f(S[id]); restyle(); renderBivar(); renderStellingen(); });
+});
+$("#meta").innerHTML = `Data: CBS Vierkantstatistieken 100 m (${D.meta.cbs_jaar}), dienstregeling GTFS NL op ${D.meta.gtfs_datum} (${D.meta.spits} uur), OpenStreetMap-looppaden. Woningen en inwoners zijn door CBS afgerond op vijftallen; vierkanten zonder bewoners ontbreken.`;
+setCity("rotterdam");
+</script>
+</body>
+</html>

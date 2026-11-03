@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Regelingsschets kruispunt</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  .varbtns { display: grid; grid-template-columns: 1fr; gap: 6px; }
+  .varbtn { text-align: left; font: inherit; padding: 9px 11px; border-radius: 9px; border: 1px solid var(--line-2); background: #fff; cursor: pointer; }
+  .varbtn b { display: block; font-size: 13.5px; }
+  .varbtn span { font-size: 12px; color: var(--ink-2); }
+  .varbtn.on { border-color: var(--accent); background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent); }
+  .modes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  @media (max-width: 980px) { .modes { grid-template-columns: 1fr 1fr; } }
+  .mode { border-radius: 10px; padding: 10px 12px; background: var(--panel-2); position: relative; }
+  .mode .rank { position: absolute; top: 8px; right: 10px; font-size: 11px; font-weight: 700; color: var(--ink-3); }
+  .mode .k { font-size: 12.5px; font-weight: 650; color: var(--ink-2); }
+  .mode .v { font-size: 30px; font-weight: 750; font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .mode .v small { font-size: 14px; color: var(--ink-2); font-weight: 600; }
+  .mode .s { font-size: 12px; color: var(--ink-3); }
+  .mode .bar { height: 6px; border-radius: 3px; margin-top: 6px; }
+  .inputs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+  .twocol { display: grid; grid-template-columns: 330px 1fr; gap: 14px; align-items: start; }
+  @media (max-width: 1100px) { .twocol { grid-template-columns: 1fr; } }
+  table.cmp td, table.cmp th { font-size: 13px; }
+  table.cmp tr.cur td { background: var(--accent-soft); font-weight: 650; }
+  table.cmp tr { cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a class="brand" href="../index.html">Themadag Mobiliteit · Rotterdam × Den Haag</a>
+  <span class="sep">/</span><span>A · Straat- en kruispuntlab</span>
+  <span class="spacer"></span>
+  <span class="small" style="color:#cfd3dc">Sessie 4 · Verkeersmanagement</span>
+</div>
+<div class="hero">
+  <div class="kicker">Inzichtprototype · regelingsschets</div>
+  <h1>Is STOMP ontwerpen ook STOMP regelen?</h1>
+  <p class="lead">Kies een kruispunt en een regelvariant. De schets berekent cyclustijd, groentijden en de gemiddelde wachttijd per reiziger: lopen, fiets, OV en auto. Wacht de voetganger het kortst en de auto het langst? Dan regelt het kruispunt volgens STOMP. Didactisch: dit vervangt geen regelingsontwerp.</p>
+</div>
+<div class="wrap">
+  <div class="grid side-main" style="grid-template-columns: minmax(300px, 360px) 1fr;">
+    <div>
+      <div class="panel">
+        <div class="panel-title"><span class="step">1</span><h2>Kies een kruispunt</h2></div>
+        <div class="presets" id="presets"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span class="step">2</span><h2>Kies een regelvariant</h2></div>
+        <div class="varbtns" id="variants"></div>
+        <label class="chk" style="display:flex;gap:8px;align-items:center;margin-top:10px;font-size:13.5px;font-weight:600"><input type="checkbox" id="prio"> Tram krijgt prioriteit (inmelden)</label>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span class="step">3</span><h2>Intensiteiten (spitsuur)</h2></div>
+        <div class="slider"><span class="lbl">Auto hoofdrichting (per tak)</span><span class="val" id="v-aH"></span><input type="range" id="aH" min="0" max="1600" step="25"></div>
+        <div class="slider"><span class="lbl">Auto zijrichting (per tak)</span><span class="val" id="v-aZ"></span><input type="range" id="aZ" min="0" max="1200" step="25"></div>
+        <div class="row" style="margin:4px 0 6px"><span class="small">Rijstroken per tak</span><div class="seg" id="lanes"><button data-v="1" class="on">1</button><button data-v="2">2</button></div></div>
+        <div class="slider"><span class="lbl">Fiets hoofdrichting (per tak)</span><span class="val" id="v-fH"></span><input type="range" id="fH" min="0" max="2000" step="25"></div>
+        <div class="slider"><span class="lbl">Fiets zijrichting (per tak)</span><span class="val" id="v-fZ"></span><input type="range" id="fZ" min="0" max="1500" step="25"></div>
+        <div class="slider"><span class="lbl">Voetgangers per oversteek</span><span class="val" id="v-p"></span><input type="range" id="p" min="0" max="1500" step="25"></div>
+        <div class="slider"><span class="lbl">Trams per uur per richting (hoofdrichting)</span><span class="val" id="v-t"></span><input type="range" id="t" min="0" max="20" step="1"></div>
+        <div class="slider"><span class="lbl">Oversteeklengte voetganger</span><span class="val" id="v-w"></span><input type="range" id="w" min="6" max="30" step="1"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="panel">
+        <div class="verdict" id="verdict"></div>
+        <div class="modes" id="modes" style="margin-top:12px"></div>
+      </div>
+      <div class="twocol">
+        <div class="panel">
+          <h3>Kruispunt nu: <span id="phase-name" style="color:var(--accent)"></span></h3>
+          <div id="xing"></div>
+          <div class="row" style="justify-content:space-between"><div class="seg" id="speed"><button data-v="0">❚❚</button><button data-v="1" class="on">1×</button><button data-v="4">4×</button></div><span class="small" id="clock"></span></div>
+        </div>
+        <div class="panel">
+          <h3>Groentijdenplan · cyclus <span id="cyc"></span></h3>
+          <div id="plan"></div>
+          <p class="small" id="plan-note"></p>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>Alle varianten naast elkaar</h3>
+        <p class="small">Gemiddelde wachttijd in seconden per reiziger. ‘Wachten totaal’ telt alle reizigers bij elkaar op (auto 1,3 personen, tram 120). Klik een rij om die variant te tonen.</p>
+        <div style="overflow-x:auto"><table class="t cmp" id="cmp"></table></div>
+      </div>
+      <details class="explain panel">
+        <summary>Hoe wordt dit berekend?</summary>
+        <p>Cyclustijd volgens Webster: <span class="formula">C = (1,5·L + 5) / (1 − Y)</span>, begrensd op 36–120 s. L = verliestijd (5 s per fasewissel, langer bij rondom groen en een voetgangersfase), Y = som van de maatgevende belastinggraden (auto 1.800 mvt/u per rijstrook, fiets 4.000 per uur op een fietspad van 2 m). Groen wordt naar rato van de belasting verdeeld, met minimumgroen (auto en fiets 6 s, rondom groen 10 s, voetgangers lengte/1,2 m/s × 0,5).</p>
+        <p>Wachttijd fiets, voetganger en tram (willekeurige aankomst): <span class="formula">W = Σ rood² / (2C)</span>. Auto: formule van Webster (uniforme en willekeurige vertraging). Tram met prioriteit: gemiddeld 4 s; elke inmelding kost de andere richtingen 11 s. Personen per voertuig: auto 1,3, tram 120.</p>
+      </details>
+    </div>
+  </div>
+  <div class="next-step">
+    <div class="box"><h3>Inzicht vandaag</h3>Laten zien dat dezelfde ontwerpprioriteit in de regeling kan omslaan, en welke keuzes (rondom groen, tramprioriteit, voetgangersfase) welke modaliteit iets kosten.</div>
+    <div class="box"><h3>Werkproces morgen: STOMP-check</h3>Gerealiseerde wachttijden per modaliteit uit iVRI-logdata (UDAP), per kruispunt per kwartaal, voor en na een regelingswijziging: wordt de beleidsprioriteit waargemaakt?</div>
+    <div class="box"><h3>Let op</h3><ul><li>iVRI-data is deels persoonsherleidbaar en niet open: verwerk intern.</li><li>iVRI's staan in het algoritmeregister; een tool die erop stuurt hoort daar ook in.</li><li>Geen groene golf, wachtrijterugslag of afslagbewegingen in dit model.</li></ul></div>
+  </div>
+</div>
+<div class="footer">Prototype themadag Mobiliteit Rotterdam × Den Haag. Rekenmodel: Webster (1958), vereenvoudigd.</div>
+
+<script src="../assets/common.js"></script>
+<script>
+const MODECOL = { voet: "#e39b2d", fiets: "#c8473c", ov: "#7b4fa3", auto: "#4a4f57" };
+const MODENAME = { voet: "Lopen", fiets: "Fiets", ov: "OV (tram)", auto: "Auto" };
+const PRESETS = [
+  { id: "tram", name: "Stedelijke as met tram", s: { aH: 650, aZ: 300, lanes: 1, fH: 700, fZ: 350, p: 450, t: 8, w: 14 } },
+  { id: "fiets", name: "Fietsdrukte (Laakhavens-type)", s: { aH: 400, aZ: 250, lanes: 1, fH: 1400, fZ: 600, p: 300, t: 0, w: 12 } },
+  { id: "auto", name: "Autokruispunt aan de rand", s: { aH: 1150, aZ: 600, lanes: 2, fH: 250, fZ: 120, p: 100, t: 0, w: 22 } },
+  { id: "binnen", name: "Binnenstad, veel lopen", s: { aH: 350, aZ: 200, lanes: 1, fH: 900, fZ: 500, p: 1200, t: 12, w: 12 } },
+];
+const VARIANTS = [
+  { id: "std", n: "Standaard: twee hoofdfasen", d: "Fiets en voetganger rijden mee met het parallelle autoverkeer." },
+  { id: "rgf", n: "Rondom groen fiets", d: "Eigen fase voor alle fietsers tegelijk, één keer per cyclus." },
+  { id: "rgf2", n: "Rondom groen fiets, 2× per cyclus", d: "Fietsers krijgen twee keer groen per cyclus." },
+  { id: "rgv", n: "Voetgangers rondom groen", d: "Eigen fase voor alle voetgangers, ook diagonaal." },
+];
+const S = { ...PRESETS[0].s, variant: "std", prio: false };
+
+/* -------- model -------- */
+function phasesFor(v, st) {
+  const A = { n: "Hoofdrichting", g: ["autoH", "fietsH", "voetH", "tram"] };
+  const B = { n: "Zijrichting", g: ["autoZ", "fietsZ", "voetZ"] };
+  const lost = 5;
+  if (v === "std") return [{ ...A, lost }, { ...B, lost }];
+  if (v === "rgf") return [{ ...A, g: ["autoH", "voetH", "tram"], lost }, { ...B, g: ["autoZ", "voetZ"], lost }, { n: "Rondom groen fiets", g: ["fietsH", "fietsZ"], lost: 7, rg: 1 }];
+  if (v === "rgf2") return [{ ...A, g: ["autoH", "voetH", "tram"], lost }, { n: "Rondom groen fiets", g: ["fietsH", "fietsZ"], lost: 7, rg: 2 }, { ...B, g: ["autoZ", "voetZ"], lost }, { n: "Rondom groen fiets", g: ["fietsH", "fietsZ"], lost: 7, rg: 2 }];
+  if (v === "rgv") return [{ ...A, g: ["autoH", "fietsH", "tram"], lost }, { ...B, g: ["autoZ", "fietsZ"], lost }, { n: "Voetgangers rondom groen", g: ["voetH", "voetZ"], lost: Math.round(st.w * 1.4 / 1.2), pv: 1 }];
+}
+function model(st, v, prio) {
+  const sA = 1800 * st.lanes, sF = 4000;
+  const ph = phasesFor(v, st);
+  ph.forEach(p => {
+    let y = 0, gmin = 6;
+    if (p.g.includes("autoH")) y = Math.max(y, st.aH / sA);
+    if (p.g.includes("autoZ")) y = Math.max(y, st.aZ / sA);
+    if (p.rg) { y = Math.max(st.fH, st.fZ) * 1.1 / sF / p.rg; gmin = 10; }
+    else { if (p.g.includes("fietsH")) y = Math.max(y, st.fH / sF); if (p.g.includes("fietsZ")) y = Math.max(y, st.fZ / sF); }
+    if (p.g.includes("voetH") || p.g.includes("voetZ")) gmin = Math.max(gmin, Math.round(st.w / 1.2 * .5));
+    if (p.pv) gmin = Math.max(8, Math.round(st.w / 1.2 * .6));
+    p.y = y; p.gmin = gmin;
+  });
+  const tramAct = prio ? st.t * 2 : 0;
+  const Yprio = tramAct * 11 / 3600;
+  const L = ph.reduce((a, p) => a + p.lost, 0);
+  const Y = ph.reduce((a, p) => a + p.y, 0) + Yprio;
+  let over = Y >= 0.95;
+  let C = over ? 120 : clamp((1.5 * L + 5) / (1 - Y), 36, 120);
+  const alloc = C => {
+    const eff = C - L - Yprio * C;
+    let g = ph.map(p => (Y - Yprio) > 0 ? eff * p.y / (Y - Yprio) : eff / ph.length);
+    for (let it = 0; it < 5; it++) {
+      const fixed = g.map((x, i) => x < ph[i].gmin);
+      const rest = eff - ph.reduce((a, p, i) => a + (fixed[i] ? p.gmin : 0), 0);
+      const yFree = ph.reduce((a, p, i) => a + (fixed[i] ? 0 : p.y), 0);
+      g = ph.map((p, i) => fixed[i] ? p.gmin : (yFree > 0 ? rest * p.y / yFree : rest / Math.max(1, fixed.filter(f => !f).length)));
+    }
+    return g;
+  };
+  let g = alloc(C);
+  const need = ph.reduce((a, p, i) => a + Math.max(p.gmin, 0), 0) + L + Yprio * C;
+  if (need > C) { C = clamp(need, 36, 150); g = alloc(C); }
+  // tijdlijn
+  let t = 0; const tl = ph.map((p, i) => { const s = t; t += g[i]; const e = t; t += p.lost + (Yprio * C) / ph.length; return { s, e, p }; });
+  C = t;
+  const groups = ["autoH", "autoZ", "fietsH", "fietsZ", "voetH", "voetZ", "tram"];
+  const green = {}; groups.forEach(k => green[k] = tl.filter(x => x.p.g.includes(k)).map(x => [x.s, x.e]));
+  const reds = k => { const gs = green[k]; if (!gs.length) return [C]; const r = []; gs.forEach((iv, i) => { const next = gs[(i + 1) % gs.length]; let len = (i + 1 < gs.length ? next[0] : next[0] + C) - iv[1]; r.push(len); }); return r; };
+  const uni = k => reds(k).reduce((a, r) => a + r * r, 0) / (2 * C);
+  const gsum = k => green[k].reduce((a, [s, e]) => a + e - s, 0);
+  const web = (q, k) => {
+    const lam = gsum(k) / C, s = sA / 3600, qs = q / 3600;
+    if (q <= 0) return { d: 0, x: 0 };
+    const x = qs / (s * lam);
+    if (x >= 0.98) return { d: 180, x };
+    const d = C * (1 - lam) ** 2 / (2 * (1 - lam * x)) + x * x / (2 * qs * (1 - x));
+    return { d: Math.min(180, d * 0.9), x };
+  };
+  const wH = web(st.aH, "autoH"), wZ = web(st.aZ, "autoZ");
+  const avg = (pairs) => { const q = pairs.reduce((a, [f]) => a + f, 0); return q > 0 ? pairs.reduce((a, [f, d]) => a + f * d, 0) / q : 0; };
+  const res = {
+    voet: avg([[st.p * 2, uni("voetH")], [st.p * 2, uni("voetZ")]]),
+    fiets: avg([[st.fH * 2, uni("fietsH")], [st.fZ * 2, uni("fietsZ")]]),
+    ov: st.t > 0 ? (prio ? 4 : uni("tram")) : null,
+    auto: avg([[st.aH * 2, wH.d], [st.aZ * 2, wZ.d]]),
+  };
+  const ph_h = {
+    voet: res.voet * st.p * 4 / 3600, fiets: res.fiets * (st.fH + st.fZ) * 2 / 3600,
+    ov: st.t > 0 ? res.ov * st.t * 2 * 120 / 3600 : 0, auto: res.auto * (st.aH + st.aZ) * 2 * 1.3 / 3600,
+  };
+  const xmax = Math.max(wH.x, wZ.x);
+  return { C, L, Y, tl, green, res, ph_h, over: over || xmax >= 0.98, xmax, phases: ph };
+}
+
+/* -------- UI -------- */
+const presetsEl = $("#presets");
+PRESETS.forEach((p, i) => { const b = document.createElement("button"); b.className = "preset" + (i === 0 ? " on" : ""); b.textContent = p.name; b.onclick = () => { $$(".preset", presetsEl).forEach(x => x.classList.remove("on")); b.classList.add("on"); Object.assign(S, p.s); sync(); update(); }; presetsEl.appendChild(b); });
+VARIANTS.forEach(v => { const b = document.createElement("button"); b.className = "varbtn" + (v.id === S.variant ? " on" : ""); b.dataset.v = v.id; b.innerHTML = `<b>${v.n}</b><span>${v.d}</span>`; b.onclick = () => { S.variant = v.id; update(); }; $("#variants").appendChild(b); });
+$("#prio").onchange = e => { S.prio = e.target.checked; update(); };
+const laneSeg = segmented($("#lanes"), v => { S.lanes = +v; update(); });
+const fmts = { aH: v => fmt(v) + " /u", aZ: v => fmt(v) + " /u", fH: v => fmt(v) + " /u", fZ: v => fmt(v) + " /u", p: v => fmt(v) + " /u", t: v => v ? v + " /u" : "geen tram", w: v => v + " m" };
+Object.keys(fmts).forEach(k => $("#" + k).addEventListener("input", e => { S[k] = +e.target.value; update(); }));
+function sync() { Object.keys(fmts).forEach(k => { $("#" + k).value = S[k]; $("#v-" + k).textContent = fmts[k](S[k]); }); laneSeg.set(S.lanes); $("#prio").checked = S.prio; }
+
+let M = null;
+function update() {
+  sync();
+  $$(".varbtn").forEach(b => b.classList.toggle("on", b.dataset.v === S.variant));
+  $("#prio").disabled = S.t === 0;
+  M = model(S, S.variant, S.prio && S.t > 0);
+  renderModes(); renderPlan(); renderCmp();
+}
+function stompCheck(res) {
+  const order = ["voet", "fiets", "ov", "auto"].filter(k => res[k] !== null);
+  const sorted = [...order].sort((a, b) => res[a] - res[b]);
+  const viol = [];
+  for (let i = 0; i < order.length; i++) for (let j = i + 1; j < order.length; j++) if (res[order[i]] > res[order[j]] + Math.max(3, .15 * res[order[j]])) viol.push([order[i], order[j]]);
+  return { ok: viol.length === 0, viol, sorted };
+}
+function renderModes() {
+  const r = M.res, chk = stompCheck(r);
+  const maxW = Math.max(...Object.values(r).filter(v => v !== null), 1);
+  $("#modes").innerHTML = ["voet", "fiets", "ov", "auto"].map((k, i) => r[k] === null ? `<div class="mode"><div class="k">${MODENAME[k]}</div><div class="v faint">–</div><div class="s">geen tram op dit kruispunt</div></div>` :
+    `<div class="mode"><span class="rank">STOMP ${i + 1}</span><div class="k" style="color:${MODECOL[k]}">${MODENAME[k]}</div><div class="v">${r[k] >= 180 ? "> 180" : fmt(r[k])}<small> s</small></div><div class="s">gemiddeld per reiziger · samen ${fmt(M.ph_h[k], 1)} uur wachten per uur</div><div class="bar" style="width:${r[k] / maxW * 100}%;background:${MODECOL[k]}"></div></div>`).join("");
+  const v = $("#verdict");
+  if (M.over) {
+    const tips = [S.lanes === 1 ? "twee rijstroken" : null, M.phases.length > 2 ? "een variant met minder fasen" : null, "minder verkeer"].filter(Boolean);
+    v.className = "verdict bad";
+    v.innerHTML = `<span class="icon">!</span><span>Deze regeling past niet: het kruispunt raakt overbelast (verzadigingsgraad auto ${fmt(M.xmax * 100)}%, cyclus ${fmt(M.C)} s).<span class="sub">${M.phases.length > 2 ? "De extra fase kost zoveel groentijd dat de auto niet meer wordt afgewikkeld. " : ""}Probeer ${tips.join(", ")}.</span></span>`;
+    return;
+  }
+  if (chk.ok) { v.className = "verdict good"; v.innerHTML = `<span class="icon">✓</span><span>STOMP geregeld: wie hoger op de ladder staat, wacht niet langer.<span class="sub">Van kortste naar langste wachttijd: ${chk.sorted.map(k => `${MODENAME[k].toLowerCase()} ${fmt(r[k])} s`).join(" → ")}. Een verschil kleiner dan 3 s of 15% telt als gelijk.</span></span>`; }
+  else {
+    const [a, b] = chk.viol[0];
+    v.className = "verdict warn";
+    v.innerHTML = `<span class="icon">≠</span><span>STOMP ontworpen, niet STOMP geregeld: ${MODENAME[a].toLowerCase()} wacht ${fmt(r[a])} s, ${MODENAME[b].toLowerCase()} ${fmt(r[b])} s.<span class="sub">Van kortste naar langste wachttijd: ${chk.sorted.map(k => `${MODENAME[k].toLowerCase()} ${fmt(r[k])} s`).join(" → ")}. ${chk.viol.length > 1 ? `In totaal ${chk.viol.length} omkeringen ten opzichte van STOMP.` : ""} Een verschil kleiner dan 3 s of 15% telt als gelijk.</span></span>`;
+  }
+}
+const GROUPS = [["voetH", "Voetganger hoofdrichting", "voet"], ["voetZ", "Voetganger zijrichting", "voet"], ["fietsH", "Fiets hoofdrichting", "fiets"], ["fietsZ", "Fiets zijrichting", "fiets"], ["tram", "Tram", "ov"], ["autoH", "Auto hoofdrichting", "auto"], ["autoZ", "Auto zijrichting", "auto"]];
+function renderPlan() {
+  const el = $("#plan"); const W = el.clientWidth || 600;
+  const rows = GROUPS.filter(g => g[0] !== "tram" || S.t > 0);
+  const H = rows.length * 26 + 30, lx = 150, pw = W - lx - 10;
+  const X = t => lx + t / M.C * pw;
+  const svg = svgEl("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}` });
+  rows.forEach(([k, n, m], i) => {
+    const y = 6 + i * 26;
+    const t = svgEl("text", { x: 0, y: y + 14, "font-size": 12, fill: MODECOL[m], "font-weight": 600 }, svg); t.textContent = n;
+    svgEl("rect", { x: lx, y, width: pw, height: 18, fill: "#e8b4ae", rx: 2 }, svg);
+    M.green[k].forEach(([s, e]) => { svgEl("rect", { x: X(s), y, width: X(e) - X(s), height: 18, fill: "#3aa655", rx: 2 }, svg); svgEl("rect", { x: X(e), y, width: Math.max(1, X(Math.min(M.C, e + 3)) - X(e)), height: 18, fill: "#f2b705" }, svg); });
+    if (k === "tram" && S.prio) { const tt = svgEl("text", { x: lx + 6, y: y + 13, "font-size": 11, fill: "#fff", "font-weight": 700 }, svg); tt.textContent = "groen op aanvraag (prioriteit)"; svgEl("rect", { x: lx, y, width: pw, height: 18, fill: "#7b4fa3", opacity: .55, rx: 2 }, svg); }
+  });
+  for (let t = 0; t <= M.C; t += (M.C > 80 ? 20 : 10)) { const tx = svgEl("text", { x: X(t), y: H - 6, "text-anchor": "middle", "font-size": 10.5, fill: "#777" }, svg); tx.textContent = t + "s"; }
+  svgEl("line", { id: "cursor", x1: lx, x2: lx, y1: 2, y2: H - 18, stroke: "#1d2330", "stroke-width": 2 }, svg);
+  el.innerHTML = ""; el.appendChild(svg);
+  $("#cyc").textContent = `${fmt(M.C)} s`;
+  $("#plan-note").innerHTML = `<span style="color:#3aa655">■</span> groen <span style="color:#f2b705">■</span> geel <span style="color:#e8b4ae">■</span> rood. Verliestijd ${fmt(M.L)} s per cyclus (ontruimen tussen fasen). Belastinggraad Y = ${fmt(M.Y, 2)}.`;
+}
+/* kruispuntschets met animatie */
+let tNow = 0, speed = 1, last = null;
+segmented($("#speed"), v => speed = +v);
+function isGreen(k, t) { return M.green[k].some(([s, e]) => t >= s && t < e); }
+function drawXing() {
+  const el = $("#xing"); const W = Math.min(el.clientWidth || 300, 320), H = W;
+  const c = W / 2, rw = 34, svg = svgEl("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}` });
+  svgEl("rect", { x: 0, y: 0, width: W, height: H, fill: "#dfe8d6" }, svg);
+  // wegen
+  svgEl("rect", { x: c - rw, y: 0, width: 2 * rw, height: H, fill: "#555b63" }, svg);
+  svgEl("rect", { x: 0, y: c - rw, width: W, height: 2 * rw, fill: "#555b63" }, svg);
+  // fietspaden
+  [[c - rw - 12, 0, 10, c - rw - 18], [c + rw + 2, 0, 10, c - rw - 18], [c - rw - 12, c + rw + 18, 10, H], [c + rw + 2, c + rw + 18, 10, H]].forEach(([x, y, w, h]) => svgEl("rect", { x, y, width: w, height: h - y, fill: "#c8473c" }, svg));
+  [[0, c - rw - 12, c - rw - 18, 10], [c + rw + 18, c - rw - 12, W, 10], [0, c + rw + 2, c - rw - 18, 10], [c + rw + 18, c + rw + 2, W, 10]].forEach(([x, y, w, h]) => svgEl("rect", { x, y, width: w - x, height: h, fill: "#c8473c" }, svg));
+  // tram
+  if (S.t > 0) [c - 6, c + 6].forEach(x => svgEl("line", { x1: x, x2: x, y1: 0, y2: H, stroke: "#9a7cc0", "stroke-width": 2 }, svg));
+  // zebra's
+  const zebra = (x, y, w, h, on) => { const g = svgEl("g", {}, svg); const n = 6; for (let i = 0; i < n; i++) { if (w > h) svgEl("rect", { x: x + i * w / n, y, width: w / n * .55, height: h, fill: on ? "#fff" : "#9aa0a8" }, g); else svgEl("rect", { x, y: y + i * h / n, width: w, height: h / n * .55, fill: on ? "#fff" : "#9aa0a8" }, g); } };
+  const vH = isGreen("voetH", tNow), vZ = isGreen("voetZ", tNow);
+  zebra(c - rw - 14, c - rw - 30, 2 * rw + 28, 10, vZ); zebra(c - rw - 14, c + rw + 20, 2 * rw + 28, 10, vZ);
+  zebra(c - rw - 30, c - rw - 14, 10, 2 * rw + 28, vH); zebra(c + rw + 20, c - rw - 14, 10, 2 * rw + 28, vH);
+  // lichten per richting
+  const light = (x, y, on, col, label) => { svgEl("circle", { cx: x, cy: y, r: 8, fill: on ? "#3aa655" : "#d33", stroke: "#fff", "stroke-width": 2 }, svg); const t = svgEl("text", { x, y: y + 3.5, "text-anchor": "middle", "font-size": 9, fill: "#fff", "font-weight": 700 }, svg); t.textContent = label; };
+  const aH = isGreen("autoH", tNow), aZ = isGreen("autoZ", tNow), fH = isGreen("fietsH", tNow), fZ = isGreen("fietsZ", tNow), tr = S.prio ? true : isGreen("tram", tNow);
+  light(c - 18, c - rw - 44, aH, 0, "A"); light(c + 18, c + rw + 44, aH, 0, "A");
+  light(c + rw + 44, c - 18, aZ, 0, "A"); light(c - rw - 44, c + 18, aZ, 0, "A");
+  light(c - rw - 7, c - rw - 44, fH, 0, "F"); light(c + rw + 7, c + rw + 44, fH, 0, "F");
+  light(c + rw + 44, c - rw - 7, fZ, 0, "F"); light(c - rw - 44, c + rw + 7, fZ, 0, "F");
+  if (S.t > 0) { light(c, 16, tr, 0, "T"); light(c, H - 16, tr, 0, "T"); }
+  // pijlen voor groene stromen
+  const arrow = (x1, y1, x2, y2, col) => { svgEl("line", { x1, y1, x2, y2, stroke: col, "stroke-width": 5, "stroke-linecap": "round", opacity: .9 }, svg); };
+  if (aH) { arrow(c - 14, 40, c - 14, H - 40, "#ffffff"); arrow(c + 14, H - 40, c + 14, 40, "#ffffff"); }
+  if (aZ) { arrow(40, c + 14, W - 40, c + 14, "#ffffff"); arrow(W - 40, c - 14, 40, c - 14, "#ffffff"); }
+  if (fH && fZ) { arrow(c - rw - 7, c - rw - 20, c + rw + 7, c + rw + 20, "#ffb3ab"); arrow(c + rw + 7, c - rw - 20, c - rw - 7, c + rw + 20, "#ffb3ab"); }
+  const cur = M.tl.find(x => tNow >= x.s && tNow < x.e);
+  $("#phase-name").textContent = cur ? cur.p.n : "ontruimen (alles rood)";
+  $("#clock").textContent = `${fmt(tNow)} / ${fmt(M.C)} s`;
+  el.innerHTML = ""; el.appendChild(svg);
+  const cu = $("#cursor"); if (cu) { const lx = 150, pw = ($("#plan").clientWidth || 600) - lx - 10; const x = lx + tNow / M.C * pw; cu.setAttribute("x1", x); cu.setAttribute("x2", x); }
+}
+function loop(ts) { if (last === null) last = ts; const dt = Math.min(.2, (ts - last) / 1000); last = ts; if (M) { tNow = (tNow + dt * speed) % M.C; drawXing(); } requestAnimationFrame(loop); }
+requestAnimationFrame(loop);
+
+function renderCmp() {
+  const rows = [];
+  VARIANTS.forEach(v => [false, true].forEach(pr => { if (pr && S.t === 0) return; rows.push({ v, pr, m: model(S, v.id, pr) }); }));
+  const best = rows.reduce((a, b) => { const sa = Object.values(a.m.ph_h).reduce((x, y) => x + y, 0), sb = Object.values(b.m.ph_h).reduce((x, y) => x + y, 0); return sb < sa ? b : a; });
+  $("#cmp").innerHTML = `<thead><tr><th>Variant</th><th class="r">Cyclus</th><th class="r" style="color:${MODECOL.voet}">Lopen</th><th class="r" style="color:${MODECOL.fiets}">Fiets</th>${S.t ? `<th class="r" style="color:${MODECOL.ov}">Tram</th>` : ""}<th class="r">Auto</th><th class="r" title="Opgeteld over alle reizigers, per uur">Wachten totaal (uur/uur)</th><th>STOMP</th></tr></thead><tbody>` +
+    rows.map(r => {
+      const tot = Object.values(r.m.ph_h).reduce((a, b) => a + b, 0), chk = stompCheck(r.m.res);
+      const f = v => v === null ? "–" : v >= 180 ? "> 180" : fmt(v);
+      return `<tr class="${r.v.id === S.variant && r.pr === (S.prio && S.t > 0) ? "cur" : ""}" data-v="${r.v.id}" data-p="${r.pr}"><td>${r.v.n}${r.pr ? " + tramprioriteit" : ""}${r === best ? ' <span class="badge info">minste totale wachttijd</span>' : ""}</td><td class="r">${fmt(r.m.C)} s</td><td class="r">${f(r.m.res.voet)}</td><td class="r">${f(r.m.res.fiets)}</td>${S.t ? `<td class="r">${f(r.m.res.ov)}</td>` : ""}<td class="r">${f(r.m.res.auto)}</td><td class="r">${fmt(tot, 1)}</td><td>${r.m.over ? '<span class="badge bad">overbelast</span>' : chk.ok ? '<span class="badge good">ja</span>' : `<span class="badge warn">${chk.viol.length} omkering${chk.viol.length > 1 ? "en" : ""}</span>`}</td></tr>`;
+    }).join("") + "</tbody>";
+  $$("#cmp tbody tr").forEach(tr => tr.onclick = () => { S.variant = tr.dataset.v; S.prio = tr.dataset.p === "true"; update(); });
+}
+sync(); update();
+addEventListener("resize", update);
+</script>
+</body>
+</html>

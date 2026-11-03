@@ -1,0 +1,603 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Oversteken en mengen</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  .tabs { display: flex; gap: 4px; margin: 0 0 14px; border-bottom: 1px solid var(--line); }
+  .tabs button {
+    font: inherit; font-size: 15px; font-weight: 600; padding: 10px 16px; border: 0; background: transparent;
+    color: var(--ink-2); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px;
+  }
+  .tabs button.on { color: var(--ink); border-bottom-color: var(--accent); }
+  .tabpane { display: none; }
+  .tabpane.on { display: block; }
+  .headline { font-size: 22px; font-weight: 650; line-height: 1.3; letter-spacing: -.01em; }
+  .headline b { color: var(--accent); }
+  #sim { width: 100%; height: 230px; display: block; border-radius: 8px; background: #e9e6dc; }
+  .simbar { display: flex; gap: 10px; align-items: center; margin-top: 8px; flex-wrap: wrap; font-size: 13px; color: var(--ink-2); }
+  .simbar .stat b { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .scen { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  @media (max-width: 980px) { .scen { grid-template-columns: 1fr 1fr; } }
+  .scen .card { border: 1px solid var(--line); border-radius: 9px; padding: 10px 12px; background: #fff; }
+  .scen .card h4 { font-size: 13.5px; margin: 0 0 4px; }
+  .scen .card .big { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .scen .card .cost { font-size: 12px; color: var(--ink-2); margin-top: 4px; }
+  .scen .card.best { border-color: var(--good); box-shadow: inset 0 0 0 1px var(--good); }
+  svg text { font-family: var(--font); }
+  .losbar { display: flex; height: 10px; border-radius: 5px; overflow: hidden; margin: 6px 0 2px; }
+  .losbar span { flex: 1; }
+  .matrix-wrap { position: relative; }
+  .seg.full { display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; }
+  .seg.full button { padding: 6px 4px; }
+  .seg.full button.on small { color: #e6f3f2; }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a class="brand" href="../index.html">Themadag Mobiliteit · Rotterdam × Den Haag</a>
+  <span class="sep">/</span><span>A · Straat- en kruispuntlab</span>
+  <span class="spacer"></span>
+  <span class="small" style="color:#cfd3dc">Sessie 8 · Ontwerpen voor fiets en voetganger</span>
+</div>
+
+<div class="hero">
+  <div class="kicker">Inzichtprototype · oversteekbaarheid en menging</div>
+  <h1>Hoe lang wacht een voetganger aan een druk fietspad?</h1>
+  <p class="lead">Kies een casus of schuif met de intensiteit. Je ziet direct de wachttijd, de kans op een gat en wat een middeneiland, een zebra of een verkeerslicht oplevert. Het tweede tabblad gaat over mengen of scheiden in langsrichting.</p>
+</div>
+
+<div class="wrap">
+  <div class="tabs" role="tablist">
+    <button class="on" data-tab="dwars" role="tab">1 · Oversteken (dwars)</button>
+    <button data-tab="langs" role="tab">2 · Mengen of scheiden (langs)</button>
+  </div>
+
+  <!-- ===================== TAB 1: OVERSTEKEN ===================== -->
+  <section class="tabpane on" id="tab-dwars">
+    <div class="grid side-main">
+      <div>
+        <div class="panel">
+          <div class="panel-title"><span class="step">1</span><h2>Kies een casus</h2></div>
+          <div class="presets" id="presets-dwars"></div>
+          <p class="small" style="margin-top:8px">Voorbeeldwaarden om het gesprek te starten. Vervang ze door een telling (NDW Dexter Fiets of eigen telling).</p>
+        </div>
+        <div class="panel">
+          <div class="panel-title"><span class="step">2</span><h2>Pas de situatie aan</h2></div>
+          <div class="slider"><span class="lbl">Fietsers per uur (spits, beide richtingen)</span><span class="val" id="v-q"></span><input type="range" id="q" min="0" max="4000" step="50"></div>
+          <div class="slider"><span class="lbl">Breedte van de oversteek</span><span class="val" id="v-w"></span><input type="range" id="w" min="1.5" max="8" step="0.25"><span class="hint">Breedte van het fietspad dat in één keer overgestoken moet worden.</span></div>
+          <label class="field">Wie steekt over?</label>
+          <div class="seg full" id="walker">
+            <button data-v="1.2" class="on">Gemiddeld<br><small>1,2 m/s</small></button>
+            <button data-v="0.9">Oudere<br><small>0,9 m/s</small></button>
+            <button data-v="0.7">Rollator<br><small>0,7 m/s</small></button>
+          </div>
+          <div class="slider"><span class="lbl">Veiligheidsmarge en reactietijd</span><span class="val" id="v-m"></span><input type="range" id="m" min="0.5" max="4" step="0.25"></div>
+          <div class="slider"><span class="lbl">Aandeel snelle fietsachtigen (e-bike, speed pedelec, scooter)</span><span class="val" id="v-f"></span><input type="range" id="f" min="0" max="60" step="5"><span class="hint">Verandert de wachttijd niet, wel de afstand die je moet inschatten (zie onder de kerncijfers) en de simulatie.</span></div>
+          <label class="field" style="margin-top:12px"><input type="checkbox" id="twoway" checked> Tweerichtingenfietspad</label>
+          <div class="slider"><span class="lbl">Overstekende voetgangers per uur</span><span class="val" id="v-p"></span><input type="range" id="p" min="20" max="1500" step="20"><span class="hint">Alleen nodig voor de simulatie en de kosten voor fietsers bij een zebra.</span></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel">
+          <div class="headline" id="headline"></div>
+          <div class="kpis" style="margin-top:14px">
+            <div class="kpi" id="kpi-wait"><div class="k">Gemiddelde wachttijd</div><div class="v num" id="o-wait"></div><div class="s" id="o-los"></div></div>
+            <div class="kpi"><div class="k">Benodigd gat</div><div class="v num" id="o-t"></div><div class="s">oversteektijd + marge</div></div>
+            <div class="kpi"><div class="k">Kans dat het eerste gat genoeg is</div><div class="v num" id="o-p"></div><div class="s" id="o-p-s"></div></div>
+            <div class="kpi" id="kpi-30"><div class="k">Wacht langer dan 30 s</div><div class="v num" id="o-30"></div><div class="s">dan neemt riskant oversteken toe</div></div>
+          </div>
+          <div style="margin-top:12px" class="small" id="o-dist"></div>
+        </div>
+
+        <div class="panel">
+          <div class="row" style="justify-content:space-between">
+            <h3 style="margin:0">Live simulatie: fietsers komen willekeurig aan, voetgangers wachten op een gat</h3>
+            <div class="row"><div class="seg" id="speed"><button data-v="1" class="on">1×</button><button data-v="3">3×</button><button data-v="8">8×</button></div><button class="btn small" id="sim-reset">Opnieuw</button></div>
+          </div>
+          <canvas id="sim" style="margin-top:10px"></canvas>
+          <div class="simbar">
+            <span class="stat">Gesimuleerde gemiddelde wachttijd: <b id="s-avg">–</b></span>
+            <span class="stat">Langste wachttijd: <b id="s-max">–</b></span>
+            <span class="stat">Voetgangers: <b id="s-n">0</b></span>
+            <span class="legend"><span><span class="sw" style="background:#7d1f17"></span>fietser</span><span><span class="sw" style="background:#f08a24"></span>snelle fietsachtige</span><span><span class="sw" style="background:#2e7d32;border-radius:50%"></span>voetganger (kleurt rood bij lang wachten)</span></span>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Wachttijd bij elke fietsintensiteit</h3>
+          <div id="curve"></div>
+          <div class="legend" style="margin-top:4px">
+            <span><span class="sw" style="background:var(--ink)"></span>huidige situatie</span>
+            <span id="leg-island"><span class="sw" style="background:var(--accent)"></span>met middeneiland (twee halve oversteken)</span>
+            <span><span class="sw" style="background:#b9bdc6"></span>rollator (0,7 m/s)</span>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h3>Wat helpt? Vier ontwerpopties naast elkaar</h3>
+          <div class="scen" id="scen"></div>
+          <p class="small" style="margin-top:8px">Kortste wachttijd voor de voetganger is niet altijd de beste keuze: kijk ook naar de kosten voor fietsers. Zebra op het fietspad: fietsers moeten voorrang geven (RVV art. 49). Verkeerslicht: cyclus 90 s, 10 s groen voor voetgangers. Middeneiland vraagt minimaal 2,5 m extra profielbreedte.</p>
+        </div>
+
+        <details class="explain panel">
+          <summary>Hoe wordt dit berekend?</summary>
+          <p>Fietsers komen willekeurig aan (Poisson). De kans dat een gat langer is dan de benodigde tijd <i>t</i> is</p>
+          <p><span class="formula">P(gat ≥ t) = e<sup>−q·t/3600</sup></span>  met q = fietsers per uur en t = breedte / loopsnelheid + marge.</p>
+          <p>De gemiddelde wachttijd volgt uit de formule van Adams: <span class="formula">W = (e<sup>λt</sup> − λt − 1) / λ</span> met λ = q/3600 per seconde. De beoordeling (A t/m F) volgt de indeling voor ongeregelde voetgangersoversteken uit de Highway Capacity Manual (2010): A ≤ 5 s, B ≤ 10 s, C ≤ 20 s, D ≤ 30 s, E ≤ 45 s, F > 45 s.</p>
+          <p>Snelle fietsachtigen veranderen de tijdsformule niet, maar wel wat een voetganger moet inschatten: bij dezelfde tijd ligt de fietser verder weg. Daarom tonen we de benodigde afstand per snelheid.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== TAB 2: MENGEN ===================== -->
+  <section class="tabpane" id="tab-langs">
+    <div class="grid side-main">
+      <div>
+        <div class="panel">
+          <div class="panel-title"><span class="step">1</span><h2>Kies een casus</h2></div>
+          <div class="presets" id="presets-langs"></div>
+          <p class="small" style="margin-top:8px">Voorbeeldwaarden. De intensiteiten van voetgangers zijn nauwelijks open beschikbaar; gebruik eigen tellingen.</p>
+        </div>
+        <div class="panel">
+          <div class="panel-title"><span class="step">2</span><h2>Pas de situatie aan</h2></div>
+          <div class="slider"><span class="lbl">Voetgangers per uur (beide richtingen)</span><span class="val" id="v-lp"></span><input type="range" id="lp" min="0" max="3000" step="50"></div>
+          <div class="slider"><span class="lbl">Fietsers per uur (beide richtingen)</span><span class="val" id="v-lq"></span><input type="range" id="lq" min="0" max="4000" step="50"></div>
+          <div class="slider"><span class="lbl">Beschikbare breedte voor beide samen</span><span class="val" id="v-lw"></span><input type="range" id="lw" min="2" max="12" step="0.5"></div>
+          <div class="slider"><span class="lbl">Aandeel snelle fietsachtigen</span><span class="val" id="v-lf"></span><input type="range" id="lf" min="0" max="60" step="5"></div>
+          <details class="explain">
+            <summary>Discussiegrenzen aanpassen</summary>
+            <p class="small">Dit zijn vuistregels voor het gesprek, geen CROW-norm. Pas ze samen aan.</p>
+            <p class="small">Drukte-index = voetgangers per meter × fietsers per meter (per uur) ÷ 1000, maal een gewicht voor snelle fietsachtigen. Boven 500 fietsers of voetgangers per meter per uur is scheiden altijd nodig.</p>
+            <div class="slider"><span class="lbl">Mengen kan tot drukte-index</span><span class="val" id="v-t1"></span><input type="range" id="t1" min="1" max="15" step="1"></div>
+            <div class="slider"><span class="lbl">Scheiden nodig vanaf drukte-index</span><span class="val" id="v-t2"></span><input type="range" id="t2" min="8" max="60" step="1"></div>
+          </details>
+        </div>
+      </div>
+      <div>
+        <div class="panel">
+          <div class="headline" id="l-headline"></div>
+          <div class="kpis" style="margin-top:14px">
+            <div class="kpi"><div class="k">Fietsers die een voetganger per minuut passeren</div><div class="v num" id="l-pass"></div><div class="s" id="l-pass-s"></div></div>
+            <div class="kpi"><div class="k">Drukte-index</div><div class="v num" id="l-dens"></div><div class="s" id="l-dens-s"></div></div>
+            <div class="kpi"><div class="k">Snelheidsverschil fiets–voetganger</div><div class="v num" id="l-dv"></div><div class="s" id="l-dv-s"></div></div>
+            <div class="kpi"><div class="k">Profiel als je scheidt</div><div class="v num" id="l-split"></div><div class="s" id="l-split-s"></div></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>Waar valt deze locatie? Mengen, mengen met maatregelen of scheiden</h3>
+          <div class="legend" style="margin-bottom:6px"><span><span class="sw" style="background:#2e7d3233;border:1px solid #2e7d32"></span>mengen kan</span><span><span class="sw" style="background:#c27c0033;border:1px solid #c27c00"></span>mengen met maatregelen</span><span><span class="sw" style="background:#b3261e33;border:1px solid #b3261e"></span>scheiden</span></div>
+          <div class="matrix-wrap" id="matrix"></div>
+          <p class="small">Elke stip is een casus, omgerekend per meter breedte zodat smalle en brede profielen vergelijkbaar zijn. De zonegrenzen zijn vuistregels voor het gesprek (aan te passen links). Meer snelle fietsachtigen schuiven de grenzen naar linksonder: hun ontmoetingen tellen zwaarder, want bewegingsenergie stijgt kwadratisch met de snelheid.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="next-step">
+    <div class="box"><h3>Inzicht vandaag</h3>Snel zien of een oversteek of een gemengd profiel werkt, en welk ontwerp het meeste oplevert. Indicatief, met voorbeeldwaarden.</div>
+    <div class="box"><h3>Werkproces morgen: knelpuntenradar langzaam verkeer</h3>Dezelfde rekenregels stadsbreed op NDW Dexter-fietstellingen, BGT en BRON-ongevallen: een jaarlijkse toplijst van oversteken en gedeelde profielen voor de programmering.</div>
+    <div class="box"><h3>Let op</h3><ul><li>Voetgangerstellingen zijn nauwelijks open; gebruik eigen tellingen.</li><li>Fietsers rijden in de praktijk in pelotons achter verkeerslichten: dat geeft grotere gaten dan het Poisson-model.</li><li>BRON mist veel enkelvoudige fietsongevallen.</li></ul></div>
+  </div>
+</div>
+<div class="footer">Prototype voor de themadag Mobiliteit Rotterdam × Den Haag, november 2026. Rekenmodel: Poisson-aankomsten, formule van Adams, LOS naar HCM 2010.</div>
+
+<script src="../assets/common.js"></script>
+<script>
+/* ---------------- tabbladen ---------------- */
+$$(".tabs button").forEach(b => b.addEventListener("click", () => {
+  $$(".tabs button").forEach(x => x.classList.toggle("on", x === b));
+  $$(".tabpane").forEach(p => p.classList.toggle("on", p.id === "tab-" + b.dataset.tab));
+  if (b.dataset.tab === "langs") renderLangs();
+  else { sim.size(); update(); }
+}));
+
+/* ================= TAB 1: OVERSTEKEN ================= */
+const PRESETS_DWARS = [
+  { id: "weena", city: "rdam", name: "Weena", q: 1800, w: 4.0, f: 25, twoway: true, p: 600 },
+  { id: "coolsingel", city: "rdam", name: "Coolsingel", q: 1300, w: 2.5, f: 25, twoway: false, p: 900 },
+  { id: "laakhavens", city: "dhaag", name: "Laakhavens", q: 900, w: 3.5, f: 20, twoway: true, p: 400 },
+  { id: "wijk", city: null, name: "Rustige wijkstraat", q: 150, w: 2.0, f: 10, twoway: false, p: 100 },
+];
+const S = { q: 1800, w: 4, v: 1.2, m: 2, f: 25, twoway: true, p: 600 };
+const LOS = [
+  { max: 5, l: "A", c: "#2e7d32", t: "nauwelijks wachten" },
+  { max: 10, l: "B", c: "#689f38", t: "kort wachten" },
+  { max: 20, l: "C", c: "#c0a000", t: "merkbaar wachten" },
+  { max: 30, l: "D", c: "#e08a00", t: "lang wachten" },
+  { max: 45, l: "E", c: "#d35400", t: "zeer lang: riskant oversteken neemt toe" },
+  { max: Infinity, l: "F", c: "#b3261e", t: "onacceptabel: mensen steken door gaten die te klein zijn" },
+];
+const los = (w) => LOS.find(x => w <= x.max);
+const needT = (w, v, m) => w / v + m;
+function adams(q, t) { // gemiddelde wachttijd in s
+  const lam = q / 3600;
+  if (lam <= 0) return 0;
+  const x = lam * t;
+  return (Math.exp(x) - x - 1) / lam;
+}
+function pWaitLonger(q, t, T) { // kans dat wachttijd > T, Monte Carlo met vaste seed
+  const lam = q / 3600; if (lam <= 0) return 0;
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  let over = 0; const N = 6000;
+  for (let i = 0; i < N; i++) {
+    let waited = -Math.log(1 - rnd()) / lam; // resterend gat bij aankomst (geheugenloos)
+    let wt = 0;
+    if (waited < t) {
+      wt = waited;
+      while (true) { const g = -Math.log(1 - rnd()) / lam; if (g >= t) break; wt += g; if (wt > T) break; }
+    }
+    if (wt > T) over++;
+  }
+  return over / N;
+}
+
+function presetButtons(el, list, onPick, activeId) {
+  el.innerHTML = "";
+  list.forEach(p => {
+    const b = document.createElement("button");
+    b.className = "preset" + (p.id === activeId ? " on" : "");
+    b.innerHTML = (p.city ? `<span class="tag ${p.city}">${p.city === "rdam" ? "R'dam" : "DH"}</span>` : "") + p.name;
+    b.onclick = () => { $$(".preset", el).forEach(x => x.classList.remove("on")); b.classList.add("on"); onPick(p); };
+    el.appendChild(b);
+  });
+}
+const walkerSeg = segmented($("#walker"), v => { S.v = +v; update(); });
+presetButtons($("#presets-dwars"), PRESETS_DWARS, p => {
+  Object.assign(S, { q: p.q, w: p.w, f: p.f, twoway: p.twoway, p: p.p });
+  syncInputs(); update(); sim.reset();
+}, "weena");
+
+function bind(id, key, fmtFn) {
+  const el = $("#" + id);
+  el.addEventListener("input", () => { S[key] = +el.value; update(); });
+  return () => { el.value = S[key]; $("#v-" + id).textContent = fmtFn(S[key]); };
+}
+const syncers = [
+  bind("q", "q", v => fmt(v) + " /u"),
+  bind("w", "w", v => fmt(v, 2).replace(/,?0+$/, "") + " m"),
+  bind("m", "m", v => fmt(v, 2).replace(/,?0+$/, "") + " s"),
+  bind("f", "f", v => v + "%"),
+  bind("p", "p", v => fmt(v) + " /u"),
+];
+$("#twoway").addEventListener("change", e => { S.twoway = e.target.checked; update(); sim.reset(); });
+function syncInputs() { syncers.forEach(s => s()); $("#twoway").checked = S.twoway; }
+
+function update() {
+  syncers.forEach(s => s());
+  const t = needT(S.w, S.v, S.m);
+  const W = adams(S.q, t);
+  const L = los(W);
+  const p0 = Math.exp(-S.q * t / 3600);
+  const p30 = pWaitLonger(S.q, t, 30);
+  $("#o-wait").innerHTML = (W > 600 ? "> 10 min" : fmt(W, W < 10 ? 1 : 0) + " <small>s</small>");
+  $("#o-los").innerHTML = `<span class="badge" style="background:${L.c}22;color:${L.c}">LOS ${L.l}</span> ${L.t}`;
+  $("#kpi-wait").className = "kpi " + (W <= 10 ? "good" : W <= 30 ? "warn" : "bad");
+  $("#o-t").innerHTML = fmt(t, 1) + " <small>s</small>";
+  $("#o-p").innerHTML = fmt(p0 * 100) + " <small>%</small>";
+  $("#o-p-s").textContent = p0 > .5 ? "meestal direct oversteken" : "meestal eerst een of meer gaten afwachten";
+  $("#o-30").innerHTML = (p30 < 0.005 ? "< 1" : fmt(p30 * 100)) + " <small>%</small>";
+  $("#kpi-30").className = "kpi " + (p30 < .05 ? "good" : p30 < .2 ? "warn" : "bad");
+  const gapEvery = S.q > 0 ? 3600 / S.q : Infinity;
+  const v18 = 18 / 3.6, v28 = 28 / 3.6;
+  $("#o-dist").innerHTML = `Gemiddeld komt er elke <b>${fmt(gapEvery, 1)} s</b> een fietser langs. Een voetganger moet inschatten of de dichtstbijzijnde fietser ver genoeg weg is: <b>${fmt(t * v18)} m</b> bij een gewone fiets (18 km/u), maar <b>${fmt(t * v28)} m</b> bij een snelle fietsachtige (28 km/u). Bij ${S.f}% snelle fietsachtigen wordt die inschatting veel lastiger.`;
+  const who = S.v === 1.2 ? "een voetganger" : S.v === 0.9 ? "een oudere voetganger" : "iemand met een rollator";
+  $("#headline").innerHTML = S.q === 0 ? "Geen fietsers: direct oversteken." :
+    `Bij <b>${fmt(S.q)} fietsers per uur</b> wacht ${who} gemiddeld <b>${W > 600 ? "meer dan 10 minuten" : fmt(W) + " seconden"}</b> op een gat van ${fmt(t, 1)} s. ${W > 30 ? "Dat is te lang: mensen gaan door te kleine gaten." : W > 20 ? "Dat is lang: ongeduld en riskant oversteken liggen op de loer." : W > 10 ? "Merkbaar, maar meestal acceptabel." : "Prima oversteekbaar."}`;
+  renderCurve(t);
+  $("#leg-island").style.display = S.twoway ? "" : "none";
+  renderScenarios(t, W);
+  sim.setParams();
+}
+
+function renderCurve(t) {
+  const el = $("#curve"); const Wd = el.clientWidth || 760, H = 260;
+  const m = { l: 52, r: 16, t: 14, b: 40 };
+  const qmax = 4000, ymax = 60;
+  const X = q => m.l + q / qmax * (Wd - m.l - m.r);
+  const Y = w => m.t + (1 - Math.min(w, ymax) / ymax) * (H - m.t - m.b);
+  const svg = svgEl("svg", { width: Wd, height: H, viewBox: `0 0 ${Wd} ${H}`, role: "img", "aria-label": "Wachttijd tegen fietsintensiteit" });
+  // LOS-banden
+  let prev = 0;
+  LOS.forEach(L => {
+    const top = Math.min(L.max, ymax);
+    if (prev >= ymax) return;
+    svgEl("rect", { x: m.l, y: Y(top), width: Wd - m.l - m.r, height: Y(prev) - Y(top), fill: L.c, opacity: .09 }, svg);
+    const tt = svgEl("text", { x: m.l + 6, y: Y(top) + 13, "text-anchor": "start", "font-size": 11, fill: L.c, "font-weight": 700, stroke: "#fff", "stroke-width": 3, "paint-order": "stroke" }, svg);
+    tt.textContent = "LOS " + L.l;
+    prev = top;
+  });
+  // assen
+  for (let q = 0; q <= qmax; q += 500) {
+    svgEl("line", { x1: X(q), x2: X(q), y1: H - m.b, y2: H - m.b + 4, stroke: "#999" }, svg);
+    const tx = svgEl("text", { x: X(q), y: H - m.b + 17, "text-anchor": "middle", "font-size": 11, fill: "#666" }, svg); tx.textContent = fmt(q);
+  }
+  for (let w = 0; w <= ymax; w += 10) {
+    svgEl("line", { x1: m.l, x2: Wd - m.r, y1: Y(w), y2: Y(w), stroke: "#000", opacity: .06 }, svg);
+    const ty = svgEl("text", { x: m.l - 6, y: Y(w) + 4, "text-anchor": "end", "font-size": 11, fill: "#666" }, svg); ty.textContent = w + " s";
+  }
+  const xl = svgEl("text", { x: (m.l + Wd - m.r) / 2, y: H - 6, "text-anchor": "middle", "font-size": 12, fill: "#444" }, svg); xl.textContent = "Fietsers per uur";
+  const yl = svgEl("text", { x: 14, y: (m.t + H - m.b) / 2, "text-anchor": "middle", "font-size": 12, fill: "#444", transform: `rotate(-90 14 ${(m.t + H - m.b) / 2})` }, svg); yl.textContent = "Gemiddelde wachttijd";
+  const line = (fn, color, dash, width) => {
+    let d = "";
+    for (let q = 0; q <= qmax; q += 25) d += (q ? "L" : "M") + X(q).toFixed(1) + "," + Y(fn(q)).toFixed(1);
+    svgEl("path", { d, fill: "none", stroke: color, "stroke-width": width || 2.5, "stroke-dasharray": dash || "" }, svg);
+  };
+  line(q => adams(q, needT(S.w, 0.7, S.m)), "#b9bdc6", "", 2);
+  if (S.twoway) line(q => 2 * adams(q / 2, needT(S.w / 2, S.v, S.m)), "#0b6e69", "6 4", 2.5);
+  line(q => adams(q, t), "#1d2330", "", 3);
+  const W = adams(S.q, t);
+  svgEl("circle", { cx: X(S.q), cy: Y(W), r: 7, fill: "#fff", stroke: "#1d2330", "stroke-width": 3 }, svg);
+  const lab = svgEl("text", { x: X(S.q) - 12, y: Math.max(Y(W) - 12, 26), "text-anchor": "end", "font-size": 13, "font-weight": 700, fill: "#1d2330", stroke: "#fff", "stroke-width": 4, "paint-order": "stroke" }, svg);
+  lab.textContent = W > ymax ? `> ${ymax} s` : fmt(W) + " s";
+  el.innerHTML = ""; el.appendChild(svg);
+}
+
+function renderScenarios(t, W) {
+  // 1. huidig, 2. middeneiland, 3. zebra, 4. VRI
+  const half = S.twoway ? 2 * adams(S.q / 2, needT(S.w / 2, S.v, S.m)) : null;
+  const tc = S.w / S.v; // tijd dat voetganger het fietspad blokkeert
+  const pps = S.p / 3600;
+  const blocked = 1 - Math.exp(-pps * tc); // fractie tijd dat er iemand op de zebra loopt (benadering)
+  const bikeDelay = blocked * tc / 2 + blocked * tc / 2; // grove benadering in s per fietser
+  const C = 90, g = 10;
+  const vri = (C - g) ** 2 / (2 * C);
+  const vriBike = (C - 40) ** 2 / (2 * C);
+  const narrow = adams(S.q, needT(Math.max(1.5, S.w - 1), S.v, S.m));
+  const cards = [
+    { h: "Zoals nu", w: W, cost: "Geen ingreep." },
+    S.twoway ? { h: "Middeneiland", w: half, cost: "Twee keer een halve oversteek, elk met de helft van de fietsers." }
+             : { h: "Versmallen met 1 m", w: narrow, cost: "Eenrichtingsfietspad: een middeneiland helpt niet, een kortere oversteek wel." },
+    { h: "Zebra op fietspad", w: 0.5, cost: `Fietsers geven voorrang. ~${fmt(blocked * 100)}% van de fietsers moet remmen, ~${fmt(bikeDelay, 1)} s vertraging per fietser.` },
+    { h: "Verkeerslicht", w: vri, cost: `Voetganger wacht op groen (cyclus ${C} s). Fietsers wachten gemiddeld ~${fmt(vriBike)} s.` },
+  ];
+  const best = cards.reduce((a, b) => (b.w < a.w ? b : a));
+  best.h += ' <span class="badge good" style="font-size:10.5px">kortste wachttijd</span>';
+  cards[2].cost = cards[2].cost.replace("~", "grofweg ~");
+  $("#scen").innerHTML = cards.map(c => {
+    const L = los(c.w);
+    return `<div class="card ${c === best ? "best" : ""}"><h4>${c.h}</h4><div class="big" style="color:${L.c}">${c.w > 600 ? "> 10 min" : fmt(c.w, c.w < 10 ? 1 : 0) + " s"}</div><div><span class="badge" style="background:${L.c}22;color:${L.c}">LOS ${L.l}</span></div><div class="cost">${c.cost}</div></div>`;
+  }).join("");
+}
+
+/* ---------------- simulatie ---------------- */
+const sim = (() => {
+  const cv = $("#sim"), ctx = cv.getContext("2d");
+  const L = 70; // zichtbare lengte in m
+  let pxm, Wpx, Hpx, sidewalk = 34, laneY;
+  let tSim = 0, cyclists = [], future = [[], []], peds = [], crossing = [], waits = [], speedUp = 1, last = null;
+  let seed = 12345; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const expo = rate => -Math.log(1 - rnd()) / rate;
+  const xc = L / 2;
+  let nextPed = 0;
+  function size() {
+    const r = cv.getBoundingClientRect(); const dpr = devicePixelRatio || 1;
+    cv.width = r.width * dpr; cv.height = r.height * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    Wpx = r.width; Hpx = r.height; pxm = Wpx / L;
+  }
+  function lanes() { return S.twoway ? 2 : 1; }
+  function speedSample() {
+    const fast = rnd() < S.f / 100;
+    const kmh = fast ? 26 + rnd() * 8 : 14 + rnd() * 8;
+    return { v: kmh / 3.6, fast };
+  }
+  function scheduleLane(l) {
+    const rate = S.q / 3600 / lanes();
+    const arr = future[l];
+    let tLast = arr.length ? arr[arr.length - 1].ts : tSim;
+    while (rate > 0 && tLast < tSim + 40) {
+      tLast += expo(rate);
+      const s = speedSample();
+      arr.push({ ts: tLast, ...s, lane: l });
+    }
+  }
+  function reset() {
+    tSim = 0; cyclists = []; future = [[], []]; peds = []; crossing = []; waits = []; nextPed = expo(S.p / 3600);
+    seed = 12345;
+  }
+  function setParams() { /* parameters gelden direct voor nieuwe aankomsten */ future = [[], []]; }
+  function timeToConflict() {
+    // minimale tijd tot een fietser het oversteekpunt bereikt (incl. toekomstige aankomsten)
+    let tmin = Infinity;
+    for (const c of cyclists) {
+      const dir = c.lane === 0 ? 1 : -1;
+      const dist = (xc - c.x) * dir;
+      if (dist < -1.2) continue; // al voorbij
+      const tt = Math.max(0, dist - 1) / c.v;
+      tmin = Math.min(tmin, tt);
+    }
+    for (let l = 0; l < lanes(); l++) for (const f of future[l]) {
+      const tt = (f.ts - tSim) + (L / 2 + 5 - 1) / f.v;
+      tmin = Math.min(tmin, tt);
+    }
+    return tmin;
+  }
+  function step(dt) {
+    tSim += dt;
+    for (let l = 0; l < lanes(); l++) {
+      scheduleLane(l);
+      while (future[l].length && future[l][0].ts <= tSim) {
+        const f = future[l].shift();
+        cyclists.push({ x: l === 0 ? -5 : L + 5, v: f.v, fast: f.fast, lane: l });
+      }
+    }
+    cyclists.forEach(c => c.x += (c.lane === 0 ? 1 : -1) * c.v * dt);
+    cyclists = cyclists.filter(c => c.x > -8 && c.x < L + 8);
+    // voetgangers
+    while (nextPed <= tSim) { peds.push({ t0: nextPed, off: (rnd() - .5) * 1.6 }); nextPed += expo(S.p / 3600); }
+    const need = needT(S.w, S.v, S.m);
+    if (peds.length && timeToConflict() >= need) {
+      peds.forEach(p => { waits.push(tSim - p.t0); crossing.push({ y: 0, off: p.off, wait: tSim - p.t0 }); });
+      peds = [];
+    }
+    crossing.forEach(p => p.y += S.v * dt);
+    crossing = crossing.filter(p => p.y < S.w + 1.5);
+  }
+  function waitColor(w) { const k = clamp(w / 40, 0, 1); const r = Math.round(46 + k * (179 - 46)), g = Math.round(125 - k * (125 - 38)), b = Math.round(50 - k * 20); return `rgb(${r},${g},${b})`; }
+  function draw() {
+    ctx.clearRect(0, 0, Wpx, Hpx);
+    const pathH = Math.min(Hpx - 2 * sidewalk - 20, S.w * 22);
+    const y0 = (Hpx - pathH) / 2;
+    const mpx = pathH / S.w;
+    ctx.fillStyle = "#d9d2c1"; ctx.fillRect(0, 0, Wpx, y0); ctx.fillRect(0, y0 + pathH, Wpx, Hpx - y0 - pathH);
+    ctx.fillStyle = "#c9655a"; ctx.fillRect(0, y0, Wpx, pathH);
+    if (S.twoway) { ctx.strokeStyle = "rgba(255,255,255,.8)"; ctx.setLineDash([10, 10]); ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(0, y0 + pathH / 2); ctx.lineTo(Wpx, y0 + pathH / 2); ctx.stroke(); ctx.setLineDash([]); }
+    // oversteeklocatie
+    const X = xc * pxm;
+    ctx.fillStyle = "rgba(255,255,255,.14)"; ctx.fillRect(X - 1.2 * pxm, y0, 2.4 * pxm, pathH);
+    ctx.fillStyle = "#6b6252"; ctx.font = "12px Segoe UI, sans-serif";
+    ctx.fillText(`fietspad ${fmt(S.w, 1)} m${S.twoway ? " · twee richtingen" : ""}`, 8, y0 - 8);
+    ctx.fillText("← 70 m in beeld →", Wpx - 120, Hpx - 8);
+    // fietsers
+    cyclists.forEach(c => {
+      const laneMid = S.twoway ? (c.lane === 0 ? y0 + pathH * .75 : y0 + pathH * .25) : y0 + pathH / 2;
+      ctx.fillStyle = c.fast ? "#f08a24" : "#7d1f17";
+      const len = 1.8 * pxm, wd = Math.max(5, .6 * mpx);
+      ctx.beginPath(); ctx.roundRect(c.x * pxm - len / 2, laneMid - wd / 2, len, wd, 3); ctx.fill();
+    });
+    // wachtende voetgangers
+    peds.forEach((p, i) => {
+      const w = tSim - p.t0;
+      ctx.fillStyle = waitColor(w);
+      ctx.beginPath(); ctx.arc(X + p.off * pxm + (i % 3 - 1) * 9, y0 - 10 - Math.floor(i / 3) * 10, 5.5, 0, 7); ctx.fill();
+    });
+    if (peds.length) {
+      const wmax = Math.max(...peds.map(p => tSim - p.t0));
+      ctx.fillStyle = "#1d2330"; ctx.font = "600 12px Segoe UI, sans-serif";
+      ctx.fillText(`wacht al ${fmt(wmax)} s`, X + 22, y0 - 12);
+    }
+    crossing.forEach(p => {
+      ctx.fillStyle = waitColor(p.wait);
+      ctx.beginPath(); ctx.arc(X + p.off * pxm, y0 + p.y * mpx, 5.5, 0, 7); ctx.fill();
+    });
+    $("#s-avg").textContent = waits.length ? fmt(waits.reduce((a, b) => a + b, 0) / waits.length, 1) + " s" : "–";
+    $("#s-max").textContent = waits.length ? fmt(Math.max(...waits)) + " s" : "–";
+    $("#s-n").textContent = fmt(waits.length);
+  }
+  function loop(ts) {
+    if (last === null) last = ts;
+    let dt = Math.min(0.1, (ts - last) / 1000) * speedUp; last = ts;
+    const n = Math.ceil(dt / 0.05);
+    for (let i = 0; i < n; i++) step(dt / n);
+    draw();
+    requestAnimationFrame(loop);
+  }
+  segmented($("#speed"), v => speedUp = +v);
+  $("#sim-reset").onclick = reset;
+  addEventListener("resize", () => { size(); });
+  size(); reset(); requestAnimationFrame(loop);
+  return { reset, setParams, size };
+})();
+
+/* ================= TAB 2: MENGEN ================= */
+const PRESETS_LANGS = [
+  { id: "rijnhaven", city: "rdam", name: "Rijnhavenbrug", lp: 900, lq: 1100, lw: 6, lf: 30 },
+  { id: "laakh", city: "dhaag", name: "Laakhavens kade", lp: 500, lq: 700, lw: 5, lf: 20 },
+  { id: "coolsingel2", city: "rdam", name: "Coolsingel trottoir", lp: 1800, lq: 1300, lw: 9, lf: 25 },
+  { id: "park", city: null, name: "Parkpad", lp: 150, lq: 120, lw: 3.5, lf: 10 },
+];
+const T = { lp: 900, lq: 1100, lw: 6, lf: 30, t1: 4, t2: 20 };
+const lsync = [];
+function lbind(id, fn) {
+  const el = $("#" + id);
+  el.addEventListener("input", () => { T[id] = +el.value; renderLangs(); });
+  lsync.push(() => { el.value = T[id]; $("#v-" + id).textContent = fn(T[id]); });
+}
+lbind("lp", v => fmt(v) + " /u"); lbind("lq", v => fmt(v) + " /u"); lbind("lw", v => fmt(v, 1) + " m");
+lbind("lf", v => v + "%"); lbind("t1", v => fmt(v)); lbind("t2", v => fmt(v));
+presetButtons($("#presets-langs"), PRESETS_LANGS, p => { Object.assign(T, p); renderLangs(); }, "rijnhaven");
+
+function speedWeight(f) { return (1 - f / 100) + (f / 100) * 2.3; } // (28/18)^2 ≈ 2,3: bewegingsenergie
+function passesPerMin(q, f) {
+  // Vrijwel elke fietser op het pad passeert een voetganger: per minuut q/60.
+  const base = q / 60;
+  return { base, weighted: base * speedWeight(f) };
+}
+function index(c) { return (c.lp / c.lw) * (c.lq / c.lw) * speedWeight(c.lf) / 1000; }
+function zoneOf(c) {
+  if (c.lq / c.lw > 500 || c.lp / c.lw > 500) return "scheiden"; // capaciteit, ongeacht menging
+  const I = index(c);
+  return I < T.t1 ? "mengen" : I < T.t2 ? "maatregelen" : "scheiden";
+}
+const ZC = { mengen: "#2e7d32", maatregelen: "#c27c00", scheiden: "#b3261e" };
+const ZT = { mengen: "Mengen kan", maatregelen: "Mengen met maatregelen", scheiden: "Scheiden" };
+
+function renderLangs() {
+  lsync.forEach(s => s());
+  const pp = passesPerMin(T.lq, T.lf);
+  const z = zoneOf(T);
+  const I = index(T);
+  const vf = 18 * (1 - T.lf / 100) + 28 * (T.lf / 100);
+  $("#l-pass").innerHTML = fmt(pp.base, 0) + ` <small>/min</small>`;
+  $("#l-pass-s").textContent = pp.base > 0 ? `elke ${fmt(60 / pp.base, 1)} s een fietser langs je schouder` : "geen fietsers";
+  $("#l-dens").innerHTML = fmt(I, 1);
+  $("#l-dens-s").textContent = `${fmt(T.lp / T.lw)} voetgangers/m × ${fmt(T.lq / T.lw)} fietsers/m per uur, gewogen voor snelheid`;
+  $("#l-dv").innerHTML = fmt(vf - 4.7, 0) + " <small>km/u</small>";
+  $("#l-dv-s").textContent = `gemiddelde fiets ${fmt(vf, 0)} km/u tegen lopen 4,7 km/u`;
+  const fietsW = T.lq > 1500 ? 4.0 : 3.5;
+  const voetW = T.lw - fietsW;
+  $("#l-split").innerHTML = voetW >= 1.8 ? `${fmt(fietsW, 1)} + ${fmt(voetW, 1)} <small>m</small>` : `<span style="color:var(--bad)">past niet</span>`;
+  $("#l-split-s").textContent = voetW >= 1.8 ? "tweerichtingenfietspad + voetpad" : `minimaal ${fmt(fietsW + 1.8, 1)} m nodig; nu ${fmt(T.lw, 1)} m`;
+  $("#l-headline").innerHTML = `<span class="badge" style="background:${ZC[z]}22;color:${ZC[z]};font-size:14px">${ZT[z]}</span><br>` +
+    (z === "mengen" ? `Een voetganger wordt ${fmt(pp.base, 0)} keer per minuut gepasseerd, op ${fmt(T.lw, 1)} m breedte. Een gemengd profiel blijft hier comfortabel.` :
+     z === "maatregelen" ? `Een voetganger wordt ${fmt(pp.base, 0)} keer per minuut gepasseerd. Mengen kan alleen met maatregelen: snelheid omlaag, looplijnen markeren, of in de spits scheiden.` :
+     `Een voetganger wordt ${fmt(pp.base, 0)} keer per minuut gepasseerd${T.lf >= 20 ? `, en ${T.lf}% rijdt snel` : ""}. Hier is scheiden nodig${voetW < 1.8 ? ", maar daarvoor is het profiel te smal: de breedte is het eigenlijke knelpunt" : ""}.`);
+  renderMatrix();
+}
+
+function renderMatrix() {
+  const el = $("#matrix"); const W = el.clientWidth || 760, H = 360;
+  const m = { l: 62, r: 20, t: 16, b: 46 };
+  const xmax = 500, ymax = 400;
+  const X = q => m.l + Math.min(q, xmax) / xmax * (W - m.l - m.r);
+  const Y = p => m.t + (1 - Math.min(p, ymax) / ymax) * (H - m.t - m.b);
+  const svg = svgEl("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Mengen of scheiden matrix" });
+  const k = speedWeight(T.lf);
+  svgEl("rect", { x: m.l, y: m.t, width: W - m.l - m.r, height: H - m.t - m.b, fill: ZC.scheiden, opacity: .13 }, svg);
+  const under = (c, color) => {
+    let d = `M${X(0)},${Y(0)}L${X(0)},${Y(ymax)}`;
+    for (let q = 0.5; q <= xmax; q += 2) {
+      const p = Math.min(ymax, c * 1000 / (k * q));
+      d += `L${X(q)},${Y(p)}`;
+    }
+    d += `L${X(xmax)},${Y(0)}Z`;
+    svgEl("path", { d, fill: "#fff" }, svg);
+    svgEl("path", { d, fill: color, opacity: .13 }, svg);
+  };
+  under(T.t2, ZC.maatregelen); under(T.t1, ZC.mengen);
+  for (let q = 0; q <= xmax; q += 50) {
+    const tx = svgEl("text", { x: X(q), y: H - m.b + 17, "text-anchor": "middle", "font-size": 11, fill: "#666" }, svg); tx.textContent = fmt(q);
+    svgEl("line", { x1: X(q), x2: X(q), y1: m.t, y2: H - m.b, stroke: "#000", opacity: .05 }, svg);
+  }
+  for (let p = 0; p <= ymax; p += 50) {
+    const ty = svgEl("text", { x: m.l - 6, y: Y(p) + 4, "text-anchor": "end", "font-size": 11, fill: "#666" }, svg); ty.textContent = fmt(p);
+    svgEl("line", { x1: m.l, x2: W - m.r, y1: Y(p), y2: Y(p), stroke: "#000", opacity: .05 }, svg);
+  }
+  const xl = svgEl("text", { x: (m.l + W - m.r) / 2, y: H - 6, "text-anchor": "middle", "font-size": 12, fill: "#444" }, svg); xl.textContent = "Fietsers per uur per meter breedte";
+  const yl = svgEl("text", { x: 14, y: (m.t + H - m.b) / 2, "text-anchor": "middle", "font-size": 12, fill: "#444", transform: `rotate(-90 14 ${(m.t + H - m.b) / 2})` }, svg); yl.textContent = "Voetgangers per uur per meter";
+  const lab = (txt, x, y, color, anchor) => { const t = svgEl("text", { x, y, "text-anchor": anchor || "start", "font-size": 13, "font-weight": 700, fill: color, stroke: "#fff", "stroke-width": 4, "paint-order": "stroke" }, svg); t.textContent = txt; };
+  lab(ZT.mengen, X(8), Y(12), ZC.mengen);
+  lab(ZT.scheiden, X(xmax) - 10, Y(ymax) + 20, ZC.scheiden, "end");
+  PRESETS_LANGS.forEach(p => {
+    const cur = p.lp === T.lp && p.lq === T.lq && p.lw === T.lw;
+    if (cur) return;
+    const cx = X(p.lq / p.lw), cy = Y(p.lp / p.lw);
+    svgEl("circle", { cx, cy, r: 5.5, fill: "#fff", stroke: ZC[zoneOf(p)], "stroke-width": 2.5 }, svg);
+    const t = svgEl("text", { x: cx + 9, y: cy + 4, "font-size": 11.5, fill: "#555", stroke: "#fff", "stroke-width": 3, "paint-order": "stroke" }, svg); t.textContent = p.name;
+  });
+  const cx = X(T.lq / T.lw), cy = Y(T.lp / T.lw);
+  svgEl("circle", { cx, cy, r: 10, fill: ZC[zoneOf(T)], stroke: "#fff", "stroke-width": 3 }, svg);
+  const t = svgEl("text", { x: cx + 14, y: cy - 9, "font-size": 13, "font-weight": 700, fill: "#1d2330", stroke: "#fff", "stroke-width": 4, "paint-order": "stroke" }, svg); t.textContent = "deze locatie";
+  el.innerHTML = ""; el.appendChild(svg);
+}
+
+syncInputs(); update(); renderLangs();
+addEventListener("resize", () => { if ($("#tab-dwars").classList.contains("on")) update(); else renderLangs(); });
+</script>
+</body>
+</html>

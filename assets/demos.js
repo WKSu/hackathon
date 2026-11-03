@@ -24,7 +24,7 @@
   ];
 
   // Klasse per gemeente; de kleuren staan in style.css
-  var CITY_CLASS = { rotterdam: "city-rotterdam", "den haag": "city-denhaag" };
+  var CITY_CLASS = { rotterdam: "city-rotterdam", "den haag": "city-denhaag", "rotterdam × den haag": "city-beide" };
 
   var ALL = "Alle";
   var themes = [];
@@ -74,6 +74,12 @@
 
     body.appendChild(el("h2", "demo-title", demo.titel));
     if (demo.beschrijving) body.appendChild(el("p", null, demo.beschrijving));
+    if (demo.probeer) {
+      var tryIt = el("p", "demo-try");
+      tryIt.appendChild(el("strong", null, "Probeer: "));
+      tryIt.appendChild(document.createTextNode(demo.probeer));
+      body.appendChild(tryIt);
+    }
 
     var facts = [
       ["Rol van AI", demo.rolVanAI || demo.watDoetAI],

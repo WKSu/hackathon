@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Precedentenzoeker</title>
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+  .searchbar { display: flex; gap: 10px; align-items: center; }
+  .searchbar input { flex: 1; font-size: 18px; padding: 12px 14px; border-radius: 10px; border: 2px solid var(--line-2); }
+  .searchbar input:focus { border-color: var(--accent); outline: none; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .chip { font: inherit; font-size: 12.5px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line-2); background: #fff; cursor: pointer; color: var(--ink-2); }
+  .chip.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .chip .n { opacity: .65; margin-left: 4px; font-variant-numeric: tabular-nums; }
+  .filters { display: grid; grid-template-columns: auto 1fr; gap: 8px 14px; align-items: start; margin-top: 12px; font-size: 13px; }
+  .filters .fl { font-weight: 650; color: var(--ink-2); padding-top: 5px; }
+  .layout { display: grid; grid-template-columns: 1fr 440px; gap: 14px; align-items: start; margin-top: 14px; }
+  @media (max-width: 1100px) { .layout { grid-template-columns: 1fr; } }
+  .layout > * { min-width: 0; }
+  .filters > * { min-width: 0; }
+  @media (max-width: 600px) { .filters { grid-template-columns: 1fr; } .searchbar input { font-size: 16px; } }
+  .doc { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 11px 14px; margin-bottom: 8px; }
+  .doc:hover { border-color: var(--line-2); box-shadow: var(--shadow); }
+  .doc .meta { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 12px; color: var(--ink-3); margin-bottom: 3px; }
+  .doc .title { font-weight: 650; font-size: 15px; color: var(--ink); text-decoration: none; line-height: 1.3; }
+  .doc .title:hover { color: var(--accent); text-decoration: underline; }
+  .doc .snip { font-size: 13px; color: var(--ink-2); margin-top: 4px; }
+  .doc .th { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 999px; background: var(--panel-2); color: var(--ink-2); margin: 5px 4px 0 0; }
+  mark { background: #fde68a; color: inherit; padding: 0 1px; border-radius: 2px; }
+  .typebadge { font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 4px; background: var(--panel-2); color: var(--ink-2); }
+  .out-aangenomen { background: var(--good-soft); color: var(--good); }
+  .out-verworpen { background: var(--bad-soft); color: var(--bad); }
+  .out-aangehouden, .out-ingetrokken { background: var(--warn-soft); color: var(--warn); }
+  .count-line { font-size: 15px; margin: 4px 0 10px; }
+  .count-line b { font-variant-numeric: tabular-nums; }
+  .heat td { width: 34px; height: 22px; text-align: center; font-size: 11px; font-variant-numeric: tabular-nums; cursor: pointer; border-radius: 3px; }
+  .heat th { font-size: 11px; font-weight: 600; color: var(--ink-2); padding: 2px 4px; text-align: right; white-space: nowrap; }
+  .heat thead th { text-align: center; }
+  .heat { border-collapse: separate; border-spacing: 2px; }
+  .vs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .vs .kpi .v { font-size: 22px; }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a class="brand" href="../index.html">Themadag Mobiliteit · Rotterdam × Den Haag</a>
+  <span class="sep">/</span><span>D · Opgave-assistent</span>
+  <span class="spacer"></span>
+  <span class="small" style="color:#cfd3dc">Sessie 6 · Verdichting, participatie en proces</span>
+</div>
+<div class="hero">
+  <div class="kicker">Inzichtprototype · precedentenzoeker raadsstukken</div>
+  <h1>Wat is er eerder besloten, gevraagd en ingesproken?</h1>
+  <p class="lead" id="lead"></p>
+</div>
+<div class="wrap">
+  <div class="panel">
+    <div class="searchbar"><input id="q" type="search" placeholder="Bijvoorbeeld: deelauto borging, parkeernorm, fietsenstalling station, autoluw" autocomplete="off"><button class="btn" id="csv" title="Download de huidige selectie als CSV">⬇ CSV</button></div>
+    <div class="chips" id="suggest"></div>
+    <div class="filters">
+      <div class="fl">Stad</div><div class="chips" id="f-city" style="margin:0"></div>
+      <div class="fl">Soort stuk</div><div class="chips" id="f-type" style="margin:0"></div>
+      <div class="fl">Thema</div><div class="chips" id="f-theme" style="margin:0"></div>
+      <div class="fl">Periode</div><div class="row"><select id="y0"></select> t/m <select id="y1"></select><button class="btn small ghost" id="reset">Alles wissen</button></div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div>
+      <div class="count-line" id="count"></div>
+      <div id="list"></div>
+      <div style="text-align:center"><button class="btn" id="more" hidden>Meer tonen</button></div>
+    </div>
+    <div>
+      <div class="panel">
+        <h3>Rotterdam en Den Haag naast elkaar</h3>
+        <div class="vs" id="vs"></div>
+      </div>
+      <div class="panel">
+        <h3>Per jaar</h3>
+        <div id="timeline"></div>
+        <div class="legend"><span><span class="sw" style="background:var(--rdam)"></span>Rotterdam</span><span><span class="sw" style="background:var(--dhaag)"></span>Den Haag</span><span class="faint">klik op een jaar om te filteren</span></div>
+      </div>
+      <div class="panel">
+        <h3>Welke thema's keren terug?</h3>
+        <p class="small">Aantal stukken per thema en jaar in de huidige selectie. Klik een vak om in te zoomen.</p>
+        <div style="overflow-x:auto"><table class="heat" id="heat"></table></div>
+      </div>
+      <div class="panel">
+        <h3>Moties en amendementen: uitslag</h3>
+        <div id="outcomes"></div>
+        <p class="small">Uitslag alleen waar die in de tekst van het stuk staat (vooral Den Haag).</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="next-step">
+    <div class="box"><h3>Inzicht vandaag</h3>In seconden zien wat beide raden al over een onderwerp zeiden, welke moties terugkomen en waar inspraak steeds over gaat. Elk stuk linkt naar het origineel.</div>
+    <div class="box"><h3>Werkproces morgen</h3><ul><li><b>Procesroute-assistent</b> per opgavetype: participatieplan, participatieplicht (Omgevingswet) en de route van een raadsvoorstel als tijdlijn.</li><li><b>Reactienota-assistent</b>: zienswijzen clusteren en conceptantwoorden voorstellen. De ambtenaar beslist.</li></ul></div>
+    <div class="box"><h3>Let op</h3><ul><li>Inspraakreacties bevatten persoonsgegevens: in het werkproces alleen binnen een goedgekeurde omgeving.</li><li>Zoeken gebeurt op titel en een tekstfragment; de volledige tekst staat in Open Raadsinformatie.</li><li>Soort stuk is afgeleid uit de titel en kan afwijken.</li></ul></div>
+  </div>
+</div>
+<div class="footer" id="foot"></div>
+
+<script src="../assets/common.js"></script>
+<script src="data.js"></script>
+<script>
+const P = window.PRECEDENT;
+const DOCS = P.docs.map((d, i) => ({ ...d, i, y: +d.d.slice(0, 4), low: (d.t + " " + d.s.replace(/[⟦⟧]/g, "") + " " + (d.id || "")).toLowerCase(), tl: d.t.toLowerCase() }));
+const CITY = { r: "Rotterdam", d: "Den Haag" };
+const TYPE_ORDER = ["motie", "amendement", "raadsvoorstel", "brief", "vragen", "afdoening", "inspraak", "onderzoek", "bijlage", "vergadering", "overig"];
+const years = [...new Set(DOCS.map(d => d.y))].filter(Boolean).sort();
+const F = { q: "", city: null, types: new Set(), themes: new Set(), y0: years[0], y1: years[years.length - 1] };
+let shown = 30;
+
+$("#lead").textContent = `${fmt(DOCS.length)} openbare raadsstukken van beide gemeenten over mobiliteit, verdichting en participatie, ${years[0]} t/m ${years[years.length - 1]}. Typ een onderwerp; de resultaten, de tijdlijn en de thema's veranderen direct mee.`;
+$("#foot").innerHTML = `Bron: ${P.meta.bron}, opgehaald ${P.meta.gemaakt}. Laatste stuk: Rotterdam ${P.meta.laatste.rotterdam}, Den Haag ${P.meta.laatste.denhaag}.`;
+
+const SUGGEST = ["deelauto", "parkeernorm", "deelmobiliteit borging", "fietsenstalling", "verdichting", "autoluw", "oversteek", "tram", "participatie", "mobiliteitshub", "30 km"];
+SUGGEST.forEach(s => { const b = document.createElement("button"); b.className = "chip"; b.textContent = s; b.onclick = () => { $("#q").value = s; F.q = s; shown = 30; render(); }; $("#suggest").appendChild(b); });
+
+const tokens = q => q.toLowerCase().split(/[\s,]+/).map(t => t.replace(/[*"']/g, "")).filter(t => t.length > 1);
+function matches(d, toks) { return toks.every(t => d.low.includes(t)); }
+function score(d, toks) {
+  let s = 0; toks.forEach(t => { if (d.tl.includes(t)) s += 3; else s += 1; });
+  if (d.ty === "motie" || d.ty === "amendement" || d.ty === "raadsvoorstel") s += .6;
+  return s + (d.y - 2018) * .08;
+}
+function filtered(skip) {
+  const toks = tokens(F.q);
+  return DOCS.filter(d =>
+    (skip === "city" || !F.city || d.c === F.city) &&
+    (skip === "type" || !F.types.size || F.types.has(d.ty)) &&
+    (skip === "theme" || !F.themes.size || d.th.some(t => F.themes.has(t))) &&
+    (skip === "year" || (d.y >= F.y0 && d.y <= F.y1)) &&
+    (!toks.length || matches(d, toks)));
+}
+const esc = s => s.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+// Markeren in één regex-ronde, zodat een tweede zoekwoord nooit in een eerder ingevoegde <mark> valt.
+function hl(text, toks) {
+  const t = esc(text.replace(/[⟦⟧]/g, ""));
+  if (!toks.length) return t;
+  const alt = [...toks].sort((a, b) => b.length - a.length).map(tok => esc(tok).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
+  return t.replace(new RegExp("(" + alt + ")[\\wëéèïöü-]*", "gi"), m => "<mark>" + m + "</mark>");
+}
+// OCR-rommel herkennen: veel losse letters of herhaalde korte woorden.
+function junk(snip) {
+  const w = snip.replace(/[⟦⟧]/g, "").split(/\s+/).filter(Boolean);
+  if (w.length < 4) return false;
+  const short = w.filter(x => x.length <= 2).length / w.length;
+  const uniq = new Set(w.map(x => x.toLowerCase())).size / w.length;
+  return short > .45 || uniq < .35;
+}
+
+const seriesKey = t => t.toLowerCase().replace(/ris\s?\d+/g, "").replace(/\b(19|20)\d{2}\b/g, "").replace(/\d+/g, "").replace(/[^a-zà-ÿ]+/g, " ").trim();
+const fdate = d => new Date(d).toLocaleDateString("nl-NL", { day: "numeric", month: "short", year: "numeric" });
+function docCard(d, toks, rest) {
+  const more = rest.length ? `<button class="chip more-series" data-l="+ ${rest.length} ${rest.length === 1 ? "vergelijkbaar stuk" : "vergelijkbare stukken"} in deze reeks" style="margin-top:6px">+ ${rest.length} ${rest.length === 1 ? "vergelijkbaar stuk" : "vergelijkbare stukken"} in deze reeks</button>
+    <div hidden style="margin-top:6px;font-size:13px">${rest.map(r => `<div style="padding:2px 0"><span class="faint">${fdate(r.d)}</span> · <a href="${r.u}" target="_blank" rel="noopener">${esc(r.t)}</a>${r.o ? ` <span class="typebadge out-${r.o}">${r.o}</span>` : ""}</div>`).join("")}</div>` : "";
+  return `
+    <div class="doc">
+      <div class="meta"><span class="tag ${d.c === "r" ? "rdam" : "dhaag"}" style="font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:4px;color:#fff">${CITY[d.c]}</span>
+        <span class="typebadge">${P.types[d.ty]}</span>${d.o ? `<span class="typebadge out-${d.o}">${d.o}</span>` : ""}
+        <span>${fdate(d.d)}</span>${d.id ? `<span>${d.id}</span>` : ""}</div>
+      <a class="title" href="${d.u}" target="_blank" rel="noopener">${hl(d.t, toks)}</a>
+      ${d.s && !junk(d.s) ? `<div class="snip">…${hl(d.s, toks)}…</div>` : ""}
+      <div>${d.th.map(t => `<span class="th">${P.themes[t]}</span>`).join("")}</div>${more}
+    </div>`;
+}
+
+function chipGroup(el, items, isOn, onClick) {
+  el.innerHTML = "";
+  items.forEach(it => {
+    const b = document.createElement("button"); b.className = "chip" + (isOn(it.k) ? " on" : "");
+    b.innerHTML = `${it.label}<span class="n">${fmt(it.n)}</span>`; b.onclick = () => onClick(it.k);
+    el.appendChild(b);
+  });
+}
+
+function render() {
+  const toks = tokens(F.q);
+  const res = filtered().sort((a, b) => toks.length ? score(b, toks) - score(a, toks) : b.d.localeCompare(a.d));
+  // facetten (tellingen zonder het eigen filter)
+  const fc = filtered("city"), ft = filtered("type"), fth = filtered("theme");
+  chipGroup($("#f-city"), [{ k: null, label: "Beide", n: fc.length }, { k: "r", label: "Rotterdam", n: fc.filter(d => d.c === "r").length }, { k: "d", label: "Den Haag", n: fc.filter(d => d.c === "d").length }],
+    k => F.city === k, k => { F.city = k; shown = 30; render(); });
+  chipGroup($("#f-type"), TYPE_ORDER.map(k => ({ k, label: P.types[k], n: ft.filter(d => d.ty === k).length })).filter(x => x.n > 0 || F.types.has(x.k)),
+    k => F.types.has(k), k => { F.types.has(k) ? F.types.delete(k) : F.types.add(k); shown = 30; render(); });
+  chipGroup($("#f-theme"), Object.entries(P.themes).map(([k, label]) => ({ k, label, n: fth.filter(d => d.th.includes(k)).length })),
+    k => F.themes.has(k), k => { F.themes.has(k) ? F.themes.delete(k) : F.themes.add(k); shown = 30; render(); });
+
+  const nr = res.filter(d => d.c === "r").length, nd = res.length - nr;
+  $("#count").innerHTML = `<b>${fmt(res.length)}</b> stukken${F.q ? ` over “${esc(F.q)}”` : ""}: <span style="color:var(--rdam);font-weight:650">${fmt(nr)} Rotterdam</span>, <span style="color:var(--dhaag);font-weight:650">${fmt(nd)} Den Haag</span>`;
+  // Terugkerende reeksen (zelfde titel, ander jaar of nummer) samen tonen.
+  const groups = new Map();
+  res.forEach(d => { const k = d.c + "|" + seriesKey(d.t); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(d); });
+  const lead = [...groups.values()];
+  $("#list").innerHTML = lead.slice(0, shown).map(g => docCard(g[0], toks, g.slice(1))).join("") || `<div class="panel">Geen stukken gevonden. Probeer een korter woord of wis een filter.</div>`;
+  $$("#list .more-series").forEach(b => b.onclick = () => { b.nextElementSibling.hidden = !b.nextElementSibling.hidden; b.textContent = b.nextElementSibling.hidden ? b.dataset.l : "verberg"; });
+  $("#more").hidden = lead.length <= shown;
+  $("#more").textContent = `Meer tonen (${fmt(lead.length - shown)} over)`;
+  renderVs(res); renderTimeline(filtered("year")); renderHeat(res); renderOutcomes(res);
+  window._res = res;
+}
+
+function renderVs(res) {
+  const by = c => res.filter(d => d.c === c);
+  const r = by("r"), d = by("d");
+  const kpi = (lab, a, b, col) => `<div class="kpi"><div class="k">${lab}</div><div class="v num" style="color:${col}">${fmt(a)}</div><div class="s">${b}</div></div>`;
+  const topTheme = arr => { const m = {}; arr.forEach(x => x.th.forEach(t => m[t] = (m[t] || 0) + 1)); const e = Object.entries(m).sort((a, b) => b[1] - a[1])[0]; return e ? P.themes[e[0]] : "–"; };
+  const mot = arr => arr.filter(x => x.ty === "motie" || x.ty === "amendement").length;
+  $("#vs").innerHTML =
+    kpi("Rotterdam: stukken", r.length, `${fmt(mot(r))} moties/amendementen · vooral ${topTheme(r).toLowerCase()}`, "var(--rdam)") +
+    kpi("Den Haag: stukken", d.length, `${fmt(mot(d))} moties/amendementen · vooral ${topTheme(d).toLowerCase()}`, "var(--dhaag)");
+}
+
+function renderTimeline(arr) {
+  const el = $("#timeline"); const W = el.clientWidth || 400, H = 170;
+  const m = { l: 30, r: 6, t: 10, b: 24 };
+  const cnt = years.map(y => ({ y, r: arr.filter(d => d.y === y && d.c === "r").length, d: arr.filter(d => d.y === y && d.c === "d").length }));
+  const max = Math.max(1, ...cnt.map(c => Math.max(c.r, c.d)));
+  const svg = svgEl("svg", { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": "Stukken per jaar per stad" });
+  const bw = (W - m.l - m.r) / years.length;
+  const Y = v => m.t + (1 - v / max) * (H - m.t - m.b);
+  [0, .5, 1].forEach(f => { const v = Math.round(max * f); svgEl("line", { x1: m.l, x2: W - m.r, y1: Y(v), y2: Y(v), stroke: "#000", opacity: .06 }, svg); const t = svgEl("text", { x: m.l - 4, y: Y(v) + 4, "text-anchor": "end", "font-size": 10, fill: "#777" }, svg); t.textContent = v; });
+  cnt.forEach((c, i) => {
+    const x = m.l + i * bw, inRange = c.y >= F.y0 && c.y <= F.y1;
+    const g = svgEl("g", { style: "cursor:pointer", opacity: inRange ? 1 : .3 }, svg);
+    svgEl("rect", { x, y: m.t, width: bw, height: H - m.t - m.b, fill: "transparent" }, g);
+    svgEl("rect", { x: x + bw * .14, y: Y(c.r), width: bw * .34, height: H - m.b - Y(c.r), fill: "var(--rdam)", rx: 2 }, g);
+    svgEl("rect", { x: x + bw * .52, y: Y(c.d), width: bw * .34, height: H - m.b - Y(c.d), fill: "var(--dhaag)", rx: 2 }, g);
+    const t = svgEl("text", { x: x + bw / 2, y: H - 8, "text-anchor": "middle", "font-size": 10.5, fill: "#555" }, g); t.textContent = "'" + String(c.y).slice(2);
+    g.addEventListener("mousemove", e => tip.show(`<b>${c.y}</b><br>Rotterdam ${c.r} · Den Haag ${c.d}`, e));
+    g.addEventListener("mouseleave", () => tip.hide());
+    g.addEventListener("click", () => { if (F.y0 === c.y && F.y1 === c.y) { F.y0 = years[0]; F.y1 = years[years.length - 1]; } else { F.y0 = F.y1 = c.y; } syncYears(); shown = 30; render(); });
+  });
+  el.innerHTML = ""; el.appendChild(svg);
+}
+
+function renderHeat(res) {
+  const ys = years.filter(y => y >= F.y0 && y <= F.y1);
+  const themes = Object.keys(P.themes);
+  const M = {}; let max = 1;
+  res.forEach(d => d.th.forEach(t => { const k = t + d.y; M[k] = (M[k] || 0) + 1; max = Math.max(max, M[k]); }));
+  let h = `<thead><tr><th></th>${ys.map(y => `<th>'${String(y).slice(2)}</th>`).join("")}</tr></thead><tbody>`;
+  themes.forEach(t => {
+    h += `<tr><th>${P.themes[t]}</th>`;
+    ys.forEach(y => { const v = M[t + y] || 0; const a = v / max; h += `<td ${v ? `data-t="${t}" data-y="${y}"` : ""} title="${P.themes[t]}, ${y}: ${v} stukken" style="cursor:${v ? "pointer" : "default"};background:rgba(11,110,105,${(a * .85 + (v ? .06 : 0)).toFixed(2)});color:${a > .55 ? "#fff" : "#333"}">${v || ""}</td>`; });
+    h += "</tr>";
+  });
+  $("#heat").innerHTML = h + "</tbody>";
+  $$("#heat td[data-t]").forEach(td => td.onclick = () => { F.themes = new Set([td.dataset.t]); F.y0 = F.y1 = +td.dataset.y; syncYears(); shown = 30; render(); });
+}
+
+function renderOutcomes(res) {
+  const row = c => {
+    const arr = res.filter(d => d.c === c && d.o);
+    const a = arr.filter(d => d.o === "aangenomen").length, v = arr.filter(d => d.o === "verworpen").length, o = arr.length - a - v;
+    const tot = Math.max(1, arr.length);
+    return `<div style="margin:6px 0"><div class="row" style="justify-content:space-between;font-size:13px"><b>${CITY[c]}</b><span class="faint">${arr.length} met uitslag</span></div>
+      <div style="display:flex;height:16px;border-radius:4px;overflow:hidden;background:var(--panel-2)">
+        <span style="width:${a / tot * 100}%;background:var(--good)" title="aangenomen ${a}"></span><span style="width:${v / tot * 100}%;background:var(--bad)" title="verworpen ${v}"></span><span style="width:${o / tot * 100}%;background:var(--warn)" title="overig ${o}"></span></div>
+      <div class="small">${a} aangenomen · ${v} verworpen${o ? ` · ${o} aangehouden/ingetrokken` : ""}</div></div>`;
+  };
+  $("#outcomes").innerHTML = row("d") + row("r");
+}
+
+function syncYears() { $("#y0").value = F.y0; $("#y1").value = F.y1; }
+["y0", "y1"].forEach(id => { const s = $("#" + id); years.forEach(y => { const o = document.createElement("option"); o.value = y; o.textContent = y; s.appendChild(o); }); s.addEventListener("change", () => { F[id] = +s.value; if (F.y0 > F.y1) [F.y0, F.y1] = [F.y1, F.y0]; syncYears(); shown = 30; render(); }); });
+syncYears();
+let tmr; $("#q").addEventListener("input", e => { clearTimeout(tmr); tmr = setTimeout(() => { F.q = e.target.value; shown = 30; render(); }, 120); });
+$("#more").onclick = () => { shown += 40; render(); };
+$("#reset").onclick = () => { F.q = ""; $("#q").value = ""; F.city = null; F.types.clear(); F.themes.clear(); F.y0 = years[0]; F.y1 = years[years.length - 1]; syncYears(); render(); };
+$("#csv").onclick = () => {
+  const rows = [["stad", "datum", "soort", "titel", "uitslag", "thema's", "link"]].concat((window._res || []).map(d => [CITY[d.c], d.d, P.types[d.ty], d.t, d.o || "", d.th.map(t => P.themes[t]).join("; "), d.u]));
+  const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(";")).join("\n");
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob(["﻿" + csv], { type: "text/csv" })); a.download = "precedenten.csv"; a.click();
+};
+render();
+addEventListener("resize", () => renderTimeline(filtered("year")));
+</script>
+</body>
+</html>

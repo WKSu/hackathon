@@ -220,8 +220,21 @@ h3 {
     position: static;
   }
 
+  /* Menu op één regel; past het niet, dan schuift het zijwaarts */
+  .site-nav {
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .site-nav ul {
+    flex-wrap: nowrap;
+  }
+
   .site-nav a {
-    padding: 8px 10px;
+    padding: 8px 6px;
+    font-size: 0.875rem;
+    white-space: nowrap;
   }
 }
 
@@ -455,16 +468,83 @@ h3 {
   color: var(--ink);
 }
 
-.flow {
+/* Startpagina als doorlopende presentatie: op een groot scherm vult elk onderdeel het beeld */
+html.presentatie {
+  scroll-snap-type: y proximity;
+  scroll-padding-top: 64px;
+}
+
+.slide {
+  scroll-snap-align: start;
+}
+
+@media (min-width: 900px) and (min-height: 640px) {
+  .slide {
+    display: flex;
+    align-items: center;
+    min-height: calc(100vh - 64px);
+    padding: 48px 0;
+  }
+
+  .slide > .container {
+    width: 100%;
+  }
+}
+
+.slide + .slide:not(.hero) {
+  border-top: 1px solid var(--border);
+}
+
+.slide-title {
+  margin: 6px 0 12px;
+  font-size: clamp(2rem, 4.5vw, 3rem);
+}
+
+.section-lead {
+  max-width: 60ch;
+  margin: 0 0 20px;
+  font-size: 1.25rem;
+}
+
+.section-note {
+  max-width: 70ch;
+  margin: 20px 0 0;
+  color: var(--muted);
+}
+
+.step-badge {
+  display: inline-grid;
+  place-items: center;
+  width: 1.8em;
+  height: 1.8em;
+  margin-right: 4px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  letter-spacing: 0;
+}
+
+.slide-builders {
+  background: var(--accent-soft);
+}
+
+.slide-builders .step-badge {
+  background: var(--dh-geel);
+  color: var(--ink);
+}
+
+.reasons,
+.substeps {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 16px;
-  margin: 24px 0 0;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.flow-step {
+.reasons li,
+.substep {
   padding: 20px;
   background: var(--surface);
   border: 1px solid var(--border);
@@ -472,78 +552,47 @@ h3 {
   box-shadow: var(--shadow);
 }
 
-/* De bouwstap doen de AI-begeleiders, niet de deelnemers */
-.flow-step.is-builders {
-  background: transparent;
-  border-style: dashed;
-  box-shadow: none;
+.reasons li:nth-child(odd) {
+  border-top: 4px solid var(--rdam-groen);
 }
 
-.flow-when {
-  color: var(--primary);
-  font-size: 0.75rem;
+.reasons li:nth-child(even) {
+  border-top: 4px solid var(--dh-geel);
+}
+
+.reasons strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 1.1rem;
+}
+
+.substeps {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.substep p {
+  margin: 6px 0 0;
+}
+
+.substep-label {
+  color: var(--primary-ink);
+  font-size: 0.85rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
-.flow-step h3 {
-  margin: 6px 0 8px;
-  font-size: 1.15rem;
+.slide-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
 }
 
-.flow-step p {
-  margin: 0 0 8px;
-  color: var(--muted);
-}
-
-.flow-step a {
-  font-weight: 600;
-}
-
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 16px;
-  margin-top: 20px;
-}
-
-.link-card {
-  display: block;
-  padding: 20px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  color: inherit;
-  text-decoration: none;
-  transition: border-color 0.15s, box-shadow 0.15s;
-}
-
-.link-card:hover {
-  border-color: var(--primary);
-  box-shadow: 0 6px 20px rgba(16, 24, 40, 0.08);
-  color: inherit;
-}
-
-.link-card .flow-when {
-  display: block;
-  margin-bottom: 4px;
-}
-
-.link-card h3 {
-  margin: 0 0 6px;
-  color: var(--primary);
-  font-size: 1.2rem;
-}
-
-.link-card h3::after {
-  content: " →";
-}
-
-.link-card p {
-  margin: 0;
-  color: var(--muted);
+@media (prefers-reduced-motion: reduce) {
+  html.presentatie {
+    scroll-snap-type: none;
+  }
 }
 
 .rules {
@@ -639,6 +688,7 @@ h3 {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: top;
 }
 
 .demo-body {
@@ -693,6 +743,36 @@ h3 {
   color: var(--primary-ink);
 }
 
+/* Gezamenlijk gemaakt: band in beide stadskleuren */
+.demo-card.city-beide {
+  position: relative;
+  border-top-width: 1px;
+  border-top-color: var(--border);
+}
+
+.demo-card.city-beide::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  height: 4px;
+  background: linear-gradient(90deg, var(--rdam-groen) 0 50%, var(--dh-geel) 50% 100%);
+}
+
+.city-beide .pill-city {
+  background: var(--primary-soft);
+  color: var(--primary-ink);
+}
+
+.demo-try {
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--bg);
+  font-size: 0.9375rem;
+}
+
 .city-denhaag .pill-city {
   background: var(--accent-soft);
   color: var(--accent-ink);
@@ -743,6 +823,41 @@ h3 {
 }
 
 /* ---------- Formulieren ---------- */
+
+.werkwijze {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 0 0 12px;
+}
+
+@media (max-width: 560px) {
+  .werkwijze {
+    grid-template-columns: 1fr;
+  }
+}
+
+.werkwijze > div {
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+}
+
+.werkwijze p {
+  margin: 4px 0 0;
+}
+
+.opname {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.page-head-link {
+  margin: 0;
+  font-weight: 600;
+}
 
 .worksheet {
   display: grid;
@@ -999,8 +1114,7 @@ h3 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .toast,
-  .link-card {
+  .toast {
     transition: none;
   }
 }

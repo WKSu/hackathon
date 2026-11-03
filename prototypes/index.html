@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Prototypefabriek mobiliteit</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .hero h1 { font-size: 34px; max-width: 980px; }
+  .levels { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 18px; }
+  @media (max-width: 980px) { .levels { grid-template-columns: 1fr 1fr; } }
+  .level { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; position: relative; }
+  .level .n { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); }
+  .level b { display: block; font-size: 14px; margin: 2px 0 3px; }
+  .level span { font-size: 12.5px; color: var(--ink-2); }
+  .level .tl { position: absolute; top: 10px; right: 10px; font-weight: 800; color: var(--accent); }
+  .group { margin-top: 26px; }
+  .group-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+  .group-head .letter { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; background: var(--ink); color: #fff; font-weight: 800; font-size: 18px; }
+  .group-head h2 { font-size: 21px; }
+  .group-head .sess { font-size: 13px; color: var(--ink-2); }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 14px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: inherit; box-shadow: var(--shadow); transition: transform .12s, box-shadow .12s; }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(29,35,48,.13); }
+  .card img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; border-bottom: 1px solid var(--line); background: var(--panel-2); }
+  .card .body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .card h3 { font-size: 16.5px; }
+  .card .q { font-size: 14px; color: var(--ink-2); }
+  .card .try { font-size: 13px; background: var(--accent-soft); color: #0b4f4b; padding: 7px 9px; border-radius: 7px; }
+  .card .try b { font-weight: 700; }
+  .card .meta { display: flex; flex-wrap: wrap; gap: 5px; margin-top: auto; padding-top: 6px; }
+  .card .meta span { font-size: 11px; padding: 2px 7px; border-radius: 999px; background: var(--panel-2); color: var(--ink-2); }
+  .card .wp { font-size: 12.5px; color: var(--ink-3); border-top: 1px dashed var(--line-2); padding-top: 7px; }
+  .card .open { font-weight: 700; color: var(--accent); font-size: 13.5px; }
+  .tool-tag { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 650; color: var(--ink-2); }
+  .letter.small { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 6px; background: var(--ink); color: #fff; font-weight: 800; font-size: 12px; }
+  .fabriek { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px; }
+  @media (max-width: 980px) { .fabriek { grid-template-columns: 1fr 1fr; } }
+  .fstep { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+  .fstep .no { font-size: 26px; font-weight: 800; color: var(--accent); line-height: 1; }
+  .fstep b { display: block; margin: 4px 0; }
+  .fstep span { font-size: 13px; color: var(--ink-2); }
+  code, pre { font-family: var(--mono); font-size: 12.5px; }
+  pre { background: #1d2330; color: #e6e9ef; padding: 12px 14px; border-radius: 9px; overflow-x: auto; margin: 6px 0 0; }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <span class="brand">Themadag Mobiliteit · Rotterdam × Den Haag</span>
+  <span class="sep">/</span><span>Prototypefabriek</span>
+  <span class="spacer"></span>
+  <span class="small" style="color:#cfd3dc">november 2026</span>
+</div>
+<div class="hero">
+  <div class="kicker">Tools voor verdichting en mobiliteit</div>
+  <h1>Acht deelsessies, één vraag: hoe verdeel je schaarse ruimte als de stad verdicht?</h1>
+  <p class="lead">Zes werkende inzichtprototypes, gebouwd op open data van beide steden. Elk prototype opent in de browser, zonder installatie. Kies hieronder een tool, klik op een voorbeeld, en schuif. Onderaan staat hoe ze gemaakt zijn en wat er nodig is om er een werkproces van te maken.</p>
+  <div class="levels">
+    <div class="level"><span class="tl">A</span><div class="n">Straatprofiel</div><b>Wie krijgt hoeveel meter?</b><span>Sessies 1 en 8</span></div>
+    <div class="level"><span class="tl">A</span><div class="n">Kruispunt</div><b>Komt de ontwerpprioriteit terug in de regeling?</b><span>Sessies 4 en 8</span></div>
+    <div class="level"><span class="tl">C · D</span><div class="n">Project en gebied</div><b>Welke afspraken maken we met ontwikkelaars en bewoners?</b><span>Sessies 2 en 6</span></div>
+    <div class="level"><span class="tl">B</span><div class="n">Stad en netwerk</div><b>Waar past groei bij de bereikbaarheid?</b><span>Sessies 3 en 7</span></div>
+    <div class="level"><span class="tl">E</span><div class="n">Werkwijze</div><b>Hoe komen we snel van vraag naar gereedschap?</b><span>Sessie 5</span></div>
+  </div>
+</div>
+
+<div class="wrap">
+  <section class="group">
+    <div class="group-head"><span class="letter">A</span><h2>Straat- en kruispuntlab</h2><span class="sess">Sessies 1 Ruimtecasino · 4 Verkeersmanagement · 8 Fiets en voetganger</span></div>
+    <div class="cards">
+      <a class="card" href="a2-straatprofiel/index.html">
+        <img src="assets/thumbs/a2.jpg" alt="Schermafbeelding straatprofiel-casino">
+        <div class="body">
+          <h3>Straatprofiel-casino</h3>
+          <div class="q">Een echte straat uit de BGT, van gevel tot gevel. Speel meters als fiches tussen voetpad, fiets, OV, auto, parkeren en groen.</div>
+          <div class="try"><b>Probeer:</b> Laan van Meerdervoort → ‘Parkeren eruit, bomen erin’. Zie 36 parkeerplaatsen verdwijnen en plek voor 22 extra bomen ontstaan.</div>
+          <div class="meta"><span>BGT (PDOK)</span><span>5 straten R'dam en DH</span><span>minimummaten</span><span>perspectieven</span></div>
+          <div class="wp">Werkproces: nulmeting ruimteverdeling in elke startnotitie</div>
+          <span class="open">Open prototype →</span>
+        </div>
+      </a>
+      <a class="card" href="a3-regeling/index.html">
+        <img src="assets/thumbs/a3.jpg" alt="Schermafbeelding regelingsschets">
+        <div class="body">
+          <h3>Regelingsschets kruispunt</h3>
+          <div class="q">Is STOMP ontwerpen ook STOMP regelen? Cyclustijd, groentijden en wachttijd per reiziger voor vier regelvarianten.</div>
+          <div class="try"><b>Probeer:</b> ‘Fietsdrukte’ → rondom groen fiets. De cyclus loopt op naar 120 s en de fietser wacht langer dan in de standaardregeling.</div>
+          <div class="meta"><span>Webster</span><span>tramprioriteit</span><span>groentijdenplan</span></div>
+          <div class="wp">Werkproces: STOMP-check op iVRI-logdata per kwartaal</div>
+          <span class="open">Open prototype →</span>
+        </div>
+      </a>
+      <a class="card" href="a1-oversteek/index.html">
+        <img src="assets/thumbs/a1.jpg" alt="Schermafbeelding oversteekbaarheid">
+        <div class="body">
+          <h3>Oversteken en mengen</h3>
+          <div class="q">Hoe lang wacht een voetganger aan een druk fietspad, en wanneer kun je fietsers en voetgangers nog mengen?</div>
+          <div class="try"><b>Probeer:</b> Weena: 21 s wachten, met een rollator 85 s. Een middeneiland brengt de gemiddelde voetganger terug naar 5 s.</div>
+          <div class="meta"><span>Poisson / Adams</span><span>live simulatie</span><span>LOS (HCM)</span></div>
+          <div class="wp">Werkproces: knelpuntenradar langzaam verkeer (NDW Dexter, BRON)</div>
+          <span class="open">Open prototype →</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <section class="group">
+    <div class="group-head"><h2>Netwerk, project en proces</h2><span class="sess">B Bereikbaarheidsatlas · C Parkeren en deelmobiliteit · D Opgave-assistent</span></div>
+    <div class="cards">
+      <a class="card" href="b-bereikbaarheid/index.html">
+        <img src="assets/thumbs/b.jpg" alt="Schermafbeelding bereikbaarheidsatlas">
+        <div class="body">
+          <div class="tool-tag"><span class="letter small">B</span>Bereikbaarheidsatlas · <span class="faint">Sessies 3 en 7</span></div>
+          <h3>Omgekeerde verdichtingskaart en haltedekking</h3>
+          <div class="q">Waar is de bereikbaarheid al goed genoeg om te verdichten? Per 100 m-vierkant: OV-vertrekken in de spits over het echte looppadennetwerk, tegen het aantal woningen.</div>
+          <div class="try"><b>Probeer:</b> klik de stelling ‘Waar het OV al goed is, is nog ruimte’. Rotterdam: 826 ha, theoretisch ruim 33.000 woningen extra.</div>
+          <div class="meta"><span>CBS 100 m (2024)</span><span>GTFS NL</span><span>OSM-looppaden</span><span>adreszoeker</span></div>
+          <div class="wp">Werkproces: bereikbaarheidsparagraaf en netwerkmonitor per dienstregeling</div>
+          <span class="open">Open prototype →</span>
+        </div>
+      </a>
+      <a class="card" href="c-parkeren/index.html">
+        <img src="assets/thumbs/c.jpg" alt="Schermafbeelding parkeernorm-tweeling">
+        <div class="body">
+          <div class="tool-tag"><span class="letter small">C</span>Parkeren en deelmobiliteit · <span class="faint">Sessie 2</span></div>
+          <h3>Parkeernorm-tweeling</h3>
+          <div class="q">Hetzelfde project door de Rotterdamse en de Haagse parkeerregels, stap voor stap met artikelverwijzing.</div>
+          <div class="try"><b>Probeer:</b> Zomerhofkwartier: Rotterdam 48 plaatsen, Den Haag 80. Zet ‘aanbieder valt weg’ aan: dan ontbreken er 32 en 29.</div>
+          <div class="meta"><span>Beleidsregel R'dam 2025</span><span>Nota DH 2024</span><span>gecontroleerd op een echte parkeerbijlage</span></div>
+          <div class="wp">Werkproces: parkeertoets-assistent en monitor afspraak versus praktijk</div>
+          <span class="open">Open prototype →</span>
+        </div>
+      </a>
+      <a class="card" href="d-precedenten/index.html">
+        <img src="assets/thumbs/d.jpg" alt="Schermafbeelding precedentenzoeker">
+        <div class="body">
+          <div class="tool-tag"><span class="letter small">D</span>Opgave-assistent · <span class="faint">Sessie 6</span></div>
+          <h3>Precedentenzoeker raadsstukken</h3>
+          <div class="q">2.714 openbare raadsstukken van beide steden over mobiliteit, verdichting en participatie (2018–2026): moties, besluiten, brieven en inspraak.</div>
+          <div class="try"><b>Probeer:</b> zoek ‘deelmobiliteit borging’. Den Haag nam in 2026 een motie aan over borging bij de Anna van Hannoverstraat.</div>
+          <div class="meta"><span>Open Raadsinformatie</span><span>tijdlijn</span><span>thema's per jaar</span><span>CSV-export</span></div>
+          <div class="wp">Werkproces: procesroute- en reactienota-assistent</div>
+          <span class="open">Open prototype →</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <section class="group">
+    <div class="group-head"><span class="letter">E</span><h2>Prototypefabriek: hoe deze tools zijn gemaakt</h2><span class="sess">Sessie 5 Mobiliteit en AI</span></div>
+    <div class="fabriek">
+      <div class="fstep"><div class="no">1</div><b>Intake met een vraageigenaar</b><span>Eén vraag, één gebruiker, één beslismoment. ‘Wie wil dit elke maand gebruiken?’</span></div>
+      <div class="fstep"><div class="no">2</div><b>Data vooraf klaarzetten</b><span>Elke bron heeft een script dat een uitsnede maakt. Op de dag hangt niets af van een haperende API.</span></div>
+      <div class="fstep"><div class="no">3</div><b>Prototype in een dag</b><span>Eén HTML-pagina per tool, gedeelde huisstijl, geen installatie. Rekenregels zichtbaar en met bron.</span></div>
+      <div class="fstep"><div class="no">4</div><b>Testen en besluiten</b><span>Stoppen, bewaren als inzichttool, of doorontwikkelen met eigenaar, data-afspraak, beleidstoets, AVG-check en beheer.</span></div>
+    </div>
+    <div class="grid cols-2" style="margin-top:14px">
+      <div class="panel">
+        <h3>Data opnieuw ophalen</h3>
+        <p class="small">Elk script declareert zijn eigen afhankelijkheden (PEP 723) en draait met één commando via <code>uv</code>.</p>
+        <pre>uv run data_prep/prep_bereikbaarheid.py   # CBS 100 m + GTFS NL + OSM, ~5 min
+uv run data_prep/prep_straatprofielen.py   # BGT-doorsneden, ~1 min
+uv run data_prep/prep_precedenten.py       # Open Raadsinformatie, ~2 min</pre>
+        <p class="small" style="margin-top:8px">Les van deze bouw: de publieke Overpass-API lag eruit. Het looppadennetwerk komt daarom uit de Geofabrik-uitsnede van Zuid-Holland. Zo’n terugvaloptie hoort bij elk werkproces.</p>
+      </div>
+      <div class="panel">
+        <h3>Gebruikte open bronnen</h3>
+        <table class="t">
+          <tr><th>Bron</th><th>Tool</th><th>Stand</th></tr>
+          <tr><td>BGT via PDOK (CC0)</td><td>A</td><td>nov 2026</td></tr>
+          <tr><td>CBS Vierkantstatistieken 100 m</td><td>B</td><td>2024, nabijheid 2023</td></tr>
+          <tr><td>GTFS NL, OVapi (CC0)</td><td>B</td><td>dienstregeling 10 nov 2026</td></tr>
+          <tr><td>OpenStreetMap, Geofabrik (ODbL)</td><td>B</td><td>nov 2026</td></tr>
+          <tr><td>Parkeerregels op lokaleregelgeving.overheid.nl</td><td>C</td><td>R'dam 2025, DH 2024</td></tr>
+          <tr><td>Open Raadsinformatie</td><td>D</td><td>tot juli 2026</td></tr>
+          <tr><td>PDOK Locatieserver en BRT-achtergrondkaart</td><td>A, B</td><td>live</td></tr>
+        </table>
+      </div>
+    </div>
+    <p class="small" style="margin-top:12px">Geen persoonsgegevens, geen ruwe iVRI-data en geen interne stukken in deze prototypes. Tools die besluiten gaan ondersteunen, horen in het algoritmeregister.</p>
+  </section>
+</div>
+<div class="footer">Gemaakt voor de themadag Mobiliteit Rotterdam × Den Haag. De prototypes zijn indicatief: toets uitkomsten aan beleid en richtlijnen voordat iemand er een advies op baseert.</div>
+</body>
+</html>
