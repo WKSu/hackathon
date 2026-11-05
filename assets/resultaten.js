@@ -42,10 +42,11 @@
     body.appendChild(el("h2", "demo-title", r.titel));
 
     var facts = [
-      ["Het concept", r.concept],
-      ["Wat is er gebouwd", r.gebouwd],
+      ["Wat is het", r.wat],
+      ["De uitdaging", r.uitdaging],
+      ["Zo gebruik je het", r.gebruik],
       ["Wat vonden de deelnemers", r.reflectie],
-      ["Nog te controleren", r.controle],
+      ["Let op", r.controle],
     ].filter(function (fact) {
       return fact[1];
     });
@@ -60,23 +61,23 @@
       body.appendChild(list);
     }
 
+    // Gevoelig: het prototype zelf staat niet online, maar losse links (zoals een formulier) wel
     if (r.gevoelig) {
       body.appendChild(el("p", "demo-note", "Dit prototype delen we als HTML-bestand binnen de organisatie, niet via deze openbare site."));
-    } else {
-      var links = Array.isArray(r.links) ? r.links : [];
-      if (links.length) {
-        var linkBar = el("div", "demo-links");
-        links.forEach(function (link, index) {
-          if (!link || !link.url) return;
-          var a = el("a", index === 0 ? "btn btn-primary btn-sm" : "btn btn-sm", link.tekst || "Open prototype");
-          a.href = link.url;
-          a.target = "_blank";
-          a.rel = "noopener";
-          a.appendChild(el("span", "visually-hidden", " (opent in nieuw tabblad)"));
-          linkBar.appendChild(a);
-        });
-        body.appendChild(linkBar);
-      }
+    }
+    var links = Array.isArray(r.links) ? r.links : [];
+    if (links.length) {
+      var linkBar = el("div", "demo-links");
+      links.forEach(function (link, index) {
+        if (!link || !link.url) return;
+        var a = el("a", index === 0 ? "btn btn-primary btn-sm" : "btn btn-sm", link.tekst || "Open prototype");
+        a.href = link.url;
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.appendChild(el("span", "visually-hidden", " (opent in nieuw tabblad)"));
+        linkBar.appendChild(a);
+      });
+      body.appendChild(linkBar);
     }
 
     card.appendChild(body);

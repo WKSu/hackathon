@@ -11,7 +11,7 @@ Geen build-stap, geen externe scripts of fonts: gewone HTML, CSS en JavaScript.
 | `testen.html` | Middag: formulier *AI-prototype testen* |
 | `toetsing-waterbed.html`, `toetsing-lostfound.html` | Toetsformulieren voor de Waterbedmonitor en Lost & Found (na de themadag) |
 | `teams.html` | De zeven ontwerpen van de teams, met schema per ontwerp (ingevuld op 5 november) |
-| `resultaten.html` | Archief: per team het concept, wat er gebouwd is en de reflectie |
+| `resultaten.html` | Archief: per prototype wat het is, de uitdaging, het gebruik en waar je op let |
 | `prototypes/` | De prototypes voor de deelsessies (met eigen overzicht in `prototypes/index.html`) |
 | `demos/` | Losse demo's die op de site zelf staan, zoals het Notitieboek |
 
@@ -111,9 +111,11 @@ keuzeknoppen (met `data-max` voor een maximum), en `.step[data-export="table"]` 
 
 ## Resultaten toevoegen
 
-Na de themadag: open `data/resultaten.js`, kopieer het voorbeeldblok per team en vul het
-in. Een prototype over een gevoelig onderwerp krijgt `gevoelig: true`: de kaart toont dan
-geen link en het prototype gaat als HTML-bestand rechtstreeks naar de ontvangers.
+Open `data/resultaten.js`, kopieer een blok en vul het in (velden staan bovenin het
+bestand). Een prototype met persoonsgegevens of interne informatie krijgt `gevoelig: true`
+en geen link naar het prototype zelf; dat gaat als HTML-bestand rechtstreeks naar de
+ontvangers. Zo staat Lost & Found er alleen als beschrijving; het smoelenboek met
+fictieve collega's is de openbare versie van hetzelfde idee.
 
 ## Prototypes voor de deelsessies
 
