@@ -10,6 +10,7 @@
  *   concept      het oorspronkelijke concept uit het ontwerpformulier, in 1 à 3 zinnen
  *   gebouwd      wat er in korte tijd gebouwd is
  *   reflectie    wat de deelnemers ervan vonden (uit het testformulier)
+ *   controle     wat het team nog moet bevestigen voordat de uitkomsten kloppen
  *   afbeelding   de concept-plaat of een screenshot, bijv. "img/resultaten/team-blauw.jpg"
  *   links        knoppen: [{ tekst: "Open prototype", url: "prototypes/..." }]
  *   gevoelig     true = geen link tonen; het prototype wordt dan alleen als
@@ -31,4 +32,21 @@
  *     links: [{ tekst: "Open prototype", url: "prototypes/team-blauw/index.html" }],
  *   },
  */
-window.RESULTATEN = [];
+window.RESULTATEN = [
+  {
+    titel: "Waterbedmonitor Parkeren",
+    team: "Team Parkeren Rotterdam",
+    casus: "Waterbedeffect",
+    concept:
+      "Voorspellen waar parkeerdruk naartoe schuift als een gebied betaald parkeren krijgt, zodat de gemeente eerder maatregelen kan nemen.",
+    gebouwd:
+      "Een kaart van Rotterdam en buurgemeenten met drie scenario’s en schuifjes voor de aannames. Per buurt zie je de extra parkeerdruk en waar de auto’s vandaan komen. Echt: subbuurtgrenzen, parkeercapaciteit en autobezit per subbuurt (CBS, 1 januari 2026). Fictief: de huidige bezetting, het uitwijkgedrag en alle cijfers van buurgemeenten.",
+    controle:
+      "Acht aannames, zoals de indeling binnen en buiten de ring en de tweede auto als benadering voor ‘geen vergunning’. Voor een echte prognose zijn parkeerdrukmetingen en tellingen rond een eerdere invoering nodig. Zie het controledocument.",
+    afbeelding: "img/resultaten/waterbedmonitor.jpg",
+    links: [
+      { tekst: "Open prototype", url: "prototypes/waterbedmonitor/index.html" },
+      { tekst: "Controledocument (Word)", url: "prototypes/waterbedmonitor/261105-controle-casus-waterbedeffect.docx" },
+    ],
+  },
+];

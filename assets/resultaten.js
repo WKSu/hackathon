@@ -45,6 +45,7 @@
       ["Het concept", r.concept],
       ["Wat is er gebouwd", r.gebouwd],
       ["Wat vonden de deelnemers", r.reflectie],
+      ["Nog te controleren", r.controle],
     ].filter(function (fact) {
       return fact[1];
     });

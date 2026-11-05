@@ -1101,6 +1101,21 @@ section[id] {
   color: var(--primary-ink);
 }
 
+.case-built {
+  padding: 10px 12px;
+  border: 1px solid var(--accent-border);
+  border-radius: 8px;
+  background: var(--accent-soft);
+}
+
+.case-built dt {
+  color: var(--accent-ink);
+}
+
+.case-built a {
+  font-weight: 600;
+}
+
 .case-figure {
   margin: 0;
   padding: 14px;
