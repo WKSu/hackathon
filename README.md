@@ -11,7 +11,7 @@ Geen build-stap, geen externe scripts of fonts: gewone HTML, CSS en JavaScript.
 | `testen.html` | Middag: formulier *AI-prototype testen* |
 | `toetsing-waterbed.html`, `toetsing-lostfound.html` | Toetsformulieren voor de Waterbedmonitor en Lost & Found (na de themadag) |
 | `teams.html` | De zeven ontwerpen van de teams, met schema per ontwerp (ingevuld op 5 november) |
-| `resultaten.html` | Archief: per prototype wat het is, de uitdaging, het gebruik en waar je op let |
+| `resultaten.html` | Prototypes (in het menu): per prototype wat het is, de uitdaging, het gebruik en waar je op let |
 | `prototypes/` | De prototypes voor de deelsessies (met eigen overzicht in `prototypes/index.html`) |
 | `demos/` | Losse demo's die op de site zelf staan, zoals het Notitieboek |
 
