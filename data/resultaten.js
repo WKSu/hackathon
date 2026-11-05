@@ -119,4 +119,20 @@ window.RESULTATEN = [
     afbeelding: "img/resultaten/smoelenboek.jpg",
     links: [{ tekst: "Smoelenboek (fictieve gegevens)", url: "prototypes/smoelenboek/index.html" }],
   },
+  {
+    titel: "Dashboard contractmanagement: wie moet wat doen, en wanneer?",
+    team: "Team Contractmanagement",
+    casus: "Contractmanagement",
+    concept:
+      "Een dashboard dat per rol laat zien hoe de contracten ervoor staan op tijd, geld, kwaliteit en rollen. Met signalen bij aflopende contracten, personele wisselingen en niet-belegde rollen, en doorklikken van totaal naar thema naar contract.",
+    gebouwd:
+      "Een dashboard op fictieve contracten in dezelfde 15 kolommen als de contractexport. Eerst één zin en vier stoplichten, details op aanvraag. Elk signaal wordt een actie: wat, wie en vóór wanneer, met de status Open, Opgepakt of Klaar. Aflopende contracten krijgen een uiterste startdatum voor de aanbesteding (± 18 maanden boven de Europese drempel, ± 6 eronder). Verder een vertrekbord, werkverdeling tegen een norm, signalen uit de Aanbestedingswet en een maandbericht per persoon. Gebouwd met Claude. Klik in het dashboard op ‘Demo: simuleer een maand gebruik’ om te zien hoe de stoplichten reageren.",
+    controle:
+      "Alle personen, leveranciers en bedragen zijn fictief. Het team moet de doorlooptijden, de Europese drempel en de norm per contractmanager nog bevestigen. Verlengingsopties, uitputting en KPI-scores staan niet in de export: die vul je nu met de hand aan, en dat blijft alleen in je eigen browser bewaard.",
+    afbeelding: "img/resultaten/contractmanagement.jpg",
+    links: [
+      { tekst: "Open het dashboard", url: "prototypes/contractmanagement/index.html" },
+      { tekst: "Plan en besluiten (GitHub)", url: "https://github.com/WKSu/hackathon-cases/tree/main/cases/contractmanagement" },
+    ],
+  },
 ];
