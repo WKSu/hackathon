@@ -61,7 +61,7 @@ window.RESULTATEN = [
       "Wegbeheer heeft de signalen nog niet bevestigd: een stille signaalgroep kan ook dataverlies of een hernummering zijn. De groentijden zijn een capaciteitsschets, niet voor gebruik op straat. Of de volledige kaart online mag, beslist de data-eigenaar.",
     afbeelding: "img/resultaten/laadlichten.jpg",
     links: [
-      { tekst: "Open prototype (selectie centrum)", url: "prototypes/laadlichten/index.html" },
+      { tekst: "Open de kaart: Boompjes - Erasmusbrug", url: "prototypes/laadlichten/index.html#vri=11160" },
       { tekst: "Uitleg", url: "prototypes/laadlichten/uitleg.html" },
       { tekst: "Plan en besluiten (GitHub)", url: "https://github.com/WKSu/hackathon-cases/tree/main/cases/laadlichten" },
     ],
