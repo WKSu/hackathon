@@ -9,6 +9,7 @@ Geen build-stap, geen externe scripts of fonts: gewone HTML, CSS en JavaScript.
 | `demos.html` | Inspiratie: bestaande AI-demo's, filterbaar op thema |
 | `ontwerp.html` | Ochtend: formulier *Van vraagstuk naar AI-prototype* |
 | `testen.html` | Middag: formulier *AI-prototype testen* |
+| `teams.html` | De zes ontwerpen van de teams, met schema per ontwerp (ingevuld op 5 november) |
 | `resultaten.html` | Archief: per team het concept, wat er gebouwd is en de reflectie |
 | `prototypes/` | De prototypes voor de deelsessies (met eigen overzicht in `prototypes/index.html`) |
 | `demos/` | Losse demo's die op de site zelf staan, zoals het Notitieboek |

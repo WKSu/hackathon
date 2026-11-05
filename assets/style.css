@@ -934,6 +934,288 @@ section[id] {
   text-align: center;
 }
 
+/* ---------- Ontwerpen van de teams ---------- */
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.team-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  height: 100%;
+  padding: 16px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--rdam-groen);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  color: inherit;
+  text-decoration: none;
+}
+
+.team-grid li:nth-child(even) .team-card {
+  border-top-color: var(--dh-geel);
+}
+
+.team-card:hover {
+  border-color: var(--primary);
+  color: inherit;
+}
+
+.team-card-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.team-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.team-casus {
+  color: var(--primary-ink);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.team-kort {
+  color: var(--ink);
+}
+
+.team-demo {
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border-strong);
+  color: var(--muted);
+  font-size: 0.9375rem;
+}
+
+.team-demo b {
+  display: block;
+  color: var(--ink);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.vorm {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.vorm-kaart {
+  background: var(--primary-soft);
+  color: var(--primary-ink);
+}
+
+.vorm-zoek {
+  background: #e5eefb;
+  color: #1d4f91;
+}
+
+.vorm-dash {
+  background: #efe8fb;
+  color: #5b3a99;
+}
+
+.cases {
+  display: grid;
+  gap: 20px;
+}
+
+.case {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  gap: 24px;
+  align-items: start;
+  scroll-margin-top: 76px;
+}
+
+@media (max-width: 820px) {
+  .case {
+    grid-template-columns: 1fr;
+  }
+}
+
+.case h3 {
+  margin: 0 0 12px;
+  font-size: 1.35rem;
+}
+
+.case-casus {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 4px;
+  color: var(--primary-ink);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.case-facts {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.case-facts dt {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.case-facts dd {
+  margin: 0;
+}
+
+.case-demo {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--primary-soft);
+}
+
+.case-demo dt {
+  color: var(--primary-ink);
+}
+
+.case-figure {
+  margin: 0;
+  padding: 14px;
+  overflow-x: auto;
+  background: var(--bg);
+  border-radius: 10px;
+}
+
+.diagram {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Op een smal scherm blijft het schema leesbaar; het schuift dan zijwaarts */
+@media (max-width: 560px) {
+  .diagram {
+    min-width: 520px;
+  }
+}
+
+/* Schemakleuren, vertaald naar het palet van de site */
+.diagram .t,
+.diagram .ts,
+.diagram .th {
+  font-family: inherit;
+}
+
+.diagram .t {
+  font-size: 14px;
+  fill: var(--ink);
+}
+
+.diagram .ts {
+  font-size: 12px;
+  fill: var(--muted);
+}
+
+.diagram .th {
+  font-size: 14px;
+  font-weight: 600;
+  fill: var(--ink);
+}
+
+.diagram .arr {
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 1.5;
+}
+
+/* invoer */
+.diagram .c-purple > rect,
+.diagram .c-purple > circle {
+  fill: #e5eefb;
+  stroke: #1d4f91;
+}
+
+.diagram .c-purple > text {
+  fill: #173f74;
+}
+
+/* uitkomst */
+.diagram .c-teal > rect,
+.diagram .c-teal > circle {
+  fill: var(--primary-soft);
+  stroke: var(--rdam-groen);
+}
+
+.diagram .c-teal > text {
+  fill: var(--primary-ink);
+}
+
+/* uitgelicht */
+.diagram .c-amber > rect,
+.diagram .c-amber > circle {
+  fill: var(--accent-soft);
+  stroke: #c9a400;
+}
+
+.diagram .c-amber > text {
+  fill: var(--accent-ink);
+}
+
+/* hoog / signaal */
+.diagram .c-coral > rect {
+  fill: #fbe7ea;
+  stroke: #9b2c3f;
+}
+
+.diagram .c-coral > text {
+  fill: #7a2232;
+}
+
+/* neutraal */
+.diagram .c-gray > rect {
+  fill: #eceff3;
+  stroke: #6b7380;
+}
+
+.diagram .c-gray > text {
+  fill: #3d4a5c;
+}
+
+.diagram {
+  --road: #b4b2a9;
+  --heat: #00811f;
+  --hub: #c2410c;
+  --hub-old: #6b7380;
+  --sel: #e0a800;
+}
+
+.callout-geel {
+  border-left-color: var(--dh-geel);
+}
+
 /* ---------- Formulieren ---------- */
 
 .werkwijze {

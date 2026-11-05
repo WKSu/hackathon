@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Ontwerpen van de teams – AI × Mobiliteit</title>
+  <meta name="description" content="De zes ontwerpen van de teams op de Themadag Mobiliteit Rotterdam × Den Haag, van vraagstuk naar AI-prototype.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Naar de inhoud</a>
+
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">AI</span><span>AI × Mobiliteit</span></a>
+      <nav class="site-nav" aria-label="Hoofdmenu">
+        <ul>
+          <li><a href="index.html">Start</a></li>
+          <li><a href="demos.html">Inspiratie</a></li>
+          <li><a href="ontwerp.html">Ontwerpen</a></li>
+          <li><a href="teams.html" aria-current="page">Teams</a></li>
+          <li><a href="testen.html">Testen</a></li>
+          <li><a href="resultaten.html">Resultaten</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Pijlpunt voor de schema's -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M2 1L8 5L2 9" fill="none" stroke="#566273" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </marker>
+    </defs>
+  </svg>
+
+  <main id="main">
+    <section class="page-head">
+      <div class="container">
+        <p class="eyebrow">Ontwerpen van de teams · 5 november 2026</p>
+        <h1>Zes ontwerpen, van vraagstuk naar <span class="nowrap">AI-prototype</span></h1>
+        <p class="lead">Wat de teams vanochtend hebben ontworpen, op één pagina. Vijf teams leverden zes ontwerpen in; Team Parkeren Rotterdam deed er twee. Vier ontwerpen zijn een kaart van de stad, één is een zoektool en één een dashboard.</p>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="overzicht-titel">
+      <div class="container">
+        <h2 id="overzicht-titel" class="visually-hidden">Overzicht</h2>
+        <ul class="team-grid">
+          <li><a class="team-card" href="#laadlichten">
+            <span class="team-card-top"><span class="team-name">Laadlichten</span><span class="vorm vorm-kaart">Kaart</span></span>
+            <span class="team-casus">Wegbeheer</span>
+            <span class="team-kort">Verkeerslichten slimmer programmeren</span>
+            <span class="team-demo"><b>Demo vandaag</b> Levende kaart van de verkeerslichten in Den Haag</span>
+          </a></li>
+          <li><a class="team-card" href="#waterbed">
+            <span class="team-card-top"><span class="team-name">Parkeren Rotterdam</span><span class="vorm vorm-kaart">Kaart + prognose</span></span>
+            <span class="team-casus">Waterbedeffect</span>
+            <span class="team-kort">Voorspellen waar parkeerdruk naartoe schuift</span>
+            <span class="team-demo"><b>Demo vandaag</b> Gekleurde waterbedeffectkaart</span>
+          </a></li>
+          <li><a class="team-card" href="#m4h">
+            <span class="team-card-top"><span class="team-name">Parkeren Rotterdam</span><span class="vorm vorm-kaart">Kaart + parameters</span></span>
+            <span class="team-casus">M4H parkeerbalans</span>
+            <span class="team-kort">Losse parkeerbalansen samenvoegen</span>
+            <span class="team-demo"><b>Demo vandaag</b> Kaart met hubs, klikbaar naar kavels</span>
+          </a></li>
+          <li><a class="team-card" href="#deelmobiliteit">
+            <span class="team-card-top"><span class="team-name">Sharing is Caring</span><span class="vorm vorm-kaart">Kaart + simulatie</span></span>
+            <span class="team-casus">Deelmobiliteit</span>
+            <span class="team-kort">Potentiekaart voor deelmobiliteitshubs</span>
+            <span class="team-demo"><b>Demo vandaag</b> Hub plaatsen en het effect zien</span>
+          </a></li>
+          <li><a class="team-card" href="#lostfound">
+            <span class="team-card-top"><span class="team-name">Lost &amp; Found</span><span class="vorm vorm-zoek">Zoeken + melding</span></span>
+            <span class="team-casus">Gebiedskennis</span>
+            <span class="team-kort">Vindbaar maken wat er in een gebied speelt</span>
+            <span class="team-demo"><b>Demo vandaag</b> Gebieds- of projectpagina</span>
+          </a></li>
+          <li><a class="team-card" href="#contracten">
+            <span class="team-card-top"><span class="team-name">Contractmanagement</span><span class="vorm vorm-dash">Dashboard</span></span>
+            <span class="team-casus">Dashboard contractmanagement Rotterdam</span>
+            <span class="team-kort">Overzicht van contracten op tijd, geld en kwaliteit</span>
+            <span class="team-demo"><b>Demo vandaag</b> Totaaloverzicht met KPI’s</span>
+          </a></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="ontwerpen-titel">
+      <div class="container">
+        <h2 id="ontwerpen-titel">De ontwerpen</h2>
+        <div class="cases">
+          <article class="case card" id="laadlichten" aria-labelledby="laadlichten-titel">
+            <div class="case-text">
+              <p class="case-casus">Wegbeheer <span class="vorm vorm-kaart">Kaart</span></p>
+              <h3 id="laadlichten-titel">Laadlichten</h3>
+              <dl class="case-facts">
+                <div><dt>Probleem</dt><dd>Verkeerslichten programmeren is veel handwerk, en detectielussen en drukknoppen zijn storingsgevoelig.</dd></div>
+                <div><dt>Voor wie</dt><dd>Weggebruikers en ambtenaren, zoals verkeerskundigen.</dd></div>
+                <div><dt>Idee</dt><dd>Uit kruispuntgeometrie, verkeersdata en beleid (ov-prioriteit, fiets voor bij regen) snel een functionele specificatie en basisregeling maken. Doel: vlottere doorstroming en minder storingen.</dd></div>
+                <div class="case-demo"><dt>Demo vandaag</dt><dd>Een levende kaart van de bestaande verkeerslichten in Den Haag.</dd></div>
+              </dl>
+            </div>
+            <figure class="case-figure">
+              <svg class="diagram" viewBox="0 0 680 235" role="img"><title>Laadlichten</title><desc>Kruispuntgeometrie, verkeersdata en beleid gaan het kruispunt in en leveren een basisregeling op.</desc>
+    <g class="c-purple"><rect x="40" y="30" width="170" height="44" rx="8" stroke-width="0.5"/><text class="th" x="125" y="52" text-anchor="middle" dominant-baseline="central">Kruispuntgeometrie</text></g>
+    <g class="c-purple"><rect x="40" y="90" width="170" height="44" rx="8" stroke-width="0.5"/><text class="th" x="125" y="112" text-anchor="middle" dominant-baseline="central">Verkeersdata</text></g>
+    <g class="c-purple"><rect x="40" y="150" width="170" height="44" rx="8" stroke-width="0.5"/><text class="th" x="125" y="172" text-anchor="middle" dominant-baseline="central">Beleid (ov, fiets)</text></g>
+    <line x1="212" y1="56" x2="256" y2="96" class="arr" marker-end="url(#arrow)"/>
+    <line x1="212" y1="112" x2="256" y2="108" class="arr" marker-end="url(#arrow)"/>
+    <line x1="212" y1="168" x2="256" y2="120" class="arr" marker-end="url(#arrow)"/>
+    <rect x="262" y="92" width="156" height="30" fill="var(--road)" opacity="0.6"/>
+    <rect x="325" y="28" width="30" height="160" fill="var(--road)" opacity="0.6"/>
+    <circle cx="315" cy="82" r="5" fill="#639922"/><circle cx="365" cy="82" r="5" fill="#E24B4A"/>
+    <circle cx="315" cy="132" r="5" fill="#E24B4A"/><circle cx="365" cy="132" r="5" fill="#639922"/>
+    <line x1="422" y1="107" x2="466" y2="107" class="arr" marker-end="url(#arrow)"/>
+    <g class="c-teal"><rect x="470" y="79" width="170" height="56" rx="8" stroke-width="0.5"/><text class="th" x="555" y="97" text-anchor="middle" dominant-baseline="central">Basisregeling</text><text class="ts" x="555" y="117" text-anchor="middle" dominant-baseline="central">uit functionele spec</text></g>
+    <text class="ts" x="340" y="218" text-anchor="middle">Demo vandaag: levende kaart van de verkeerslichten in Den Haag</text>
+    </svg>
+            </figure>
+          </article>
+          <article class="case card" id="waterbed" aria-labelledby="waterbed-titel">
+            <div class="case-text">
+              <p class="case-casus">Waterbedeffect <span class="vorm vorm-kaart">Kaart + prognose</span></p>
+              <h3 id="waterbed-titel">Parkeren Rotterdam</h3>
+              <dl class="case-facts">
+                <div><dt>Probleem</dt><dd>Waar betaald parkeren ingaat, wijken bewoners, bezoekers en bedrijven uit naar gratis buurgebieden.</dd></div>
+                <div><dt>Voor wie</dt><dd>De gemeente, voor het parkeerbeleid.</dd></div>
+                <div><dt>Idee</dt><dd>Op basis van parkeerdrukmetingen, vergunningen, autobezit en eerdere invoeringen voorspellen waar de druk naartoe schuift, zodat de gemeente eerder maatregelen kan nemen.</dd></div>
+                <div class="case-demo"><dt>Demo vandaag</dt><dd>Een waterbedeffectkaart met kleuren.</dd></div>
+              </dl>
+            </div>
+            <figure class="case-figure">
+              <svg class="diagram" viewBox="0 0 680 230" role="img"><title>Waterbedeffect</title><desc>Centrale kolom met betaald parkeren; aangrenzende gebieden hoog, verderop matig voorspelde parkeerdruk.</desc>
+    <g class="c-amber"><rect x="40" y="40" width="80" height="44" rx="4" stroke-width="0.5"/><text class="ts" x="80" y="62" text-anchor="middle" dominant-baseline="central">matig</text></g>
+    <g class="c-coral"><rect x="126" y="40" width="80" height="44" rx="4" stroke-width="0.5"/><text class="ts" x="166" y="62" text-anchor="middle" dominant-baseline="central">hoog</text></g>
+    <g class="c-gray"><rect x="212" y="40" width="80" height="44" rx="4" stroke-width="0.5"/><text class="ts" x="252" y="62" text-anchor="middle" dominant-baseline="central">betaald</text></g>
+    <g class="c-coral"><rect x="298" y="40" width="80" height="44" rx="4" stroke-width="0.5"/><text class="ts" x="338" y="62" text-anchor="middle" dominant-baseline="central">hoog</text></g>
+    <g class="c-amber"><rect x="384" y="40" width="80" height="44" rx="4" stroke-width="0.5"/><text class="ts" x="424" y="62" text-anchor="middle" dominant-baseline="central">matig</text></g>
+    <g class="c-amber"><rect x="40" y="90" width="80" height="44" rx="4" stroke-width="0.5"/><text class="ts" x="80" y="112" text-anchor="middle" dominant-baseline="central">matig</text></g>
+    <g class="c-coral"><rect x="126" y="90" width="80" height="44" rx="4" stroke-width="0.5"/><text class="ts" x="166" y="112" text-anchor="middle" dominant-baseline="central">hoog</text></g>
+    <g class="c-gray"><rect x="212" y="90" width="80" height="44" rx="4" stroke-width="0.5"/><text class="ts" x="252" y="112" text-anchor="middle" dominant-baseline="central">betaald</text></g>
+    <g class="c-coral"><rect x="298" y="90" width="80" height="44" rx="4" stroke-width="0.5"/><text class="ts" x="338" y="112" text-anchor="middle" dominant-baseline="central">hoog</text></g>
+    <g class="c-amber"><rect x="384" y="90" width="80" height="44" rx="4" stroke-width="0.5"/><text class="ts" x="424" y="112" text-anchor="middle" dominant-baseline="central">matig</text></g>
+    <g class="c-amber"><rect x="40" y="140" width="80" height="44" rx="4" stroke-width="0.5"/><text class="ts" x="80" y="162" text-anchor="middle" dominant-baseline="central">matig</text></g>
+    <g class="c-coral"><rect x="126" y="140" width="80" height="44" rx="4" stroke-width="0.5"/><text class="ts" x="166" y="162" text-anchor="middle" dominant-baseline="central">hoog</text></g>
+    <g class="c-gray"><rect x="212" y="140" width="80" height="44" rx="4" stroke-width="0.5"/><text class="ts" x="252" y="162" text-anchor="middle" dominant-baseline="central">betaald</text></g>
+    <g class="c-coral"><rect x="298" y="140" width="80" height="44" rx="4" stroke-width="0.5"/><text class="ts" x="338" y="162" text-anchor="middle" dominant-baseline="central">hoog</text></g>
+    <g class="c-amber"><rect x="384" y="140" width="80" height="44" rx="4" stroke-width="0.5"/><text class="ts" x="424" y="162" text-anchor="middle" dominant-baseline="central">matig</text></g>
+    <g class="c-purple"><rect x="480" y="40" width="160" height="144" rx="8" stroke-width="0.5"/>
+    <text class="th" x="496" y="64" dominant-baseline="central">Invoer</text>
+    <text class="ts" x="496" y="92" dominant-baseline="central">Parkeerdrukmetingen</text>
+    <text class="ts" x="496" y="114" dominant-baseline="central">Vergunningen</text>
+    <text class="ts" x="496" y="136" dominant-baseline="central">RDW auto’s/huishouden</text>
+    <text class="ts" x="496" y="158" dominant-baseline="central">Eerdere invoeringen</text></g>
+    <text class="ts" x="252" y="210" text-anchor="middle">Prognose: waar verschuift de parkeerdruk naartoe?</text>
+    </svg>
+            </figure>
+          </article>
+          <article class="case card" id="m4h" aria-labelledby="m4h-titel">
+            <div class="case-text">
+              <p class="case-casus">M4H parkeerbalans <span class="vorm vorm-kaart">Kaart + parameters</span></p>
+              <h3 id="m4h-titel">Parkeren Rotterdam</h3>
+              <dl class="case-facts">
+                <div><dt>Probleem</dt><dd>Er zijn losse parkeerbalansen, maar geen totaaloverzicht van hoe de parkeervraag over de parkeerhubs verdeeld is.</dd></div>
+                <div><dt>Voor wie</dt><dd>De gemeente, de ontwikkelaar en uiteindelijk de bewoner en ondernemer.</dd></div>
+                <div><dt>Idee</dt><dd>Balansen, parkeerbeleid, loopafstanden, hublocaties en fasering samenbrengen op een M4H-website met een kaart en aanpasbare parameters.</dd></div>
+                <div class="case-demo"><dt>Demo vandaag</dt><dd>Een kaart met hubs: klik een hub aan en zie welke kavels er gebruik van maken.</dd></div>
+              </dl>
+            </div>
+            <figure class="case-figure">
+              <svg class="diagram" viewBox="0 0 680 215" role="img"><title>M4H parkeerbalans</title><desc>Drie parkeerhubs met de kavels die ze bedienen; hub B is geselecteerd en toont zijn twee kavels.</desc>
+    <line x1="105" y1="62" x2="160" y2="100" stroke="var(--muted)" stroke-width="0.75"/>
+    <line x1="195" y1="62" x2="180" y2="100" stroke="var(--muted)" stroke-width="0.75"/>
+    <line x1="285" y1="62" x2="328" y2="100" stroke="var(--sel)" stroke-width="2"/>
+    <line x1="375" y1="62" x2="352" y2="100" stroke="var(--sel)" stroke-width="2"/>
+    <line x1="465" y1="62" x2="500" y2="100" stroke="var(--muted)" stroke-width="0.75"/>
+    <line x1="555" y1="62" x2="520" y2="100" stroke="var(--muted)" stroke-width="0.75"/>
+    <g class="c-gray"><rect x="70" y="30" width="70" height="30" rx="4" stroke-width="0.5"/><text class="ts" x="105" y="45" text-anchor="middle" dominant-baseline="central">Kavel</text></g>
+    <g class="c-gray"><rect x="160" y="30" width="70" height="30" rx="4" stroke-width="0.5"/><text class="ts" x="195" y="45" text-anchor="middle" dominant-baseline="central">Kavel</text></g>
+    <g class="c-amber"><rect x="250" y="30" width="70" height="30" rx="4" stroke-width="0.5"/><text class="ts" x="285" y="45" text-anchor="middle" dominant-baseline="central">Kavel</text></g>
+    <g class="c-amber"><rect x="340" y="30" width="70" height="30" rx="4" stroke-width="0.5"/><text class="ts" x="375" y="45" text-anchor="middle" dominant-baseline="central">Kavel</text></g>
+    <g class="c-gray"><rect x="430" y="30" width="70" height="30" rx="4" stroke-width="0.5"/><text class="ts" x="465" y="45" text-anchor="middle" dominant-baseline="central">Kavel</text></g>
+    <g class="c-gray"><rect x="520" y="30" width="70" height="30" rx="4" stroke-width="0.5"/><text class="ts" x="555" y="45" text-anchor="middle" dominant-baseline="central">Kavel</text></g>
+    <g class="c-teal"><circle cx="170" cy="128" r="28" stroke-width="0.5"/><text class="th" x="170" y="128" text-anchor="middle" dominant-baseline="central">Hub A</text></g>
+    <g class="c-amber"><circle cx="340" cy="128" r="28" stroke-width="1"/><text class="th" x="340" y="128" text-anchor="middle" dominant-baseline="central">Hub B</text></g>
+    <g class="c-teal"><circle cx="510" cy="128" r="28" stroke-width="0.5"/><text class="th" x="510" y="128" text-anchor="middle" dominant-baseline="central">Hub C</text></g>
+    <text class="ts" x="340" y="192" text-anchor="middle">Klik een hub: welke kavels parkeren hier? Beleid, loopafstand en fasering aanpasbaar.</text>
+    </svg>
+            </figure>
+          </article>
+          <article class="case card" id="deelmobiliteit" aria-labelledby="deelmobiliteit-titel">
+            <div class="case-text">
+              <p class="case-casus">Deelmobiliteit <span class="vorm vorm-kaart">Kaart + simulatie</span></p>
+              <h3 id="deelmobiliteit-titel">Sharing is Caring</h3>
+              <dl class="case-facts">
+                <div><dt>Probleem</dt><dd>Waar in Rotterdam en Den Haag komen deelmobiliteitshubs het best tot hun recht, gegeven dichtheid, functies, herkomst en bestemming, en maximaal 300 meter tussen hubs?</dd></div>
+                <div><dt>Voor wie</dt><dd>Beleidsmakers en aanbieders van deelmobiliteit.</dd></div>
+                <div><dt>Idee</dt><dd>Een potentiekaart waarop je een hub plaatst en direct kansrijkheid, dekking, capaciteit, voertuigtypen en aansluitende hubs ziet, ook per dagdeel en in het weekend.</dd></div>
+                <div class="case-demo"><dt>Demo vandaag</dt><dd>Een hub plaatsen en het effect zien op een paar cruciale factoren.</dd></div>
+              </dl>
+            </div>
+            <figure class="case-figure">
+              <svg class="diagram" viewBox="0 0 680 230" role="img"><title>Sharing is Caring</title><desc>Potentiekaart als raster; een nieuwe hub met straal 300 meter op de hotspot, met rechts de berekende effecten.</desc>
+    <g fill="var(--heat)">
+    <rect x="40" y="40" width="28" height="28" opacity=".15"/><rect x="70" y="40" width="28" height="28" opacity=".2"/><rect x="100" y="40" width="28" height="28" opacity=".3"/><rect x="130" y="40" width="28" height="28" opacity=".4"/><rect x="160" y="40" width="28" height="28" opacity=".35"/><rect x="190" y="40" width="28" height="28" opacity=".25"/><rect x="220" y="40" width="28" height="28" opacity=".2"/><rect x="250" y="40" width="28" height="28" opacity=".15"/>
+    <rect x="40" y="70" width="28" height="28" opacity=".2"/><rect x="70" y="70" width="28" height="28" opacity=".35"/><rect x="100" y="70" width="28" height="28" opacity=".55"/><rect x="130" y="70" width="28" height="28" opacity=".7"/><rect x="160" y="70" width="28" height="28" opacity=".65"/><rect x="190" y="70" width="28" height="28" opacity=".45"/><rect x="220" y="70" width="28" height="28" opacity=".3"/><rect x="250" y="70" width="28" height="28" opacity=".2"/>
+    <rect x="40" y="100" width="28" height="28" opacity=".25"/><rect x="70" y="100" width="28" height="28" opacity=".45"/><rect x="100" y="100" width="28" height="28" opacity=".7"/><rect x="130" y="100" width="28" height="28" opacity=".9"/><rect x="160" y="100" width="28" height="28" opacity=".85"/><rect x="190" y="100" width="28" height="28" opacity=".6"/><rect x="220" y="100" width="28" height="28" opacity=".35"/><rect x="250" y="100" width="28" height="28" opacity=".2"/>
+    <rect x="40" y="130" width="28" height="28" opacity=".2"/><rect x="70" y="130" width="28" height="28" opacity=".35"/><rect x="100" y="130" width="28" height="28" opacity=".5"/><rect x="130" y="130" width="28" height="28" opacity=".65"/><rect x="160" y="130" width="28" height="28" opacity=".6"/><rect x="190" y="130" width="28" height="28" opacity=".45"/><rect x="220" y="130" width="28" height="28" opacity=".3"/><rect x="250" y="130" width="28" height="28" opacity=".15"/>
+    <rect x="40" y="160" width="28" height="28" opacity=".15"/><rect x="70" y="160" width="28" height="28" opacity=".2"/><rect x="100" y="160" width="28" height="28" opacity=".3"/><rect x="130" y="160" width="28" height="28" opacity=".35"/><rect x="160" y="160" width="28" height="28" opacity=".3"/><rect x="190" y="160" width="28" height="28" opacity=".25"/><rect x="220" y="160" width="28" height="28" opacity=".2"/><rect x="250" y="160" width="28" height="28" opacity=".15"/>
+    </g>
+    <circle cx="144" cy="114" r="40" fill="none" stroke="var(--hub)" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <circle cx="144" cy="114" r="7" fill="var(--hub)"/>
+    <circle cx="234" cy="84" r="5" fill="var(--hub-old)"/><circle cx="84" cy="174" r="5" fill="var(--hub-old)"/>
+    <line x1="284" y1="114" x2="326" y2="114" class="arr" marker-end="url(#arrow)"/>
+    <g class="c-purple"><rect x="330" y="40" width="310" height="148" rx="8" stroke-width="0.5"/>
+    <text class="th" x="348" y="64" dominant-baseline="central">Nieuwe hub: wat gebeurt er?</text>
+    <text class="ts" x="348" y="92" dominant-baseline="central">Kansrijkheid van de locatie</text>
+    <text class="ts" x="348" y="114" dominant-baseline="central">Dekking en effect op het netwerk</text>
+    <text class="ts" x="348" y="136" dominant-baseline="central">Capaciteit en type voertuigen</text>
+    <text class="ts" x="348" y="158" dominant-baseline="central">Aansluitende hubs, per dagdeel</text></g>
+    <text class="ts" x="159" y="212" text-anchor="middle">Oranje: nieuwe hub met 300 m straal, grijs: bestaand</text>
+    </svg>
+            </figure>
+          </article>
+          <article class="case card" id="lostfound" aria-labelledby="lostfound-titel">
+            <div class="case-text">
+              <p class="case-casus">Gebiedskennis <span class="vorm vorm-zoek">Zoeken + melding</span></p>
+              <h3 id="lostfound-titel">Lost &amp; Found</h3>
+              <dl class="case-facts">
+                <div><dt>Probleem</dt><dd>Op de hoogte blijven van wat er in een gebied speelt kost veel moeite. Of projecten aan elkaar gekoppeld worden, hangt af van de scherpte van collega’s.</dd></div>
+                <div><dt>Voor wie</dt><dd>Gemeentebreed, alle ambtenaren.</dd></div>
+                <div><dt>Idee</dt><dd>Een tool die per gebied projecten, thema’s, status en contactpersonen opzoekt, en belanghebbenden actief informeert als er iets verandert. Het resultaat: een dashboard met kaart en meldingen, bijvoorbeeld per mail.</dd></div>
+                <div class="case-demo"><dt>Demo vandaag</dt><dd>Een gebiedspagina met de lopende projecten en thema’s, of een projectpagina met de relevante thema’s.</dd></div>
+              </dl>
+            </div>
+            <figure class="case-figure">
+              <svg class="diagram" viewBox="0 0 680 235" role="img"><title>Lost and Found</title><desc>Projectdocumenten, statussen en thema’s voeden een gebiedspagina die contactpersonen toont en meldingen verstuurt.</desc>
+    <g class="c-gray"><rect x="40" y="30" width="160" height="44" rx="8" stroke-width="0.5"/><text class="th" x="120" y="52" text-anchor="middle" dominant-baseline="central">Projectdocumenten</text></g>
+    <g class="c-gray"><rect x="40" y="90" width="160" height="44" rx="8" stroke-width="0.5"/><text class="th" x="120" y="112" text-anchor="middle" dominant-baseline="central">Projectstatussen</text></g>
+    <g class="c-gray"><rect x="40" y="150" width="160" height="44" rx="8" stroke-width="0.5"/><text class="th" x="120" y="172" text-anchor="middle" dominant-baseline="central">Lopende thema’s</text></g>
+    <line x1="202" y1="56" x2="246" y2="96" class="arr" marker-end="url(#arrow)"/>
+    <line x1="202" y1="112" x2="246" y2="108" class="arr" marker-end="url(#arrow)"/>
+    <line x1="202" y1="168" x2="246" y2="120" class="arr" marker-end="url(#arrow)"/>
+    <g class="c-teal"><rect x="250" y="80" width="180" height="56" rx="8" stroke-width="0.5"/><text class="th" x="340" y="98" text-anchor="middle" dominant-baseline="central">Gebiedspagina</text><text class="ts" x="340" y="118" text-anchor="middle" dominant-baseline="central">wat speelt hier nu?</text></g>
+    <line x1="432" y1="98" x2="476" y2="74" class="arr" marker-end="url(#arrow)"/>
+    <line x1="432" y1="118" x2="476" y2="142" class="arr" marker-end="url(#arrow)"/>
+    <g class="c-purple"><rect x="480" y="50" width="160" height="44" rx="8" stroke-width="0.5"/><text class="th" x="560" y="72" text-anchor="middle" dominant-baseline="central">Contactpersonen</text></g>
+    <g class="c-purple"><rect x="480" y="122" width="160" height="44" rx="8" stroke-width="0.5"/><text class="th" x="560" y="144" text-anchor="middle" dominant-baseline="central">Melding bij wijziging</text></g>
+    <text class="ts" x="340" y="218" text-anchor="middle">Zoek op gebied of project: dashboard met kaart, plus meldingen bij wijzigingen</text>
+    </svg>
+            </figure>
+          </article>
+          <article class="case card" id="contracten" aria-labelledby="contracten-titel">
+            <div class="case-text">
+              <p class="case-casus">Dashboard contractmanagement Rotterdam <span class="vorm vorm-dash">Dashboard</span></p>
+              <h3 id="contracten-titel">Contractmanagement</h3>
+              <dl class="case-facts">
+                <div><dt>Probleem</dt><dd>Veel contracten, maar geen overzicht op tijd, geld, kwaliteit en verantwoordelijkheden. De data in de huidige systemen is niet gebruiksvriendelijk.</dd></div>
+                <div><dt>Voor wie</dt><dd>Contractmanagers, teamleiders en het MT.</dd></div>
+                <div><dt>Idee</dt><dd>Een dashboard met filters per rol en doorklikken van totaal naar thema naar contract, met signalen bij personele wisselingen en bij contracten die binnen anderhalf jaar aflopen. Maandelijks bijgewerkt.</dd></div>
+                <div class="case-demo"><dt>Demo vandaag</dt><dd>De eerste laag: een totaaloverzicht met KPI’s, nog zonder doorklikken.</dd></div>
+              </dl>
+            </div>
+            <figure class="case-figure">
+              <svg class="diagram" viewBox="0 0 680 235" role="img"><title>Dashboard contractmanagement</title><desc>Drie lagen: totaal, per thema, specifiek contract. KPI’s tijd, geld, kwaliteit en rollen, plus signaal bij afloop binnen anderhalf jaar.</desc>
+    <g class="c-teal"><rect x="40" y="30" width="340" height="44" rx="8" stroke-width="1"/><text class="th" x="210" y="52" text-anchor="middle" dominant-baseline="central">Totaal alle contracten</text></g>
+    <g class="c-gray"><rect x="80" y="90" width="260" height="44" rx="8" stroke-width="0.5"/><text class="th" x="210" y="112" text-anchor="middle" dominant-baseline="central">Per thema of onderwerp</text></g>
+    <g class="c-gray"><rect x="120" y="150" width="180" height="44" rx="8" stroke-width="0.5"/><text class="th" x="210" y="172" text-anchor="middle" dominant-baseline="central">Specifiek contract</text></g>
+    <g class="c-purple"><rect x="420" y="30" width="100" height="36" rx="6" stroke-width="0.5"/><text class="th" x="470" y="48" text-anchor="middle" dominant-baseline="central">Tijd</text></g>
+    <g class="c-purple"><rect x="540" y="30" width="100" height="36" rx="6" stroke-width="0.5"/><text class="th" x="590" y="48" text-anchor="middle" dominant-baseline="central">Geld</text></g>
+    <g class="c-purple"><rect x="420" y="78" width="100" height="36" rx="6" stroke-width="0.5"/><text class="th" x="470" y="96" text-anchor="middle" dominant-baseline="central">Kwaliteit</text></g>
+    <g class="c-purple"><rect x="540" y="78" width="100" height="36" rx="6" stroke-width="0.5"/><text class="th" x="590" y="96" text-anchor="middle" dominant-baseline="central">Rollen</text></g>
+    <g class="c-amber"><rect x="420" y="130" width="220" height="44" rx="8" stroke-width="0.5"/><text class="th" x="530" y="152" text-anchor="middle" dominant-baseline="central">Signaal: afloop &lt; 1,5 jaar</text></g>
+    <text class="ts" x="340" y="218" text-anchor="middle">Demo vandaag: alleen de bovenste laag (totaaloverzicht met KPI’s)</text>
+    </svg>
+            </figure>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="opvallend-titel">
+      <div class="container">
+        <h2 id="opvallend-titel">Wat valt op?</h2>
+        <div class="callouts">
+          <p class="callout"><strong>Vier keer een kaart</strong> Laadlichten, Waterbedeffect, M4H en Deelmobiliteit zijn in de kern een kaart van de stad. Eén gedeelde basiskaart met buurtgrenzen en ondergrond, waar elk team een eigen laag op legt, scheelt bouwtijd. Waterbed en Deelmobiliteit kunnen dezelfde buurtcijfers gebruiken, zoals autobezit en dichtheid.</p>
+          <p class="callout callout-geel"><strong>Let op gevoelige data</strong> Het waterbedeffect leunt op autobezit en vergunningen: in het prototype werken we met cijfers per buurt, niet per huishouden. Het contractendashboard bouwen we op fictieve contracten.</p>
+          <p class="callout callout-geel"><strong>Snel gebouwd is nog niet goed getoetst</strong> Het einddoel van Laadlichten, een regeling voor verkeerslichten genereren, raakt aan verkeersveiligheid. De demo van vandaag blijft daarom bij de kaart; de grotere ambitie vraagt om een eigen toets.</p>
+        </div>
+        <p class="section-note">Samengevat uit de ingeleverde ontwerpformulieren. Die waren soms kort, dus dit is een interpretatie. Klopt iets niet of willen jullie iets aanvullen? Laat het de begeleiders weten.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Themadag Mobiliteit · Rotterdam × Den Haag · 5 november 2026</p>
+    </div>
+  </footer>
+</body>
+</html>
