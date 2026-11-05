@@ -47,6 +47,7 @@ window.RESULTATEN = [
     links: [
       { tekst: "Open prototype", url: "prototypes/waterbedmonitor/index.html" },
       { tekst: "Controledocument (Word)", url: "prototypes/waterbedmonitor/261105-controle-casus-waterbedeffect.docx" },
+      { tekst: "Toets de monitor (formulier)", url: "toetsing-waterbed.html" },
     ],
   },
   {
@@ -117,7 +118,10 @@ window.RESULTATEN = [
     controle:
       "Voor een echte versie moeten collega’s instemmen met hun naam en foto, en is een vaste bron nodig, zoals een SharePoint-lijst met een eigenaar.",
     afbeelding: "img/resultaten/smoelenboek.jpg",
-    links: [{ tekst: "Smoelenboek (fictieve gegevens)", url: "prototypes/smoelenboek/index.html" }],
+    links: [
+      { tekst: "Smoelenboek (fictieve gegevens)", url: "prototypes/smoelenboek/index.html" },
+      { tekst: "Toets het prototype (formulier)", url: "toetsing-lostfound.html" },
+    ],
   },
   {
     titel: "Dashboard contractmanagement: wie moet wat doen, en wanneer?",

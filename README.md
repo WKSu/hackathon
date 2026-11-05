@@ -9,6 +9,7 @@ Geen build-stap, geen externe scripts of fonts: gewone HTML, CSS en JavaScript.
 | `demos.html` | Inspiratie: bestaande AI-demo's, filterbaar op thema |
 | `ontwerp.html` | Ochtend: formulier *Van vraagstuk naar AI-prototype* |
 | `testen.html` | Middag: formulier *AI-prototype testen* |
+| `toetsing-waterbed.html`, `toetsing-lostfound.html` | Toetsformulieren voor de Waterbedmonitor en Lost & Found (na de themadag) |
 | `teams.html` | De zeven ontwerpen van de teams, met schema per ontwerp (ingevuld op 5 november) |
 | `resultaten.html` | Archief: per team het concept, wat er gebouwd is en de reflectie |
 | `prototypes/` | De prototypes voor de deelsessies (met eigen overzicht in `prototypes/index.html`) |
@@ -94,6 +95,19 @@ kwijt. Dat is alleen een probleem als je dat op de dag zelf doet.
   als plakken niet lukt.
 - **Print / PDF**: nette afdruk van het ingevulde formulier.
 - **Teamnaam** wordt gedeeld tussen beide formulieren op hetzelfde apparaat.
+
+## Toetsformulieren
+
+De toetsformulieren werken als de andere formulieren (bewaren, e-mail, kopiëren,
+download), maar per persoon: de naam is verplicht en komt in bestandsnaam en onderwerp.
+Een groepsoverzicht is er niet, want de site heeft geen server; de begeleiders bundelen de
+mails. De export toont per vraag alleen wat iemand gekozen of ingevuld heeft, en uit de
+buurtentabel alleen de gewijzigde rijen (met de oude waarde erbij).
+
+De vragen komen uit de toetspagina's die de teams in Claude maakten. Extra opbouw voor
+`assets/forms.js`: `.q` met `.q-title` voor een vraag, `.choice[data-label]` voor
+keuzeknoppen (met `data-max` voor een maximum), en `.step[data-export="table"]` met
+`tr[data-row]` en keuzelijsten met `data-default` voor een tabel.
 
 ## Resultaten toevoegen
 

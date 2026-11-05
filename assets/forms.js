@@ -1,10 +1,18 @@
 /*
- * Formulierlogica voor ontwerp.html en testen.html.
+ * Formulierlogica voor ontwerp.html, testen.html en de toetsformulieren.
  *
  * De vragen staan in de HTML; dit script leest de structuur daaruit:
  *   - elk <fieldset class="step"> is één stap (.step-nr + .step-title),
  *   - elk veld heeft een name, id en bijbehorend <label for="...">.
  * Wie een vraag wil aanpassen, hoeft alleen de HTML te wijzigen.
+ *
+ * Extra voor de toetsformulieren:
+ *   - .q met .q-title: één vraag; de export toont per vraag de gekozen opties
+ *     (.choice[data-label]) en ingevulde velden (data-label, data-unit),
+ *   - .choice[data-max]: maximaal zoveel vinkjes,
+ *   - .step[data-export="table"]: tabel met tr[data-row]; alleen gewijzigde
+ *     rijen gaan mee (keuzelijsten met data-default),
+ *   - data-file-author op het formulier: veld voor de naam in bestand en onderwerp.
  *
  * Er wordt niets verstuurd: antwoorden staan alleen in localStorage van
  * dit apparaat en worden gedownload als Markdown-bestand.
@@ -19,7 +27,8 @@
   var SHARED_PREFIX = "themadag:shared:";
 
   var steps = Array.prototype.slice.call(form.querySelectorAll(".step"));
-  var fields = Array.prototype.slice.call(form.querySelectorAll("input[name], textarea[name]"));
+  var FIELD_SELECTOR = "input[name], textarea[name], select[name]";
+  var fields = Array.prototype.slice.call(form.querySelectorAll(FIELD_SELECTOR));
   var progressEl = document.querySelector("[data-progress]");
   var savedEl = document.querySelector("[data-saved]");
   var toastEl = document.querySelector("[data-toast]");
@@ -56,21 +65,39 @@
 
   /* ---------- Waarden lezen en schrijven ---------- */
 
+  function all(root, selector) {
+    return Array.prototype.slice.call(root.querySelectorAll(selector));
+  }
+
+  function isToggle(field) {
+    return field.type === "checkbox" || field.type === "radio";
+  }
+
   function getValue(field) {
     return field.type === "checkbox" ? field.checked : field.value;
   }
 
   function setValue(field, value) {
     if (field.type === "checkbox") field.checked = Boolean(value);
+    else if (field.type === "radio") field.checked = value != null && field.value === String(value);
     else field.value = value == null ? "" : String(value);
   }
 
+  // Keuzelijsten hebben een voorgevulde waarde; pas een afwijking telt als ingevuld
+  function defaultValue(field) {
+    if (field.type === "checkbox") return false;
+    if (field.tagName === "SELECT") return field.dataset.default || "";
+    return "";
+  }
+
   function isFilled(field) {
-    return field.type === "checkbox" ? field.checked : field.value.trim() !== "";
+    if (isToggle(field)) return field.checked;
+    if (field.tagName === "SELECT") return field.value !== defaultValue(field);
+    return field.value.trim() !== "";
   }
 
   function stepFields(step) {
-    return Array.prototype.slice.call(step.querySelectorAll("input[name], textarea[name]"));
+    return all(step, FIELD_SELECTOR);
   }
 
   function stepIsFilled(step) {
@@ -80,7 +107,9 @@
   function collect() {
     var values = {};
     fields.forEach(function (field) {
-      values[field.name] = getValue(field);
+      if (field.type !== "radio") values[field.name] = getValue(field);
+      else if (field.checked) values[field.name] = field.value;
+      else if (!(field.name in values)) values[field.name] = "";
     });
     return values;
   }
@@ -89,7 +118,7 @@
 
   // Textarea's printen niet volledig; daarom spiegelen we de tekst in een div
   function syncPrintCopy(field) {
-    if (field.type === "checkbox") return;
+    if (field.tagName !== "TEXTAREA" && field.type !== "text") return;
     var copy = field.nextElementSibling;
     if (!copy || !copy.classList.contains("print-value")) {
       copy = document.createElement("div");
@@ -107,9 +136,16 @@
     field.style.height = field.scrollHeight + 2 + "px";
   }
 
+  // Gewijzigde tabelrijen krijgen een kleur, zodat je ziet wat je hebt aangepast
+  function markRow(field) {
+    var row = field.closest("tr[data-row]");
+    if (row) row.classList.toggle("is-changed", all(row, FIELD_SELECTOR).some(isFilled));
+  }
+
   function refresh(field) {
     syncPrintCopy(field);
     autosize(field);
+    markRow(field);
   }
 
   function updateProgress() {
@@ -165,6 +201,7 @@
   /* ---------- Export: één opbouw, als Markdown en als opgemaakte HTML ---------- */
 
   var NOT_FILLED = "(niet ingevuld)";
+  var NOT_ANSWERED = "(niet beantwoord)";
 
   function cleanText(node) {
     if (!node) return "";
@@ -198,11 +235,26 @@
         text: cleanText(step.querySelector(".step-nr")) + " — " + cleanText(step.querySelector(".step-title")),
       });
 
-      var all = stepFields(step);
-      var checkboxes = all.filter(function (f) {
+      if (step.dataset.export === "table") {
+        var changed = tableChanges(step);
+        blocks.push(changed.length ? { type: "list", items: changed } : { type: "text", text: "Geen wijzigingen." });
+        return;
+      }
+
+      all(step, ".q").forEach(function (question) {
+        blocks.push({ type: "subhead", text: questionTitle(question) });
+        blocks.push({ type: "lines", items: questionLines(question) });
+      });
+
+      // Velden buiten een vraagblok: zoals in ontwerp en testen
+      var loose = stepFields(step).filter(function (f) {
+        return !f.closest(".q");
+      });
+      if (!loose.length) return;
+      var checkboxes = loose.filter(function (f) {
         return f.type === "checkbox";
       });
-      var others = all.filter(function (f) {
+      var others = loose.filter(function (f) {
         return f.type !== "checkbox";
       });
 
@@ -216,7 +268,7 @@
       }
 
       // Eén vrij tekstveld: alleen het antwoord. Meerdere velden: met tussenkopjes.
-      if (others.length === 1 && !checkboxes.length) {
+      if (others.length === 1 && !checkboxes.length && !step.querySelector(".q")) {
         blocks.push({ type: "answer", text: others[0].value.trim() });
       } else {
         others.forEach(function (field) {
@@ -227,6 +279,56 @@
     });
 
     return blocks;
+  }
+
+  // "3 Tekst" in beeld wordt "3. Tekst" in de export
+  function questionTitle(question) {
+    var title = question.querySelector(".q-title");
+    var nr = title && title.querySelector(".q-nr");
+    if (!nr) return cleanText(title);
+    var rest = title.cloneNode(true);
+    rest.querySelector(".q-nr").remove();
+    return cleanText(nr) + ". " + cleanText(rest);
+  }
+
+  function prefixed(label, value) {
+    return label ? label + ": " + value : value;
+  }
+
+  function fieldText(field) {
+    if (field.tagName === "SELECT") return field.options[field.selectedIndex] ? field.options[field.selectedIndex].text : "";
+    var value = field.value.trim();
+    return value && field.dataset.unit ? value + " " + field.dataset.unit : value;
+  }
+
+  // Eén vraag als regels, bijvoorbeeld "Oordeel: Klopt niet" en "Toelichting: ..."
+  function questionLines(question) {
+    var lines = [];
+    all(question, ".choice").forEach(function (group) {
+      var picked = all(group, "input:checked").map(labelFor);
+      if (picked.length) lines.push(prefixed(group.dataset.label, picked.join(", ")));
+    });
+    all(question, FIELD_SELECTOR).forEach(function (field) {
+      if (field.closest(".choice") || !isFilled(field)) return;
+      lines.push(prefixed(field.dataset.label, fieldText(field)));
+    });
+    return lines;
+  }
+
+  // Alleen de rijen die iemand heeft aangepast, met de oorspronkelijke waarde erbij
+  function tableChanges(step) {
+    return all(step, "tr[data-row]")
+      .map(function (row) {
+        var changes = all(row, FIELD_SELECTOR)
+          .filter(isFilled)
+          .map(function (field) {
+            var text = prefixed(field.dataset.label, fieldText(field));
+            var original = field.tagName === "SELECT" && field.dataset.default ? field.querySelector('option[value="' + field.dataset.default + '"]') : null;
+            return original ? text + " (was: " + original.text + ")" : text;
+          });
+        return changes.length ? row.dataset.row + ": " + changes.join("; ") : "";
+      })
+      .filter(Boolean);
   }
 
   function toMarkdown(blocks) {
@@ -252,6 +354,14 @@
             .join("\n");
         case "answer":
           return block.text || "_" + NOT_FILLED + "_";
+        case "lines":
+          return block.items.length ? block.items.join("  \n") : "_" + NOT_ANSWERED + "_";
+        case "list":
+          return block.items
+            .map(function (item) {
+              return "- " + item;
+            })
+            .join("\n");
         default:
           return block.text;
       }
@@ -297,6 +407,20 @@
           return block.text
             ? "<p>" + escapeHtml(block.text).replace(/\n/g, "<br>") + "</p>"
             : "<p><em>" + NOT_FILLED + "</em></p>";
+        case "lines":
+          return block.items.length
+            ? "<p>" + block.items.map(escapeHtml).join("<br>").replace(/\n/g, "<br>") + "</p>"
+            : "<p><em>" + NOT_ANSWERED + "</em></p>";
+        case "list":
+          return (
+            "<ul>" +
+            block.items
+              .map(function (item) {
+                return "<li>" + escapeHtml(item) + "</li>";
+              })
+              .join("") +
+            "</ul>"
+          );
         default:
           return "<p>" + escapeHtml(block.text) + "</p>";
       }
@@ -306,6 +430,7 @@
 
   // Bestandsnaam volgens teamconventie: JJMMDD Auteur korte inhoud
   function teamLabel() {
+    if (form.dataset.fileAuthor) return form.elements[form.dataset.fileAuthor].value.trim();
     var team = form.elements.team.value.trim();
     return /^team\b/i.test(team) ? "Team" + team.slice(4) : "Team " + team;
   }
@@ -328,11 +453,11 @@
   /* ---------- Acties ---------- */
 
   function requireTeam() {
-    var team = form.elements.team;
-    if (team.value.trim()) return true;
-    team.setAttribute("aria-invalid", "true");
-    team.focus();
-    toast("Vul eerst jullie teamnaam in.");
+    var field = form.querySelector(".meta-card [required]");
+    if (!field || field.value.trim()) return true;
+    field.setAttribute("aria-invalid", "true");
+    field.focus();
+    toast(form.dataset.requiredMessage || "Vul eerst jullie teamnaam in.");
     return false;
   }
 
@@ -450,7 +575,7 @@
     storage.remove(STORAGE_KEY);
     fields.forEach(function (field) {
       if (field.dataset.shared) storage.remove(SHARED_PREFIX + field.dataset.shared);
-      setValue(field, field.type === "checkbox" ? false : "");
+      setValue(field, defaultValue(field));
       field.removeAttribute("aria-invalid");
       refresh(field);
     });
@@ -502,9 +627,20 @@
   updateProgress();
   showSaved(saved && saved.savedAt ? new Date(saved.savedAt) : null);
 
+  // Bij .choice[data-max] gaat het vinkje dat te veel is er meteen weer af
+  function overMax(field) {
+    var group = field.type === "checkbox" && field.checked && field.closest(".choice[data-max]");
+    if (!group) return false;
+    var max = Number(group.dataset.max);
+    if (group.querySelectorAll("input:checked").length <= max) return false;
+    field.checked = false;
+    toast("Kies er maximaal " + max + ".");
+    return true;
+  }
+
   function onEdit(event) {
     var field = event.target;
-    if (!field.name) return;
+    if (!field.name || overMax(field)) return;
     field.removeAttribute("aria-invalid");
     refresh(field);
     updateProgress();
@@ -524,6 +660,36 @@
       var action = actions[button.dataset.action];
       if (action) action();
     });
+  });
+
+  // Zoekveld boven een lange tabel: rijen en lege groepskoppen verbergen
+  all(document, "[data-filter]").forEach(function (input) {
+    var table = document.getElementById(input.dataset.filter);
+    var countEl = input.dataset.count ? document.getElementById(input.dataset.count) : null;
+    function apply() {
+      var term = input.value.trim().toLowerCase();
+      var shown = 0;
+      var group = null;
+      var groupHasRows = false;
+      all(table, "tbody tr").forEach(function (row) {
+        if (row.classList.contains("row-group")) {
+          if (group) group.hidden = !groupHasRows;
+          group = row;
+          groupHasRows = false;
+          return;
+        }
+        var match = !term || (row.dataset.search || "").indexOf(term) !== -1;
+        row.hidden = !match;
+        if (match) {
+          shown += 1;
+          groupHasRows = true;
+        }
+      });
+      if (group) group.hidden = !groupHasRows;
+      if (countEl) countEl.textContent = shown + " buurten";
+    }
+    input.addEventListener("input", apply);
+    apply();
   });
 
   var resizeTimer;

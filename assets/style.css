@@ -314,6 +314,10 @@ h3 {
   margin: 0;
 }
 
+.notice .notice-more {
+  margin-top: 8px;
+}
+
 /* Tekst die de organisatie nog moet invullen: valt bewust op */
 .todo {
   padding: 0 4px;
@@ -1528,6 +1532,239 @@ section[id] {
   }
 }
 
+/* ---------- Toetsformulieren: vraagblokken, keuzeknoppen, tabel ---------- */
+
+.q {
+  display: grid;
+  gap: 8px;
+  padding: 14px 0;
+  border-top: 1px solid var(--border);
+}
+
+.step-help + .q,
+.step legend + .q {
+  border-top: 0;
+  padding-top: 4px;
+}
+
+.q-title {
+  margin: 0;
+  font-weight: 600;
+}
+
+.q-nr {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.6em;
+  height: 1.6em;
+  margin-right: 6px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--primary-soft);
+  color: var(--primary-ink);
+  font-size: 0.8rem;
+  font-weight: 700;
+  vertical-align: 0.1em;
+}
+
+.q-now,
+.q-hint,
+.now,
+.table-count {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.q-hint,
+.q-link {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.choice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pick {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  background: #fff;
+  cursor: pointer;
+  line-height: 1.3;
+}
+
+.pick input {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--primary);
+}
+
+.pick:has(input:checked) {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  font-weight: 600;
+}
+
+.pick-twijfel:has(input:checked) {
+  background: var(--dh-geel-licht);
+  border-color: #b8961a;
+}
+
+.pick-nee:has(input:checked) {
+  background: var(--danger-soft);
+  border-color: var(--danger);
+}
+
+.pick:has(input:focus-visible) {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.scale-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.scale-end {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.number-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+}
+
+.worksheet input[type="number"],
+.worksheet input[type="search"],
+.worksheet select {
+  padding: 8px 10px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+}
+
+.number-row input[type="number"] {
+  width: 8em;
+}
+
+.q textarea {
+  min-height: 3.2em;
+}
+
+.table-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-bottom: 10px;
+}
+
+.table-tools input[type="search"] {
+  width: min(100%, 320px);
+}
+
+.table-wrap {
+  max-height: 560px;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.form-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.form-table th,
+.form-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.form-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--rdam-licht);
+}
+
+.form-table tbody th {
+  font-weight: 600;
+}
+
+.form-table .row-group th {
+  background: #f7f9fa;
+  color: var(--primary-ink);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.form-table tr.is-changed {
+  background: var(--dh-geel-licht);
+}
+
+.form-table select {
+  width: 100%;
+  min-width: 9em;
+  padding: 5px 6px;
+}
+
+.form-table input[type="number"] {
+  width: 6em;
+  padding: 5px 6px;
+}
+
+@media (max-width: 560px) {
+  .form-table thead {
+    display: none;
+  }
+
+  .form-table tr:not(.row-group) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    padding: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .form-table tr:not(.row-group) > * {
+    padding: 0;
+    border: 0;
+  }
+
+  .form-table tr:not(.row-group) > th {
+    grid-column: 1 / -1;
+  }
+
+  .form-table select {
+    min-width: 0;
+  }
+
+  .form-table .row-group,
+  .form-table .row-group th {
+    display: block;
+  }
+}
+
 /* Kopie van de antwoorden die alleen bij printen zichtbaar is */
 .print-value {
   display: none;
@@ -1595,5 +1832,22 @@ section[id] {
     min-height: 7em;
     border: 1px solid #bbb;
     border-radius: 6px;
+  }
+
+  .q .print-value:empty {
+    min-height: 2.5em;
+  }
+
+  .table-wrap {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .form-table thead th {
+    position: static;
+  }
+
+  .q {
+    break-inside: avoid;
   }
 }
