@@ -88,6 +88,6 @@
     return;
   }
 
-  countEl.textContent = results.length + (results.length === 1 ? " team" : " teams");
+  countEl.textContent = results.length + (results.length === 1 ? " prototype" : " prototypes");
   grid.replaceChildren.apply(grid, results.map(renderCard));
 })();

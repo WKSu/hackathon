@@ -66,4 +66,18 @@ window.RESULTATEN = [
       { tekst: "Plan en besluiten (GitHub)", url: "https://github.com/WKSu/hackathon-cases/tree/main/cases/laadlichten" },
     ],
   },
+  {
+    titel: "Laadpalen: waar is ruimte voor een nieuwe laadpaal?",
+    team: "Team Laadlichten",
+    casus: "Laadpalen",
+    concept:
+      "Typ een adres in en zie binnen 200 meter welke parkeervakken volgens het Rotterdamse plaatsingsbeleid geschikt zijn voor een nieuwe laadpaal, en waar die het hardst nodig is.",
+    gebouwd:
+      "Een kaart voor de zes vooroorlogse buurten van Noord, met 16.372 openbare parkeervakken. Elk vak is getoetst aan de Beleidsregel plaatsing laadpunten 2025: kandidaat, maatwerk of ongeschikt, met de reden per criterium. Met schuifjes voor stoepbreedte, boomafstand en de norm, en een voorstel voor de beste nieuwe locaties op basis van het tekort aan laadpunten. Eerste bevinding: bij de helft van de adressen is minder dan 3,3% van de vakken binnen 200 meter een laadvak, tegenover een norm van 1 op 10. Voor elektrisch rijden per adres gebruikt de kaart woningen per 100 m-vak, geen kentekens. De kaart draait alleen lokaal: de gemeentelijke lagen zijn nog niet bevestigd als open data.",
+    controle:
+      "Een kaart is geen besluit: elke kandidaat krijgt nog een verkeerskundige toets en een verkeersbesluit. Kabels, inritten en nooddeuren staan niet in de data en moeten ter plaatse worden gecheckt. De drempels, zoals ‘grote boom nabij’, zijn aannames die het team nog moet bevestigen. Daarna beslist de data-eigenaar of de kaart online mag.",
+    links: [
+      { tekst: "Plan en besluiten (GitHub)", url: "https://github.com/WKSu/hackathon-cases/tree/case/lp/cases/laadpalen" },
+    ],
+  },
 ];
