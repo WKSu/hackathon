@@ -56,13 +56,14 @@ window.RESULTATEN = [
     concept:
       "Een kaart van alle verkeerslichten die zelf ziet waar iets mis is, en per kruispunt een eerste schets van een basisregeling geeft: van geometrie, verkeersdata en beleid naar groentijden.",
     gebouwd:
-      "Een kaart met de 292 Rotterdamse verkeerslichten, die zelf signaleert waar de detectie of de datalevering mogelijk hapert (september 2025 tegenover september 2026). Per kruispunt een schets van de groentijden, met knoppen voor ov-prioriteit en regen. Gebouwd in ongeveer 90 minuten met Claude. De kaart draait alleen lokaal: de VRI-data is niet openbaar.",
+      "Een kaart met de 292 Rotterdamse verkeerslichten, die zelf signaleert waar de detectie of de datalevering mogelijk hapert (september 2025 tegenover september 2026). Per kruispunt een schets van de groentijden, met knoppen voor ov-prioriteit en regen. Gebouwd in ongeveer 90 minuten met Claude. Online staat een selectie van 8 VRI’s in het centrum. De volledige kaart draait lokaal, omdat de VRI-data niet openbaar is.",
     controle:
-      "Wegbeheer heeft de signalen nog niet bevestigd: een stille signaalgroep kan ook dataverlies of een hernummering zijn. De groentijden zijn een capaciteitsschets, niet voor gebruik op straat. De data-eigenaar beslist of de kaart online mag.",
+      "Wegbeheer heeft de signalen nog niet bevestigd: een stille signaalgroep kan ook dataverlies of een hernummering zijn. De groentijden zijn een capaciteitsschets, niet voor gebruik op straat. Of de volledige kaart online mag, beslist de data-eigenaar.",
     afbeelding: "img/resultaten/laadlichten.jpg",
     links: [
+      { tekst: "Open prototype (selectie centrum)", url: "prototypes/laadlichten/index.html" },
       { tekst: "Uitleg", url: "prototypes/laadlichten/uitleg.html" },
-      { tekst: "Plan en besluiten (GitHub)", url: "https://github.com/WKSu/hackathon-cases/tree/case/ll/cases/laadlichten" },
+      { tekst: "Plan en besluiten (GitHub)", url: "https://github.com/WKSu/hackathon-cases/tree/main/cases/laadlichten" },
     ],
   },
 ];
