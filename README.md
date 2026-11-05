@@ -114,8 +114,8 @@ keuzeknoppen (met `data-max` voor een maximum), en `.step[data-export="table"]` 
 Open `data/resultaten.js`, kopieer een blok en vul het in (velden staan bovenin het
 bestand). Een prototype met persoonsgegevens of interne informatie krijgt `gevoelig: true`
 en geen link naar het prototype zelf; dat gaat als HTML-bestand rechtstreeks naar de
-ontvangers. Zo staat Lost & Found er alleen als beschrijving; het smoelenboek met
-fictieve collega's is de openbare versie van hetzelfde idee.
+ontvangers. Lost & Found staat online in een versie met fictieve namen en zonder foto's
+(`prototypes/lost-and-found/`); het origineel met echte collega's gaat alleen intern rond.
 
 ## Prototypes voor de deelsessies
 
