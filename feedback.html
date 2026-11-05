@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Feedback – AI × Mobiliteit</title>
+  <meta name="description" content="Geef feedback op een prototype van de Themadag Mobiliteit Rotterdam × Den Haag.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Naar de inhoud</a>
+
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">AI</span><span>AI × Mobiliteit</span></a>
+      <nav class="site-nav" aria-label="Hoofdmenu">
+        <ul>
+          <li><a href="index.html">Start</a></li>
+          <li><a href="demos.html">Inspiratie</a></li>
+          <li><a href="ontwerp.html">Ontwerpen</a></li>
+          <li><a href="teams.html">Teams</a></li>
+          <li><a href="resultaten.html" aria-current="page">Prototypes</a></li>
+          <li><a href="testen.html">Testen</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-head">
+      <div class="container container-narrow">
+        <p class="eyebrow" data-fb-eyebrow>Feedback</p>
+        <h1 data-fb-title>Geef feedback op een prototype</h1>
+        <p class="subtitle">Themadag Mobiliteit | Rotterdam × Den Haag</p>
+        <p class="lead">Wat werkt, wat moet beter, wat mist er? Vier korte vragen; vul in wat je weet. Het team gebruikt je antwoorden voor de volgende versie.</p>
+        <div class="notice">
+          <p><strong>Je antwoorden worden automatisch bewaard op dit apparaat</strong> en nergens naartoe gestuurd. Klaar? Mail ze naar het adres dat de begeleiders geven. Vul geen vertrouwelijke informatie in.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="container container-narrow">
+      <!-- Zonder geldig prototype: keuzelijst -->
+      <section class="card fb-kies" data-fb-kies hidden>
+        <h2>Kies een prototype</h2>
+        <ul class="fb-lijst" data-fb-lijst></ul>
+      </section>
+
+      <!-- Uitleg over het gekozen prototype -->
+      <section class="card uitleg-card" data-fb-uitleg hidden aria-labelledby="fb-over">
+        <h2 id="fb-over" class="fb-over-titel">Over dit prototype</h2>
+        <details class="fb-details">
+          <summary>Hoe werkt het? Hoe is het gebouwd, wat zit erin en wat kan het nog niet</summary>
+          <div class="uitleg-body" data-fb-uitleg-body></div>
+        </details>
+        <div class="uitleg-actions" data-fb-links></div>
+      </section>
+
+      <form class="worksheet" data-fb-form data-subtitle="Themadag Mobiliteit | Rotterdam × Den Haag" data-file-author="naam" novalidate hidden>
+
+        <div class="card meta-card">
+          <div class="field">
+            <label for="naam">Naam <span class="opt">(optioneel)</span></label>
+            <input id="naam" name="naam" type="text" autocomplete="name" data-shared="naam">
+          </div>
+          <div class="field">
+            <label for="afdeling">Team of afdeling <span class="opt">(optioneel)</span></label>
+            <input id="afdeling" name="afdeling" type="text" autocomplete="off" data-shared="afdeling">
+          </div>
+        </div>
+
+        <fieldset class="card step">
+          <legend><span class="step-nr">Stap 1</span> <span class="step-title">Hoe bruikbaar is dit?</span></legend>
+          <div class="q" id="vraag-score">
+            <p class="q-title">Hoe bruikbaar is dit prototype voor jouw werk?</p>
+            <div class="scale-row"><span class="scale-end">Niet bruikbaar</span>
+              <div class="choice choice-scale" role="radiogroup" aria-label="Score (1 = niet bruikbaar, 5 = heel bruikbaar)" data-label="Score (1 = niet bruikbaar, 5 = heel bruikbaar)">
+                <label class="pick" for="score_0"><input id="score_0" name="score" type="radio" value="1"> <span>1</span></label>
+                <label class="pick" for="score_1"><input id="score_1" name="score" type="radio" value="2"> <span>2</span></label>
+                <label class="pick" for="score_2"><input id="score_2" name="score" type="radio" value="3"> <span>3</span></label>
+                <label class="pick" for="score_3"><input id="score_3" name="score" type="radio" value="4"> <span>4</span></label>
+                <label class="pick" for="score_4"><input id="score_4" name="score" type="radio" value="5"> <span>5</span></label>
+              </div>
+              <span class="scale-end">Heel bruikbaar</span></div>
+            <input id="score_toel" name="score_toel" type="text" autocomplete="off" data-label="Toelichting" aria-label="Toelichting bij de score" placeholder="Waarom? Waarvoor zou je het gebruiken? (optioneel)">
+          </div>
+        </fieldset>
+
+        <fieldset class="card step">
+          <legend><span class="step-nr">Stap 2</span> <span class="step-title">Wat werkt goed?</span></legend>
+          <label class="hint" for="werkt_goed">Wat is handig, verrassend of waardevol?</label>
+          <textarea id="werkt_goed" name="werkt_goed" rows="3"></textarea>
+        </fieldset>
+
+        <fieldset class="card step">
+          <legend><span class="step-nr">Stap 3</span> <span class="step-title">Wat moet beter?</span></legend>
+          <label class="hint" for="beter">Wat werkt niet, klopt niet of is onduidelijk? Noem de belangrijkste verbetering eerst.</label>
+          <textarea id="beter" name="beter" rows="4"></textarea>
+        </fieldset>
+
+        <fieldset class="card step">
+          <legend><span class="step-nr">Stap 4</span> <span class="step-title">Wat mist er nog?</span></legend>
+          <label class="hint" for="mist">Welke functie, data of koppeling is nodig om dit echt te gebruiken?</label>
+          <textarea id="mist" name="mist" rows="3"></textarea>
+        </fieldset>
+
+        <section class="card done-card" aria-labelledby="tot-slot">
+          <h2 id="tot-slot">Inleveren</h2>
+          <ol class="handin">
+            <li>Klik hieronder op <strong>Open e-mail</strong>. De tekst van het formulier wordt meteen gekopieerd.</li>
+            <li>Vul het e-mailadres in dat de begeleiders geven.</li>
+            <li>Plak het formulier in de mail (Ctrl+V) en verstuur.</li>
+          </ol>
+          <p class="handin-alt">Opent er geen mail? Klik op <strong>Kopieer tekst</strong> en plak het in een nieuwe mail, of klik op <strong>Download</strong> en voeg het bestand toe als bijlage.</p>
+          <p class="reset-row no-print">Opnieuw beginnen? <button type="button" class="btn btn-ghost btn-sm" data-action="reset">Formulier leegmaken</button></p>
+        </section>
+
+        <div class="form-bar">
+          <p class="form-status"><span data-progress>0 van 4 stappen ingevuld</span> · <span data-saved>Wordt automatisch bewaard</span></p>
+          <div class="form-actions">
+            <button type="button" class="btn btn-primary btn-sm" data-action="mail">Open e-mail</button>
+            <button type="button" class="btn btn-sm" data-action="copy">Kopieer tekst</button>
+            <button type="button" class="btn btn-sm" data-action="download">Download</button>
+            <button type="button" class="btn btn-sm" data-action="print">Print / PDF</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="toast" role="status" aria-live="polite" data-toast></div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Themadag Mobiliteit · Rotterdam × Den Haag · 5 november 2026</p>
+    </div>
+  </footer>
+
+  <script src="data/resultaten.js"></script>
+  <script src="assets/feedback.js"></script>
+  <script src="assets/forms.js"></script>
+</body>
+</html>

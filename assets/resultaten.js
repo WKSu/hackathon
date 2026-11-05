@@ -80,8 +80,92 @@
       body.appendChild(linkBar);
     }
 
+    // Uitleg en feedback: per prototype dezelfde twee knoppen
+    if (r.id) {
+      var extra = el("div", "demo-extra");
+      if (r.uitleg) {
+        var explain = el("button", "btn btn-sm", "Hoe werkt het?");
+        explain.type = "button";
+        explain.addEventListener("click", function () {
+          openUitleg(r, explain);
+        });
+        extra.appendChild(explain);
+      }
+      var feedback = el("a", "btn btn-sm", "Geef feedback");
+      feedback.href = "feedback.html?p=" + encodeURIComponent(r.id);
+      extra.appendChild(feedback);
+      body.appendChild(extra);
+    }
+
     card.appendChild(body);
     return card;
+  }
+
+  /* ---------- Uitlegvenster ---------- */
+
+  var dialog = document.getElementById("uitleg");
+
+  function list(items) {
+    var ul = el("ul");
+    (items || []).forEach(function (item) {
+      ul.appendChild(el("li", null, item));
+    });
+    return ul;
+  }
+
+  function uitlegContent(r) {
+    var frag = document.createDocumentFragment();
+    var u = r.uitleg || {};
+    var sections = [
+      ["Hoe is het gebouwd?", u.bouw ? el("p", null, u.bouw) : null],
+      ["Wat zit erin?", u.functies && u.functies.length ? list(u.functies) : null],
+      ["Wat kan het nog niet?", u.nogNiet && u.nogNiet.length ? list(u.nogNiet) : null],
+      ["Let op", r.controle ? el("p", null, r.controle) : null],
+    ];
+    sections.forEach(function (section) {
+      if (!section[1]) return;
+      frag.appendChild(el("h3", null, section[0]));
+      frag.appendChild(section[1]);
+    });
+    return frag;
+  }
+
+  var returnFocus = null;
+  function openUitleg(r, opener) {
+    if (!dialog || typeof dialog.showModal !== "function") {
+      window.location.href = "feedback.html?p=" + encodeURIComponent(r.id);
+      return;
+    }
+    returnFocus = opener;
+    dialog.querySelector("[data-uitleg-title]").textContent = r.titel;
+    dialog.querySelector("[data-uitleg-team]").textContent = [r.team, r.casus].filter(Boolean).join(" · ");
+    dialog.querySelector("[data-uitleg-body]").replaceChildren(uitlegContent(r));
+    var actions = dialog.querySelector("[data-uitleg-actions]");
+    actions.replaceChildren();
+    var first = (r.links || []).filter(function (l) {
+      return l && l.url;
+    })[0];
+    if (first && !r.gevoelig) {
+      var open = el("a", "btn btn-primary btn-sm", first.tekst || "Open prototype");
+      open.href = first.url;
+      open.target = "_blank";
+      open.rel = "noopener";
+      actions.appendChild(open);
+    }
+    var fb = el("a", "btn btn-sm", "Geef feedback");
+    fb.href = "feedback.html?p=" + encodeURIComponent(r.id);
+    actions.appendChild(fb);
+    dialog.showModal();
+  }
+
+  if (dialog) {
+    dialog.addEventListener("click", function (event) {
+      // Klik op de achtergrond of de sluitknop sluit het venster
+      if (event.target === dialog || event.target.closest("[data-uitleg-close]")) dialog.close();
+    });
+    dialog.addEventListener("close", function () {
+      if (returnFocus) returnFocus.focus();
+    });
   }
 
   if (!results.length) {

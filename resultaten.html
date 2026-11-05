@@ -33,7 +33,7 @@
       <div class="container">
         <p class="eyebrow">Prototypes</p>
         <h1>Wat hebben we gebouwd?</h1>
-        <p class="lead">Wat de teams in korte tijd met AI bouwden. Per prototype: wat het is, welk probleem het aanpakt, hoe je het gebruikt en waar je op moet letten.</p>
+        <p class="lead">Wat de teams in korte tijd met AI bouwden. Per prototype: wat het is, welk probleem het aanpakt en hoe je het gebruikt. Onder <strong>Hoe werkt het?</strong> lees je hoe het gebouwd is en wat het nog niet kan. Met <strong>Geef feedback</strong> help je het team verder.</p>
         <p class="page-head-link">De prototypes zijn gemaakt op basis van het ontwerpformulier en de transcriptie van het groepsgesprek.</p>
       </div>
     </section>
@@ -43,6 +43,19 @@
         <p class="result-count" id="result-count" aria-live="polite"></p>
         <div class="demo-grid" id="result-grid"></div>
         <noscript><p class="empty-state">Zet JavaScript aan om de prototypes te bekijken.</p></noscript>
+        <dialog class="uitleg-dialog" id="uitleg" aria-labelledby="uitleg-titel">
+          <div class="uitleg-inner">
+            <div class="uitleg-head">
+              <div>
+                <p class="uitleg-team" data-uitleg-team></p>
+                <h2 id="uitleg-titel" data-uitleg-title></h2>
+              </div>
+              <button type="button" class="uitleg-close" data-uitleg-close aria-label="Sluiten">×</button>
+            </div>
+            <div class="uitleg-body" data-uitleg-body></div>
+            <div class="uitleg-actions" data-uitleg-actions></div>
+          </div>
+        </dialog>
         <p class="section-note">Prototypes met echte namen of interne informatie staan hier met fictieve gegevens. Het origineel delen we als HTML-bestand binnen de organisatie.</p>
       </div>
     </section>

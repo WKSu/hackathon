@@ -558,7 +558,7 @@
   function mail() {
     copy(function (ok, note) {
       var topic = topicValue();
-      var subject = "Themadag: " + form.dataset.fileLabel + " " + teamLabel() + (topic ? " – " + topic : "");
+      var subject = "Themadag: " + [form.dataset.fileLabel, teamLabel()].filter(Boolean).join(" ") + (topic ? " – " + topic : "");
       var body = ok ? "Plak hier het formulier (Ctrl+V)." : "Voeg hier het gedownloade formulier toe als bijlage.";
       window.location.href = "mailto:?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
       toast(

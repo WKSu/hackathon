@@ -10,6 +10,7 @@ Geen build-stap, geen externe scripts of fonts: gewone HTML, CSS en JavaScript.
 | `ontwerp.html` | Ochtend: formulier *Van vraagstuk naar AI-prototype* |
 | `testen.html` | Middag: formulier *AI-prototype testen* |
 | `toetsing-waterbed.html`, `toetsing-lostfound.html` | Toetsformulieren voor de Waterbedmonitor en Lost & Found (na de themadag) |
+| `feedback.html?p=<id>` | Kort feedbackformulier per prototype (vragen in de HTML, prototype uit `data/resultaten.js`) |
 | `teams.html` | De zeven ontwerpen van de teams, met schema per ontwerp (ingevuld op 5 november) |
 | `resultaten.html` | Prototypes (in het menu): per prototype wat het is, de uitdaging, het gebruik en waar je op let |
 | `prototypes/` | De prototypes voor de deelsessies (met eigen overzicht in `prototypes/index.html`) |
@@ -95,6 +96,14 @@ kwijt. Dat is alleen een probleem als je dat op de dag zelf doet.
   als plakken niet lukt.
 - **Print / PDF**: nette afdruk van het ingevulde formulier.
 - **Teamnaam** wordt gedeeld tussen beide formulieren op hetzelfde apparaat.
+
+## Uitleg en feedback per prototype
+
+Elke kaart op de prototypepagina heeft twee knoppen. **Hoe werkt het?** toont het veld
+`uitleg` uit `data/resultaten.js`: hoe het gebouwd is, wat erin zit en wat het nog niet
+kan. **Geef feedback** opent `feedback.html?p=<id>`: vier korte vragen met dezelfde
+werking als de andere formulieren, met eigen opslag per prototype. Een nieuw prototype
+krijgt beide knoppen zodra het een `id` heeft.
 
 ## Toetsformulieren
 
