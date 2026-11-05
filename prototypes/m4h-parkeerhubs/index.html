@@ -1,0 +1,712 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M4H Parkeerhubs</title>
+<link rel="stylesheet" href="../assets/vendor/leaflet.css">
+<style>
+:root{
+  --paars:#671566; --paars-d:#450e44; --magenta:#cc007f; --blauw:#45bce6; --blauw-l:#a3e2f8;
+  --grijs:#9da9b1; --bg:#edf3f6; --tekst:#2f2f2e; --tekst-2:#5d6670; --lijn:#d7e0e6; --wit:#fff;
+  --ok:#2e9e6b; --krap:#e0a100; --tekort:#d7263d;
+  --font:'Barlow',system-ui,-apple-system,'Segoe UI',sans-serif; --font-c:'Barlow Condensed','Barlow',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--tekst);font-family:var(--font);font-size:15px}
+button,input,select{font-family:inherit;font-size:inherit;color:inherit}
+a{color:var(--paars)}
+/* ---------- header ---------- */
+header{height:62px;background:var(--paars);color:#fff;display:flex;align-items:center;gap:22px;padding:0 20px;position:relative;z-index:1000}
+.brand{display:flex;align-items:center;gap:12px;white-space:nowrap}
+.brand .mark{font-family:var(--font-c);font-weight:700;font-size:26px;letter-spacing:.5px;background:#fff;color:var(--paars);padding:2px 9px;border-radius:3px;line-height:1.15}
+.brand .t1{font-family:var(--font-c);font-weight:600;font-size:21px;line-height:1.05}
+.brand .t2{font-size:12.5px;opacity:.82}
+nav{display:flex;gap:2px;margin-left:auto;overflow-x:auto}
+nav button{background:none;border:0;color:#fff;opacity:.78;padding:8px 13px;border-radius:4px;cursor:pointer;font-weight:600;white-space:nowrap;font-size:14.5px}
+nav button:hover{opacity:1;background:rgba(255,255,255,.1)}
+nav button.on{opacity:1;background:#fff;color:var(--paars)}
+.badge-ind{font-size:11.5px;font-weight:600;background:var(--magenta);color:#fff;padding:3px 8px;border-radius:20px;white-space:nowrap}
+/* ---------- kaartview ---------- */
+#view-kaart{display:grid;grid-template-columns:1fr 450px;height:calc(100% - 62px)}
+#map{height:100%;background:#dfe7ec}
+aside{height:100%;overflow-y:auto;background:#fff;border-left:1px solid var(--lijn)}
+.sec{padding:14px 18px;border-bottom:1px solid var(--lijn)}
+.sec h3{margin:0 0 8px;font-family:var(--font-c);font-size:15px;text-transform:uppercase;letter-spacing:.6px;color:var(--paars)}
+.row{display:flex;align-items:center;gap:10px}
+.yearbox{display:flex;align-items:baseline;gap:10px}
+.yearbox .yr{font-family:var(--font-c);font-weight:700;font-size:44px;line-height:1;color:var(--paars)}
+.yearbox .fase{font-weight:600;color:var(--magenta)}
+input[type=range]{width:100%;accent-color:var(--paars)}
+.ticks{display:flex;justify-content:space-between;font-size:11.5px;color:var(--tekst-2);margin-top:-2px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.chip{border:1px solid var(--lijn);background:#fff;border-radius:20px;padding:4px 11px;font-size:13px;cursor:pointer;font-weight:500}
+.chip.on{background:var(--paars);border-color:var(--paars);color:#fff}
+.btn{border:1px solid var(--paars);background:#fff;color:var(--paars);border-radius:4px;padding:5px 11px;cursor:pointer;font-weight:600;font-size:13.5px}
+.btn.prim{background:var(--paars);color:#fff}
+.btn:hover{filter:brightness(.96)}
+.seg{display:inline-flex;border:1px solid var(--paars);border-radius:4px;overflow:hidden}
+.seg button{border:0;background:#fff;color:var(--paars);padding:5px 12px;cursor:pointer;font-weight:600;font-size:13.5px}
+.seg button.on{background:var(--paars);color:#fff}
+.toggles{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;margin-top:10px;font-size:13.5px}
+.toggles label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.toggles input{accent-color:var(--paars)}
+select{border:1px solid var(--lijn);border-radius:4px;padding:4px 6px;background:#fff}
+.kpis{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.kpi{background:var(--bg);border-radius:6px;padding:8px 10px}
+.kpi .v{font-family:var(--font-c);font-weight:700;font-size:25px;line-height:1.05}
+.kpi .l{font-size:12px;color:var(--tekst-2);line-height:1.2}
+.kpi.warn .v{color:var(--tekort)}
+.kpi.good .v{color:var(--ok)}
+.hublist .h{display:grid;grid-template-columns:12px 1fr 92px;gap:8px;align-items:center;padding:6px 6px;border-radius:5px;cursor:pointer}
+.hublist .h:hover{background:var(--bg)}
+.hublist .h.sel{background:#f4e9f4}
+.hublist .dot{width:12px;height:12px;border-radius:50%}
+.hublist .nm{font-weight:600;font-size:13.5px;line-height:1.15}
+.hublist .sub{font-size:11.5px;color:var(--tekst-2)}
+.bar{height:7px;background:#e6ecf0;border-radius:4px;overflow:hidden;margin-top:3px}
+.bar>i{display:block;height:100%}
+.num{font-family:var(--font-c);font-weight:600;font-size:15px;text-align:right;line-height:1.1}
+.num small{display:block;font-family:var(--font);font-weight:500;font-size:11px;color:var(--tekst-2)}
+.gebiedkop{font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--tekst-2);margin:8px 0 2px 6px;font-weight:600}
+/* detail */
+#detail{display:none;background:#fbf7fb;border-bottom:3px solid var(--paars)}
+#detail.open{display:block}
+.dhead{display:flex;align-items:flex-start;gap:10px}
+.dhead h2{margin:0;font-family:var(--font-c);font-size:23px;color:var(--paars);line-height:1.1}
+.dhead .x{margin-left:auto;border:0;background:none;font-size:22px;cursor:pointer;color:var(--tekst-2);line-height:1}
+.meta{font-size:12.5px;color:var(--tekst-2);margin-top:2px}
+.big{display:flex;gap:16px;margin:10px 0 6px}
+.big div .v{font-family:var(--font-c);font-weight:700;font-size:30px;line-height:1}
+.big div .l{font-size:12px;color:var(--tekst-2)}
+.stack{display:flex;height:16px;border-radius:4px;overflow:hidden;margin:6px 0 4px}
+.legend-s{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--tekst-2)}
+.legend-s i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+table.pl{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+table.pl th{text-align:left;font-weight:600;color:var(--tekst-2);font-size:11.5px;border-bottom:1px solid var(--lijn);padding:4px 4px}
+table.pl td{padding:4px 4px;border-bottom:1px solid #eef2f5}
+table.pl tr.c{cursor:pointer}
+table.pl tr.c:hover td{background:#f3eef3}
+table.pl td.r,table.pl th.r{text-align:right}
+.edit{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;margin-top:8px}
+.edit label{font-size:12px;color:var(--tekst-2);display:flex;flex-direction:column;gap:2px}
+.edit input{border:1px solid var(--lijn);border-radius:4px;padding:5px 7px;background:#fff;font-size:14px}
+.note{font-size:12.5px;background:#fff;border-left:3px solid var(--blauw);padding:6px 9px;margin-top:8px;color:var(--tekst-2)}
+.flag{font-size:12.5px;background:#fdecee;border-left:3px solid var(--tekort);padding:6px 9px;margin-top:8px}
+.flag.amber{background:#fff6dd;border-color:var(--krap)}
+.calcline{font-size:12.5px;color:var(--tekst-2);margin-top:6px;line-height:1.5}
+.calcline b{color:var(--tekst)}
+/* map elements */
+.hubm{position:relative;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-c);font-weight:700;color:#fff;
+  background:conic-gradient(var(--ring) calc(var(--p)*1turn), rgba(255,255,255,.55) 0);box-shadow:0 1px 4px rgba(0,0,0,.35);cursor:pointer}
+.hubm::before{content:"";position:absolute;inset:5px;border-radius:50%;background:var(--paars)}
+.hubm span{position:relative;font-size:13px;line-height:1;text-align:center}
+.hubm span small{display:block;font-size:10px;font-weight:600;opacity:.85}
+.hubm.closed{background:none;border:2.5px dashed var(--paars);box-shadow:none}
+.hubm.closed::before{background:rgba(255,255,255,.85)}
+.hubm.closed span{color:var(--paars)}
+.hubm.res{border-style:dotted;border-color:#7a6b7a}
+.hubm.sel{outline:3px solid var(--magenta);outline-offset:3px}
+.hublabel{font-family:var(--font-c);font-weight:600;font-size:12.5px;color:var(--paars-d);white-space:nowrap;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff}
+.plotlabel{font-family:var(--font-c);font-weight:700;font-size:11px;color:#fff;text-shadow:0 0 2px rgba(0,0,0,.8);white-space:nowrap;transform:translate(-50%,-50%);display:inline-block}
+.gebiedlabel{font-family:var(--font-c);font-weight:700;font-size:17px;letter-spacing:1.2px;text-transform:uppercase;color:rgba(69,14,68,.55);white-space:nowrap;text-shadow:0 0 4px #fff,0 0 4px #fff}
+.maplegend{background:rgba(255,255,255,.95);padding:9px 11px;border-radius:6px;font-size:12.5px;box-shadow:0 1px 5px rgba(0,0,0,.2);max-width:260px;line-height:1.35}
+.maplegend b{font-family:var(--font-c);font-size:13.5px;color:var(--paars)}
+.maplegend .it{display:flex;align-items:center;gap:7px;margin-top:3px}
+.maplegend .sw{width:14px;height:11px;border-radius:2px;flex:none}
+.maplegend .ring{width:14px;height:14px;border-radius:50%;flex:none}
+.leaflet-tooltip.tt{font-family:var(--font);font-size:12.5px;padding:5px 8px;border-radius:5px}
+.leaflet-container{font-family:var(--font)}
+/* ---------- infoviews ---------- */
+.view{display:none;height:calc(100% - 62px);overflow-y:auto}
+.view.on{display:block}
+#view-kaart:not(.on){display:none}
+.page{max-width:1180px;margin:0 auto;padding:28px 28px 60px}
+.page h1{font-family:var(--font-c);color:var(--paars);font-size:36px;margin:0 0 4px}
+.page .lead{font-size:17px;color:var(--tekst-2);margin:0 0 22px;max-width:880px;line-height:1.45}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.card{background:#fff;border-radius:8px;padding:16px 18px;border:1px solid var(--lijn)}
+.card h3{margin:0 0 8px;font-family:var(--font-c);font-size:20px;color:var(--paars)}
+.card p,.card li{line-height:1.45;font-size:14.5px}
+.card ul{padding-left:18px;margin:6px 0}
+.stat{display:flex;gap:18px;flex-wrap:wrap;margin:6px 0 4px}
+.stat div .v{font-family:var(--font-c);font-weight:700;font-size:30px;color:var(--magenta);line-height:1}
+.stat div .l{font-size:12.5px;color:var(--tekst-2)}
+table.t{border-collapse:collapse;width:100%;font-size:13.5px}
+table.t th{background:var(--paars);color:#fff;text-align:left;padding:6px 8px;font-weight:600}
+table.t td{padding:5px 8px;border-bottom:1px solid var(--lijn)}
+table.t td.r,table.t th.r{text-align:right}
+.steps{counter-reset:s;list-style:none;padding:0;margin:0}
+.steps li{counter-increment:s;position:relative;padding:8px 0 8px 42px;border-bottom:1px dashed var(--lijn);line-height:1.45}
+.steps li::before{content:counter(s);position:absolute;left:0;top:8px;width:28px;height:28px;border-radius:50%;background:var(--magenta);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:var(--font-c)}
+.timeline{position:relative;margin:10px 0 0;padding-left:26px}
+.timeline::before{content:"";position:absolute;left:8px;top:4px;bottom:4px;width:3px;background:var(--blauw-l)}
+.timeline .ev{position:relative;margin-bottom:14px}
+.timeline .ev::before{content:"";position:absolute;left:-24px;top:4px;width:13px;height:13px;border-radius:50%;background:var(--paars);border:2px solid #fff;box-shadow:0 0 0 2px var(--paars)}
+.timeline .ev.f::before{background:#fff}
+.timeline .y{font-family:var(--font-c);font-weight:700;color:var(--magenta);font-size:16px}
+.gantt{width:100%;border-collapse:collapse;font-size:13px}
+.gantt td{padding:3px 0;border-bottom:1px solid #eef2f5}
+.gantt .lbl{width:230px;padding-right:10px;font-weight:600}
+.gbar{position:relative;height:18px}
+.gbar i{position:absolute;top:2px;height:14px;border-radius:3px}
+.src li{margin-bottom:6px}
+.aanname{background:#fff6dd;border-left:3px solid var(--krap);padding:10px 12px;border-radius:4px;font-size:14px;line-height:1.45}
+@media (max-width:1500px){.brand .t2{display:none} nav button{padding:8px 10px}}
+@media (max-width:900px){#view-kaart{grid-template-columns:1fr;grid-template-rows:55% 45%} aside{border-left:0;border-top:1px solid var(--lijn)} .brand .t2{display:none} nav button{padding:8px 8px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="mark">M4H</div>
+    <div><div class="t1">Parkeerhubs Merwe-Vierhavens</div><div class="t2">Totaaloverzicht parkeervraag en verdeling over de mobiliteitshubs</div></div>
+  </div>
+  <span class="badge-ind" title="Plots en programma zijn indicatief; vervang door de losse parkeerbalansen">Prototype · indicatieve data</span>
+  <nav id="nav">
+    <button data-v="kaart" class="on">Kaart &amp; verdeling</button>
+    <button data-v="gebied">Gebied</button>
+    <button data-v="beleid">Parkeerbeleid</button>
+    <button data-v="methode">Rekenmethode</button>
+    <button data-v="planning">Planning &amp; fasering</button>
+    <button data-v="bronnen">Bronnen &amp; aannames</button>
+  </nav>
+</header>
+
+<!-- ============ KAART ============ -->
+<section id="view-kaart" class="view on">
+  <div id="map"></div>
+  <aside>
+    <div class="sec">
+      <div class="row" style="justify-content:space-between">
+        <div class="yearbox"><div class="yr" id="yr">2030</div><div><div class="fase" id="fase">Fase 2</div><div class="meta" id="faseTxt"></div></div></div>
+        <button class="btn prim" id="play" title="Speel de jaren af (pijltjestoetsen werken ook)">▶ Afspelen</button>
+      </div>
+      <input type="range" id="slider" min="2025" max="2045" step="1" value="2030" aria-label="Jaar">
+      <div class="ticks"><span>2025</span><span>2030</span><span>2035</span><span>2040</span><span>2045</span></div>
+      <div class="chips" id="faseChips"></div>
+    </div>
+    <div class="sec">
+      <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <div><div style="font-size:12px;color:var(--tekst-2)">Mobiliteitspakket</div>
+          <div class="seg" id="scen"><button data-s="M" class="on" title="Verplichte kortingen: OV, fiets, deelauto">Ambitie M</button><button data-s="L" title="+20% korting bij MaaS en first/last mile">Ambitie L</button></div></div>
+        <div><div style="font-size:12px;color:var(--tekst-2)">Kleur plots op</div>
+          <select id="colorMode"><option value="hub">Gekoppelde hub</option><option value="vraag">Parkeervraag</option><option value="jaar">Opleverjaar</option><option value="gebied">Deelgebied</option></select></div>
+      </div>
+      <div class="toggles">
+        <label><input type="checkbox" id="tLinks" checked> Koppelingen plot–hub</label>
+        <label><input type="checkbox" id="tCircles"> 400 m-cirkels hubs</label>
+        <label><input type="checkbox" id="tRes"> Reservehubs meenemen</label>
+        <label><input type="checkbox" id="tFuture" checked> Toekomstige plots tonen</label>
+      </div>
+    </div>
+    <div id="detail" class="sec"></div>
+    <div class="sec">
+      <h3>Totaal M4H in <span class="cy">2030</span></h3>
+      <div class="kpis" id="kpis"></div>
+      <div id="totChart" style="margin-top:10px"></div>
+    </div>
+    <div class="sec">
+      <h3>Hubs — vraag t.o.v. capaciteit</h3>
+      <div class="hublist" id="hublist"></div>
+      <div class="row" style="margin-top:10px;justify-content:space-between">
+        <span class="meta">Klik op een hub of plot voor details en om aan te passen.</span>
+        <button class="btn" id="resetAll">Alles herstellen</button>
+      </div>
+    </div>
+  </aside>
+</section>
+
+<!-- ============ GEBIED ============ -->
+<section id="view-gebied" class="view"><div class="page">
+  <h1>Merwe-Vierhavens (M4H)</h1>
+  <p class="lead">Een voormalig haven- en industriegebied in Rotterdam-West dat de komende decennia verandert in een gemengd woon-werkgebied: het Rotterdam Makers District. Het plangebied is ongeveer 207 hectare, vergelijkbaar met de binnenstad van Rotterdam.</p>
+  <div class="cards">
+    <div class="card"><h3>Ambitie Ruimtelijk Raamwerk (t/m 2035)</h3>
+      <div class="stat"><div><div class="v">7.000</div><div class="l">woningen (max.)</div></div><div><div class="v">547.000</div><div class="l">m² nieuwe bedrijvigheid</div></div><div><div class="v">137.000</div><div class="l">m² voorzieningen</div></div></div>
+      <p>Vastgesteld in 2019. Het bestemmingsplan (2024) maakt hiervan nu een deel mogelijk: ca. 2.800 woningen in Merwehaven en ca. 160.000 m² maakindustrie in het Galileipark.</p></div>
+    <div class="card"><h3>Vier deelgebieden met hubs</h3>
+      <ul>
+        <li><b>Merwehaven</b>: Marconistrip, Middenvaarpier en Kortevaarpier. Ca. 2.500 woningen, 30.000 m² commercieel en 15.000 m² maatschappelijk (SP 2025). Gemeente is grondeigenaar.</li>
+        <li><b>Galileipark</b>: werkgebied voor maakindustrie (ca. 160.000 m² nieuw), ontwikkeld door het Havenbedrijf.</li>
+        <li><b>Marconikwartier</b>: rond de Europoint-torens, hoogste dichtheid; RR: 1.500–2.500 woningen. Gebiedsvisie in voorbereiding.</li>
+        <li><b>Keilekwartier</b>: rond (gedempte) Keilehaven; RR: 1.200–1.700 woningen. Wonen pas na geluidmaatregelen en vertrek van enkele bedrijven.</li>
+      </ul></div>
+    <div class="card"><h3>Waarom collectieve hubs?</h3>
+      <p>Het omliggende wegennet (Marconiplein, Tjalklaan) kan het volledige programma niet verwerken als de auto dezelfde rol houdt als nu. Daarom: geen parkeren op straat of per gebouw, maar collectief in openbare mobiliteitshubs met deelauto's, plus inzet op fiets, OV en een first/last-mile-verbinding vanaf Marconiplein.</p>
+      <div class="stat"><div><div class="v">10–15</div><div class="l">hubs in heel M4H</div></div><div><div class="v">±400</div><div class="l">plekken per hub (gem.)</div></div><div><div class="v">400 m</div><div class="l">max. loopafstand</div></div></div></div>
+    <div class="card"><h3>Wat deze tool laat zien</h3>
+      <p>De losse parkeerbalansen per plot worden hier samengebracht op gebiedsniveau: per jaar wordt elke plot gekoppeld aan een hub binnen 400 m, wordt dubbelgebruik per hub berekend en zie je waar de hubcapaciteit knelt. Wijzig programma of hubcapaciteit en het totaalbeeld rekent direct mee.</p>
+      <p class="aanname">De plotgrenzen volgen het Stedenbouwkundig Plan Merwehaven 2025 (29 plots) en de Ruimtelijk Raamwerkkaart 2035. Het programma per plot is nog <b>indicatief</b> en wordt vervangen door de echte parkeerbalansen.</p></div>
+  </div>
+</div></section>
+
+<!-- ============ BELEID ============ -->
+<section id="view-beleid" class="view"><div class="page">
+  <h1>Parkeerbeleid M4H</h1>
+  <p class="lead">De Beleidsregeling parkeernormen auto en fiets Merwe-Vierhavens (onderdeel van het bestemmingsplan, vastgesteld 2024) legt de uitgangspunten van de Mobiliteitsstrategie M4H juridisch vast voor Merwehaven, Galileipark, Marconikwartier en Keilekwartier.</p>
+  <div class="cards">
+    <div class="card"><h3>Kernregels</h3><ul>
+      <li>Parkeren in collectieve, gebouwde mobiliteitshubs, niet op straat of eigen terrein (behalve gehandicaptenplaatsen).</li>
+      <li>Een hub bedient meerdere plots binnen <b>400 m loopafstand</b> en is openbaar toegankelijk.</li>
+      <li><b>Dubbelgebruik is verplicht</b>, ook tussen ontwikkelingen rond dezelfde hub (dynamische parkeerbalans).</li>
+      <li>Kortingen zijn verplicht en worden opgeteld; de netto parkeereis is óók het maximum.</li>
+      <li>Geen parkeervergunning op straat voor nieuwe gebruikers.</li>
+    </ul></div>
+    <div class="card"><h3>Kortingen op de parkeereis</h3>
+      <table class="t"><tr><th>Korting</th><th class="r">%</th></tr>
+      <tr><td>Nabijheid OV (metro Marconiplein 0–400 m / 400–800 m)</td><td class="r">30 / 20</td></tr>
+      <tr><td>Tramhalte (0–400 m / 400–800 m)</td><td class="r">20 / 10</td></tr>
+      <tr><td>Extra fietsparkeren (2 fietsplekken per vervallen autoplek)</td><td class="r">10</td></tr>
+      <tr><td>Deelauto's bij woningen (1 deelauto i.p.v. 5 plekken)</td><td class="r">20</td></tr>
+      <tr><td>MaaS + first/last mile (alleen ambitie L)</td><td class="r">20</td></tr></table>
+      <p style="margin-top:8px">Totaal per deelgebied (ambitie M): Galileipark 30%, Merwehaven en Keilekwartier 50%, Marconikwartier 60%. Ambitie L: 50 / 70 / 80%.</p></div>
+    <div class="card"><h3>Autonormen (selectie)</h3>
+      <table class="t"><tr><th>Functie</th><th class="r">Norm</th></tr>
+      <tr><td>Woning &lt; 40 m² gbo</td><td class="r">0,10</td></tr>
+      <tr><td>Woning 40–65 m²</td><td class="r">0,50</td></tr>
+      <tr><td>Woning 65–85 m²</td><td class="r">0,80</td></tr>
+      <tr><td>Woning 85–120 m²</td><td class="r">1,00</td></tr>
+      <tr><td>Woning ≥ 120 m²</td><td class="r">1,20</td></tr>
+      <tr><td>Sociale huur / zorgwoning ≤ 100 m²</td><td class="r">0,60</td></tr>
+      <tr><td>Bezoek (gemeente, per woning)</td><td class="r">0,10</td></tr>
+      <tr><td>Kantoor (per 100 m² bvo)</td><td class="r">1,00</td></tr>
+      <tr><td>Bedrijfsverzamelgebouw / atelier</td><td class="r">0,80</td></tr>
+      <tr><td>Arbeidsintensief bedrijf (industrie, lab)</td><td class="r">1,20</td></tr>
+      <tr><td>Detailhandel / supermarkt</td><td class="r">2,50</td></tr>
+      <tr><td>Restaurant</td><td class="r">8,00</td></tr></table></div>
+    <div class="card"><h3>Tijdelijk parkeren &amp; financiering</h3><ul>
+      <li>Nog geen hub binnen 400 m? Dan tijdelijk op een collectieve maaiveldvoorziening of in een bestaande garage (bijv. Europointgarage, 1.650 plekken), <b>maximaal 10 jaar</b> na oplevering.</li>
+      <li>Ontwikkelaars dragen <b>€ 11.000 per genormeerde parkeerplaats</b> af aan het Mobiliteitsfonds M4H en kunnen abonnementen afnemen in de hub.</li>
+      <li>Gemeente bouwt en exploiteert de hubs in Merwehaven, Marconi- en Keilekwartier; in het Galileipark de gemeente of het Havenbedrijf.</li>
+      <li>Investering ca. € 145 mln voor 10–15 hubs (ca. € 10–15 mln per hub), gefaseerd over ca. 20 jaar.</li>
+    </ul></div>
+  </div>
+</div></section>
+
+<!-- ============ METHODE ============ -->
+<section id="view-methode" class="view"><div class="page">
+  <h1>Rekenmethode</h1>
+  <p class="lead">De tool volgt de volgorde uit artikel 7 van de Parkeerregeling M4H, maar past het dubbelgebruik toe op het niveau van de hub: alle plots die aan dezelfde hub gekoppeld zijn, delen dezelfde parkeerplaatsen.</p>
+  <div class="cards">
+    <div class="card" style="grid-column:1/-1"><h3>Stappen per jaar</h3><ol class="steps">
+      <li><b>Bruto parkeereis per plot</b>: programma × norm per functie (wonen, bezoek, kantoor, bedrijf, voorzieningen).</li>
+      <li><b>Koppelen aan een hub</b>: een opgeleverde plot gaat naar de dichtstbijzijnde geopende hub binnen 400 m die nog ruimte heeft. Is er geen hub met ruimte, dan de dichtstbijzijnde (die raakt dan overbezet). Is er geen geopende hub binnen 400 m, dan parkeert de plot tijdelijk op maaiveld of in een bestaande garage. Een gekoppelde plot blijft bij zijn hub, behalve als die overbezet raakt en een andere hub binnen 400 m ruimte heeft.</li>
+      <li><b>Kortingen per plot</b>: OV (per deelgebied) + fiets 10% + deelauto 20% (alleen plots met woningen) + MaaS/first-last mile 20% (ambitie L).</li>
+      <li><b>Dubbelgebruik per hub</b>: per moment (werkdag ochtend t/m nacht) wordt de vraag van alle gekoppelde plots opgeteld met de aanwezigheidspercentages. Het drukste moment is maatgevend.</li>
+      <li><b>Deelautoplaatsen</b> komen erbij: 1 per 5 vervallen plekken, oftewel 4% van de eis na dubbelgebruik van plots met woningen.</li>
+      <li><b>Vergelijk met capaciteit</b>: bezettingsgraad en tekort/overschot per hub en voor heel M4H.</li>
+    </ol></div>
+    <div class="card" style="grid-column:1/-1"><h3>Aanwezigheidspercentages</h3><table class="t" id="presTable"></table>
+      <p class="meta" style="margin-top:6px">Bron: tabel 5 Parkeerregeling M4H. Nacht: bewoners 100% (voetnoot). Bezoek en voorzieningen-mix: zie aannames.</p></div>
+    <div class="card"><h3>Normen in deze tool</h3><table class="t" id="normTable"></table></div>
+    <div class="card"><h3>Formule maatgevende vraag hub</h3>
+      <p style="font-family:ui-monospace,Consolas,monospace;font-size:13px;background:var(--bg);padding:10px;border-radius:5px;line-height:1.6">vraag<sub>hub</sub> = max<sub>moment</sub> Σ<sub>plots</sub> [ (1 − korting<sub>plot</sub>) × Σ<sub>functie</sub> programma × norm × aanwezigheid + bezoek × aanwezigheid ] + deelautoplaatsen</p>
+      <p>Bezoekersplaatsen (0,1 per woning) realiseert de gemeente bovenop de parkeereis; ze tellen mee in de hub maar zonder korting.</p></div>
+  </div>
+</div></section>
+
+<!-- ============ PLANNING ============ -->
+<section id="view-planning" class="view"><div class="page">
+  <h1>Planning &amp; fasering</h1>
+  <p class="lead">De ontwikkeling loopt over ca. 20 jaar. Hubs groeien mee met het bouwtempo; tot een hub open is, wordt tijdelijk op maaiveld geparkeerd. Jaartallen van plots en hubs zijn in dit prototype indicatief en per plot/hub aan te passen.</p>
+  <div class="cards">
+    <div class="card"><h3>Mijlpalen</h3><div class="timeline">
+      <div class="ev"><div class="y">2019</div>Ruimtelijk Raamwerk M4H vastgesteld (incl. ambitie collectieve hubs).</div>
+      <div class="ev"><div class="y">2022</div>Mobiliteitsstrategie M4H vastgesteld (22 februari).</div>
+      <div class="ev"><div class="y">2023</div>Masterplan Merwehaven vastgesteld (juni).</div>
+      <div class="ev"><div class="y">2024</div>Bestemmingsplan, Parkeerregeling M4H en financieel-organisatorisch model hubs (incl. krediet eerste hub Merwehaven).</div>
+      <div class="ev"><div class="y">2025</div>Stedenbouwkundig Plan Merwehaven; eerste tenders en start bouw (eind 2025).</div>
+      <div class="ev f"><div class="y">t/m 2032</div>Plots Merwehaven gefaseerd uitgegeven, ca. 300–350 woningen per jaar. Stuwadoor aan de Gustoweg vertrekt uiterlijk 2032 (zuidelijke helft pieren).</div>
+      <div class="ev f"><div class="y">na 2035</div>Herontwikkeling FTR, Vierhavens/Sappencluster en Gustoweg (buiten deze tool).</div>
+      <div class="ev f"><div class="y">2045</div>Eindsituatie waarop de Mobiliteitsstrategie is gericht.</div>
+    </div></div>
+    <div class="card" style="grid-column:span 2"><h3>Fasen in deze tool</h3>
+      <table class="gantt" id="gantt"></table>
+      <p class="meta" style="margin-top:8px">Balk = opleverjaren van plots per deelgebied; ◆ = openingsjaar hub (huidige invoer).</p></div>
+  </div>
+</div></section>
+
+<!-- ============ BRONNEN ============ -->
+<section id="view-bronnen" class="view"><div class="page">
+  <h1>Bronnen &amp; aannames</h1>
+  <div class="cards">
+    <div class="card"><h3>Bronnen</h3><ul class="src">
+      <li><a href="https://m4hrotterdam.nl/wp-content/uploads/2022/02/M4H_mobiliteitsstrategie_DEF.pdf" target="_blank" rel="noopener">Mobiliteitsstrategie Merwe-Vierhavens (feb 2022)</a>: hublocaties en capaciteit (kaart variant 3, ±4.400 plekken, 265 deelauto's).</li>
+      <li><a href="https://rotterdamraad.bestuurlijkeinformatie.nl/Document/View/08a0938d-9277-4291-99f6-b70a760208a3" target="_blank" rel="noopener">Beleidsregeling parkeernormen auto en fiets Merwe-Vierhavens</a>: normen, aanwezigheid, kortingen, 400 m.</li>
+      <li><a href="https://rotterdamraad.bestuurlijkeinformatie.nl/Document/View/0ae7d4d7-acfe-4f5d-ad36-0d60f64dec4c" target="_blank" rel="noopener">Raadsvoorstel bestemmingsplan Merwe-Vierhavens (nov 2024)</a>: programma's, kortingen per deelgebied, aantallen M/L.</li>
+      <li><a href="https://rotterdamraad.bestuurlijkeinformatie.nl/Document/View/cec80dee-6c26-4c8a-b7ce-1d43b4298724" target="_blank" rel="noopener">Raadsvoorstel rolkeuze en financiering mobiliteitshubs (sep 2024)</a>: fondsafdracht, investering, aantal hubs.</li>
+      <li><a href="https://m4hrotterdam.nl/wp-content/uploads/2025/03/Merwehaven_Stedenbouwkundig-Plan_2025_webversie.pdf" target="_blank" rel="noopener">Stedenbouwkundig Plan Merwehaven 2025</a>: plotgrenzen (matenplan), plotnummers (plankaart), hubs, programma, ontwikkelvolgorde.</li><li><a href="https://m4hrotterdam.nl/wp-content/uploads/2020/02/190627_Boekwerk-klein-voorwoord.pdf" target="_blank" rel="noopener">Ruimtelijk Raamwerk M4H (2019)</a>: kavels Galileipark, Marconikwartier en Keilekwartier (raamwerkkaart 2035).</li>
+      <li>Ondergrond: PDOK BRT-Achtergrondkaart en Luchtfoto (Kadaster).</li>
+    </ul></div>
+    <div class="card"><h3>Aannames prototype</h3><ul>
+      <li><b>Plotgrenzen Merwehaven</b>: de 29 plots (1, 2A, 2B, 3, 4A, 4B, 5–27) zijn overgetrokken van het matenplan van het Stedenbouwkundig Plan Merwehaven 2025 en genummerd volgens de plankaart. Het matenplan is gegeorefereerd op de kades en havenbekkens (afwijking enkele meters).</li><li><b>Plotgrenzen Galileipark, Marconikwartier en Keilekwartier</b>: kavels overgetrokken van de Ruimtelijk Raamwerkkaart 2035 (RR 2019) en gegeorefereerd op vaste punten (Ferro-koepel, gashouders, Marconistraat/Galileïstraat, Keileweg/Vierhavensstraat, kop Lekhaven); restafwijking circa 5–10 m. Kavels die in de huidige Keilehaven of op een SP-plot vallen zijn weggelaten; de kadestrook langs de Merwehaven is op de PDOK-ondergrond gelegd.</li><li><b>Programma per plot</b>: Merwehaven per plot ingeschat op basis van het SP (ca. 2.500 woningen, functies uit de programmakaart); overige deelgebieden: RR/MER-programma naar rato van het kaveloppervlak verdeeld.</li>
+      <li><b>Woningnorm</b>: 0,67 per woning, gewogen uit de prijsmix 20% sociaal (0,6), 40% midden (40–65 m²: 0,5), 25% hoog (65–85 m²: 0,8), 15% top (85–120 m²: 1,0).</li>
+      <li><b>Bedrijf/maakindustrie</b>: norm arbeidsintensief bedrijf (1,2 per 100 m²).</li>
+      <li><b>Horeca/voorzieningen/cultuur</b>: mix-norm 2,5 per 100 m²; aanwezigheid = gemiddelde van detailhandel, restaurant en sociaal-cultureel.</li>
+      <li><b>Bezoek</b>: 0,1 per woning, aanwezigheid volgens CROW-kencijfers bezoek wonen; geen korting.</li>
+      <li><b>OV-korting</b> per deelgebied i.p.v. per plot (Marconikwartier 30%, overige 20%), afgeleid uit de totale kortingen in het raadsvoorstel.</li>
+      <li><b>Loopafstand</b> hemelsbreed tot het hubmidden (zoals de 400 m-cirkels in de strategie); werkelijke looproutes zijn langer.</li>
+      <li><b>Hubs</b>: locaties gegeorefereerd vanaf de strategiekaart (2022), Merwehaven aangepast aan het SP 2025. Openingsjaren zijn aannames; capaciteit reservehubs is een aanname.</li>
+      <li>Bestaande functies binnen 400 m en de Europointgarage zijn niet meegerekend.</li>
+    </ul></div>
+  </div>
+</div></section>
+
+<script src="../assets/vendor/leaflet.js"></script>
+<script>
+const DATA = {"plots":[{"id":"MW-5","naam":"Plot 5 – Marconistrip west","gebied":"Merwehaven","poly":[[51.913786,4.412964],[51.913874,4.414566],[51.913272,4.414597],[51.913352,4.412949]],"c":[51.913571,4.413769],"won":160,"kant":1500,"bedr":1500,"voorz":500,"jaar":2030,"note":"Ensemble wonen & werken bestaand + accenttorens corporaties","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-4B","naam":"Plot 4B – Marconistrip","gebied":"Merwehaven","poly":[[51.913693,4.415863],[51.91368,4.416504],[51.913099,4.416504],[51.913133,4.415863]],"c":[51.913401,4.416183],"won":75,"kant":0,"bedr":0,"voorz":400,"jaar":2029,"note":"Kinderdagverblijf naast de westelijke hub","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-4A","naam":"Plot 4A – Marconistrip","gebied":"Merwehaven","poly":[[51.913668,4.416977],[51.913588,4.417984],[51.913027,4.417984],[51.913078,4.416992]],"c":[51.91334,4.417484],"won":120,"kant":300,"bedr":0,"voorz":400,"jaar":2028,"note":"Beschermd wonen (ca. 32 studio's) + kleinschalige ondernemers","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-3","naam":"Plot 3 – Marconistrip","gebied":"Merwehaven","poly":[[51.913588,4.418045],[51.913457,4.419846],[51.912905,4.419708],[51.913044,4.418045]],"c":[51.913249,4.418911],"won":220,"kant":300,"bedr":0,"voorz":900,"jaar":2027,"note":"Eerste fase: centraal deel Marconistrip; buurtsupermarkt + kleinschalige ondernemers","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-2B","naam":"Plot 2B – Marconistrip","gebied":"Merwehaven","poly":[[51.91347,4.419815],[51.913423,4.420792],[51.912842,4.420822],[51.912939,4.41983]],"c":[51.913168,4.420315],"won":130,"kant":0,"bedr":0,"voorz":3500,"jaar":2027,"note":"Woonzorgcomplex + gezondheidscentrum naast oostelijke hub","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-2A","naam":"Plot 2A – Marconistrip","gebied":"Merwehaven","poly":[[51.913402,4.421326],[51.913343,4.421951],[51.912741,4.421875],[51.912796,4.421356]],"c":[51.91307,4.421627],"won":75,"kant":1500,"bedr":0,"voorz":0,"jaar":2028,"note":"Kantoren in de plint naast de oostelijke hub","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-1","naam":"Plot 1 – Marconistrip oost","gebied":"Merwehaven","poly":[[51.913242,4.422836],[51.91315,4.424835],[51.912564,4.424728],[51.912695,4.422836]],"c":[51.912913,4.423809],"won":150,"kant":1500,"bedr":1500,"voorz":300,"jaar":2030,"note":"Ensemble wonen & werken bestaand + accenttoren; mix maken & kantoor in de plint","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-25","naam":"Plot 25 – Kortevaarpier","gebied":"Merwehaven","poly":[[51.912918,4.416031],[51.912825,4.416779],[51.912151,4.416245],[51.912417,4.415543]],"c":[51.912578,4.41615],"won":115,"kant":0,"bedr":0,"voorz":600,"jaar":2033,"note":"Woonblok + horeca aan het Antenneplein","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-21","naam":"Plot 21 – Kortevaarpier","gebied":"Merwehaven","poly":[[51.912568,4.416718],[51.912442,4.416992],[51.911949,4.416443],[51.912033,4.416245]],"c":[51.912248,4.4166],"won":50,"kant":0,"bedr":0,"voorz":500,"jaar":2033,"note":"Cultureel centrum in de plint","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-26","naam":"Plot 26 – Kortevaarpier","gebied":"Merwehaven","poly":[[51.912299,4.415436],[51.912067,4.416031],[51.91141,4.415436],[51.911654,4.414825]],"c":[51.911857,4.415432],"won":140,"kant":0,"bedr":0,"voorz":0,"jaar":2034,"note":"Woonblok; reservering vierde hub","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-22","naam":"Plot 22 – Kortevaarpier","gebied":"Merwehaven","poly":[[51.911915,4.416122],[51.911822,4.416336],[51.911561,4.416199],[51.911683,4.415878]],"c":[51.911745,4.416134],"won":25,"kant":0,"bedr":0,"voorz":0,"jaar":2034,"note":"Klein woonblok","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-27","naam":"Plot 27 – Kortevaarpier","gebied":"Merwehaven","poly":[[51.911549,4.414719],[51.911254,4.415192],[51.911131,4.415085],[51.910778,4.414764],[51.91079,4.414566],[51.91122,4.414352]],"c":[51.91112,4.41478],"won":140,"kant":0,"bedr":0,"voorz":0,"jaar":2035,"note":"Woonblok; laatste fase","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-23","naam":"Plot 23 – Kortevaarpier","gebied":"Merwehaven","poly":[[51.911325,4.415497],[51.91122,4.415756],[51.910815,4.415298],[51.910921,4.415085]],"c":[51.91107,4.415409],"won":30,"kant":0,"bedr":0,"voorz":0,"jaar":2034,"note":"Woongebouw, collectief opdrachtgeverschap mogelijk","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-24","naam":"Plot 24 – Kortevaarpier","gebied":"Merwehaven","poly":[[51.910782,4.414978],[51.910702,4.415192],[51.910377,4.414917],[51.910457,4.414673]],"c":[51.910579,4.41494],"won":25,"kant":0,"bedr":0,"voorz":0,"jaar":2035,"note":"Vrijstaande 'special'","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-15","naam":"Plot 15 – Middenvaarpier","gebied":"Merwehaven","poly":[[51.912657,4.419785],[51.91261,4.420303],[51.912543,4.420364],[51.911603,4.419464],[51.911789,4.418976]],"c":[51.91224,4.419778],"won":100,"kant":600,"bedr":1500,"voorz":300,"jaar":2028,"note":"Mix maken & kantoor + horeca aan het Antenneplein","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-6","naam":"Plot 6 – kop Middenvaarpier","gebied":"Merwehaven","poly":[[51.912509,4.420837],[51.912568,4.421722],[51.91221,4.421402]],"c":[51.912429,4.42132],"won":30,"kant":600,"bedr":900,"voorz":0,"jaar":2029,"note":"Mix maken & kantoor aan het Radioplein","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-7","naam":"Plot 7 – Middenvaarpier","gebied":"Merwehaven","poly":[[51.912311,4.420944],[51.912172,4.421158],[51.911742,4.420853],[51.911856,4.420578]],"c":[51.91202,4.420883],"won":70,"kant":1200,"bedr":0,"voorz":0,"jaar":2029,"note":"Innovatief werkmilieu, primair kantoren","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-8","naam":"Plot 8 – Middenvaarpier","gebied":"Merwehaven","poly":[[51.911894,4.42009],[51.911624,4.420731],[51.911119,4.420212],[51.911376,4.419617]],"c":[51.911503,4.420162],"won":120,"kant":0,"bedr":0,"voorz":0,"jaar":2029,"note":"Woonblok met collectieve hof (noordelijk deel Middenvaarpier)","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-16","naam":"Plot 16 – Middenvaarpier","gebied":"Merwehaven","poly":[[51.911776,4.418884],[51.911561,4.419403],[51.911106,4.41893],[51.911313,4.418442]],"c":[51.911439,4.418915],"won":40,"kant":0,"bedr":2700,"voorz":0,"jaar":2029,"note":"Innovatief werkmilieu, primair maken","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-17","naam":"Plot 17 – Middenvaarpier","gebied":"Merwehaven","poly":[[51.911313,4.418442],[51.911106,4.41893],[51.910917,4.418762],[51.911115,4.418259]],"c":[51.911113,4.418598],"won":20,"kant":0,"bedr":0,"voorz":2800,"jaar":2030,"note":"Basisschool","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-9","naam":"Plot 9 – Middenvaarpier","gebied":"Merwehaven","poly":[[51.911245,4.419464],[51.911009,4.420197],[51.910457,4.419617],[51.910702,4.418945]],"c":[51.910853,4.419556],"won":130,"kant":300,"bedr":0,"voorz":0,"jaar":2030,"note":"Woonblok met collectieve hof","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-18","naam":"Plot 18 – Middenvaarpier","gebied":"Merwehaven","poly":[[51.910815,4.418045],[51.910617,4.418472],[51.910036,4.417923],[51.910238,4.417389]],"c":[51.910426,4.417957],"won":90,"kant":600,"bedr":600,"voorz":0,"jaar":2031,"note":"Woon-werk, mix maken & kantoor","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-10","naam":"Plot 10 – Middenvaarpier","gebied":"Merwehaven","poly":[[51.910563,4.418915],[51.910373,4.419403],[51.910049,4.419189],[51.910251,4.418625]],"c":[51.910309,4.419033],"won":55,"kant":900,"bedr":0,"voorz":0,"jaar":2031,"note":"Woon-werk, kantoren in de plint","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-12","naam":"Plot 12 – Middenvaarpier","gebied":"Merwehaven","poly":[[51.910158,4.418503],[51.91004,4.418777],[51.90945,4.418198],[51.909564,4.417923]],"c":[51.909803,4.41835],"won":70,"kant":0,"bedr":0,"voorz":0,"jaar":2031,"note":"Woongebouw naast de derde hub","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-11","naam":"Plot 11 – Middenvaarpier (hub)","gebied":"Merwehaven","poly":[[51.91004,4.418777],[51.909926,4.419052],[51.909341,4.418472],[51.90945,4.418198]],"c":[51.909689,4.418625],"won":0,"kant":0,"bedr":0,"voorz":2500,"jaar":2031,"note":"Derde mobiliteitshub met gymzalen / commerciële sport","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-19","naam":"Plot 19 – Middenvaarpier","gebied":"Merwehaven","poly":[[51.909762,4.416916],[51.909564,4.417404],[51.909307,4.41713],[51.909526,4.416672]],"c":[51.90954,4.417031],"won":50,"kant":300,"bedr":300,"voorz":0,"jaar":2032,"note":"Woon-werk, mix maken & kantoor","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-20","naam":"Plot 20 – Middenvaarpier","gebied":"Merwehaven","poly":[[51.909421,4.416565],[51.909189,4.417084],[51.908924,4.416824],[51.908835,4.416412],[51.909147,4.416275]],"c":[51.909103,4.416632],"won":85,"kant":0,"bedr":0,"voorz":0,"jaar":2032,"note":"Woonblok; zuidelijke helft pier","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-13","naam":"Plot 13 – Middenvaarpier","gebied":"Merwehaven","poly":[[51.909467,4.417755],[51.909235,4.41835],[51.908532,4.417664],[51.908763,4.417084]],"c":[51.908999,4.417713],"won":120,"kant":0,"bedr":0,"voorz":0,"jaar":2032,"note":"Woonblok met collectieve hof; wonen pas na vertrek stuwadoor (uiterlijk 2032)","bron":"SP Merwehaven 2025, matenplan"},{"id":"MW-14","naam":"Plot 14 – kop Middenvaarpier","gebied":"Merwehaven","poly":[[51.908498,4.416733],[51.908447,4.417297],[51.908262,4.417313],[51.90811,4.417175],[51.908077,4.416962],[51.908186,4.416763]],"c":[51.908263,4.41704],"won":50,"kant":0,"bedr":0,"voorz":600,"jaar":2033,"note":"Iconisch gebouw met horeca op de kop van de pier","bron":"SP Merwehaven 2025, matenplan"},{"id":"GP-02","naam":"Galileipark Marconistraat","gebied":"Galileipark","poly":[[51.913073,4.425747],[51.913026,4.42715],[51.912769,4.427093],[51.912794,4.425729]],"c":[51.912915,4.42643],"won":0,"kant":300,"bedr":2600,"voorz":400,"jaar":2027,"note":"Programma naar rato van kaveloppervlak verdeeld","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"GP-03","naam":"Galileipark Galileïstraat noord","gebied":"Galileipark","poly":[[51.911393,4.424679],[51.911835,4.425041],[51.911901,4.426215],[51.911501,4.426411],[51.911098,4.424713]],"c":[51.911546,4.425412],"won":0,"kant":600,"bedr":6100,"voorz":800,"jaar":2027,"note":"Programma naar rato van kaveloppervlak verdeeld","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"GP-04","naam":"Galileipark Benjamin Franklinstraat","gebied":"Galileipark","poly":[[51.912042,4.426653],[51.912072,4.427403],[51.911314,4.427782],[51.911229,4.427053]],"c":[51.911664,4.427223],"won":0,"kant":400,"bedr":4200,"voorz":600,"jaar":2028,"note":"Programma naar rato van kaveloppervlak verdeeld","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"GP-05","naam":"Galileipark kade noord","gebied":"Galileipark","poly":[[51.912323,4.424143],[51.912085,4.42513],[51.910298,4.423585],[51.910497,4.422297]],"c":[51.911301,4.423789],"won":0,"kant":1800,"bedr":17100,"voorz":2300,"jaar":2028,"note":"Kadestrook langs Merwehaven (Galileïstraat)","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"GP-06","naam":"Galileipark kade zuid","gebied":"Galileipark","poly":[[51.910497,4.422297],[51.910298,4.423585],[51.909199,4.422598],[51.908379,4.421482],[51.908577,4.420366]],"c":[51.90939,4.422066],"won":0,"kant":2100,"bedr":20500,"voorz":2800,"jaar":2030,"note":"Kadestrook langs Merwehaven (Galileïstraat)","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"GP-07","naam":"Galileipark Makersplein","gebied":"Galileipark","poly":[[51.910976,4.426913],[51.91109,4.427796],[51.910603,4.428615],[51.910229,4.427972],[51.910338,4.427257]],"c":[51.910647,4.427711],"won":0,"kant":700,"bedr":6400,"voorz":900,"jaar":2029,"note":"Programma naar rato van kaveloppervlak verdeeld","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"GP-08","naam":"Galileipark hof west","gebied":"Galileipark","poly":[[51.910315,4.423371],[51.910242,4.424408],[51.909794,4.424515],[51.909728,4.42347]],"c":[51.91002,4.423941],"won":0,"kant":400,"bedr":3800,"voorz":500,"jaar":2029,"note":"Programma naar rato van kaveloppervlak verdeeld","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"GP-09","naam":"Galileipark gashouders","gebied":"Galileipark","poly":[[51.910408,4.425117],[51.910439,4.426993],[51.909151,4.42762],[51.90908,4.425437]],"c":[51.909769,4.426292],"won":0,"kant":2000,"bedr":18900,"voorz":2500,"jaar":2031,"note":"Kavel met de twee historische gashouders","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"GP-10","naam":"Galileipark midden west","gebied":"Galileipark","poly":[[51.909464,4.422858],[51.909757,4.42479],[51.909192,4.425125],[51.908587,4.422143]],"c":[51.90925,4.423729],"won":0,"kant":1200,"bedr":11900,"voorz":1600,"jaar":2030,"note":"Programma naar rato van kaveloppervlak verdeeld","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"GP-11","naam":"Galileipark Keileweg","gebied":"Galileipark","poly":[[51.908666,4.425078],[51.90925,4.427558],[51.909152,4.427857],[51.908313,4.428153],[51.907633,4.42615]],"c":[51.908603,4.426959],"won":0,"kant":2100,"bedr":20000,"voorz":2700,"jaar":2032,"note":"Programma naar rato van kaveloppervlak verdeeld","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"GP-12","naam":"Galileipark zuid","gebied":"Galileipark","poly":[[51.90785,4.421675],[51.908501,4.424523],[51.907487,4.425619],[51.90686,4.423994]],"c":[51.907674,4.423953],"won":0,"kant":2400,"bedr":23500,"voorz":3200,"jaar":2034,"note":"Herontwikkeling na aflopen erfpacht","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"GP-13","naam":"Galileipark Ferroplein noord","gebied":"Galileipark","poly":[[51.909625,4.428047],[51.909738,4.428794],[51.909361,4.428969],[51.909033,4.428811],[51.90904,4.428241]],"c":[51.909359,4.428572],"won":0,"kant":400,"bedr":3400,"voorz":500,"jaar":2031,"note":"Programma naar rato van kaveloppervlak verdeeld","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"GP-14","naam":"Galileipark Ferroplein zuid","gebied":"Galileipark","poly":[[51.90904,4.428276],[51.909068,4.428881],[51.908649,4.429012],[51.908565,4.428408]],"c":[51.908831,4.428644],"won":0,"kant":200,"bedr":2000,"voorz":300,"jaar":2033,"note":"Programma naar rato van kaveloppervlak verdeeld","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"GP-15","naam":"Galileipark Ferro","gebied":"Galileipark","poly":[[51.909536,4.428858],[51.909626,4.429391],[51.9095,4.429929],[51.909152,4.43002],[51.908929,4.429705],[51.908942,4.42911],[51.909152,4.428855]],"c":[51.909262,4.42941],"won":0,"kant":500,"bedr":4600,"voorz":600,"jaar":2033,"note":"Ferro-koepel: innovatie, maken en publiek","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"MK-01","naam":"Marconikwartier Marconistraat","gebied":"Marconikwartier","poly":[[51.912971,4.428077],[51.912864,4.429761],[51.912376,4.429495],[51.912337,4.428012]],"c":[51.912637,4.428836],"won":290,"kant":11600,"bedr":8700,"voorz":5100,"jaar":2030,"note":"Marconistraat, nabij metro Marconiplein","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"MK-02","naam":"Marconikwartier Europoint west","gebied":"Marconikwartier","poly":[[51.912169,4.428113],[51.912196,4.42898],[51.9113,4.429193],[51.911245,4.428298]],"c":[51.911727,4.428646],"won":260,"kant":10500,"bedr":7900,"voorz":4600,"jaar":2031,"note":"Programma naar rato van kaveloppervlak verdeeld","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"MK-03","naam":"Marconikwartier Europoint zuid","gebied":"Marconikwartier","poly":[[51.910895,4.430049],[51.911258,4.43018],[51.911583,4.432403],[51.911171,4.433232],[51.910787,4.433226],[51.910531,4.431289],[51.910393,4.430388]],"c":[51.910945,4.431538],"won":815,"kant":32700,"bedr":24500,"voorz":14300,"jaar":2033,"note":"Bouwblok ten zuiden van de Europoint-torens","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"MK-04","naam":"Marconikwartier Galileïstraat","gebied":"Marconikwartier","poly":[[51.910881,4.428997],[51.911035,4.429529],[51.910825,4.429836],[51.910281,4.429816],[51.910233,4.429555]],"c":[51.910651,4.429547],"won":130,"kant":5300,"bedr":3900,"voorz":2300,"jaar":2032,"note":"Programma naar rato van kaveloppervlak verdeeld","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"MK-05","naam":"Marconikwartier Keileweg west","gebied":"Marconikwartier","poly":[[51.910023,4.429882],[51.910211,4.431054],[51.90966,4.43157],[51.909361,4.430529]],"c":[51.909814,4.430759],"won":265,"kant":10500,"bedr":7900,"voorz":4600,"jaar":2034,"note":"Programma naar rato van kaveloppervlak verdeeld","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"MK-06","naam":"Marconikwartier Keileweg oost","gebied":"Marconikwartier","poly":[[51.910322,4.431512],[51.91046,4.432325],[51.910166,4.432879],[51.909806,4.431908]],"c":[51.910189,4.432156],"won":155,"kant":6200,"bedr":4700,"voorz":2700,"jaar":2036,"note":"Programma naar rato van kaveloppervlak verdeeld","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"MK-07","naam":"Marconikwartier Vierhavensstraat","gebied":"Marconikwartier","poly":[[51.910571,4.432774],[51.910682,4.433591],[51.910437,4.433718],[51.910229,4.433024]],"c":[51.91048,4.433277],"won":80,"kant":3300,"bedr":2400,"voorz":1400,"jaar":2037,"note":"Programma naar rato van kaveloppervlak verdeeld","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"KK-01","naam":"Keilekwartier Keileweg","gebied":"Keilekwartier","poly":[[51.910019,4.433483],[51.910159,4.434173],[51.909915,4.434575],[51.909567,4.434017],[51.909602,4.4336]],"c":[51.909852,4.43397],"won":85,"kant":2000,"bedr":5200,"voorz":1800,"jaar":2033,"note":"Programma naar rato van kaveloppervlak verdeeld","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"KK-02","naam":"Keilekwartier Keilepand","gebied":"Keilekwartier","poly":[[51.909652,4.4326],[51.909804,4.433121],[51.909449,4.433323],[51.909338,4.432854]],"c":[51.909561,4.432975],"won":40,"kant":1000,"bedr":2400,"voorz":800,"jaar":2032,"note":"Keilepand (cultuurcluster) aan de Keileweg","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"KK-03","naam":"Keilekwartier park noord","gebied":"Keilekwartier","poly":[[51.909326,4.431672],[51.909485,4.432479],[51.909151,4.43289],[51.908873,4.432641],[51.908769,4.4322],[51.909082,4.43158]],"c":[51.909114,4.432244],"won":120,"kant":2900,"bedr":7500,"voorz":2600,"jaar":2035,"note":"Programma naar rato van kaveloppervlak verdeeld","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"KK-04","naam":"Keilekwartier Vierhavensstraat","gebied":"Keilekwartier","poly":[[51.909011,4.434606],[51.909289,4.435492],[51.908954,4.436022],[51.908579,4.434937]],"c":[51.908958,4.435264],"won":105,"kant":2500,"bedr":6500,"voorz":2200,"jaar":2037,"note":"Programma naar rato van kaveloppervlak verdeeld","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"KK-05","naam":"Keilekwartier park oost","gebied":"Keilekwartier","poly":[[51.908733,4.433931],[51.908837,4.434346],[51.908489,4.434643],[51.908316,4.434314],[51.908386,4.434077]],"c":[51.908552,4.434262],"won":45,"kant":1100,"bedr":2800,"voorz":1000,"jaar":2036,"note":"Programma naar rato van kaveloppervlak verdeeld","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"KK-06","naam":"Keilekwartier Galileïstraat zuid","gebied":"Keilekwartier","poly":[[51.908956,4.430839],[51.909131,4.431255],[51.908734,4.431805],[51.908505,4.431656],[51.908511,4.431272]],"c":[51.908767,4.431365],"won":70,"kant":1700,"bedr":4300,"voorz":1500,"jaar":2034,"note":"Programma naar rato van kaveloppervlak verdeeld","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"KK-07","naam":"Keilekwartier Lekhaven kop","gebied":"Keilekwartier","poly":[[51.908076,4.43252],[51.908456,4.433721],[51.908178,4.434081],[51.907832,4.43409],[51.907697,4.432859]],"c":[51.908048,4.433454],"won":155,"kant":3700,"bedr":9500,"voorz":3300,"jaar":2039,"note":"Kop Lekhaven, beeldbepalende loods","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"KK-08","naam":"Keilekwartier Keilehaven noord","gebied":"Keilekwartier","poly":[[51.908258,4.428857],[51.908545,4.429812],[51.908106,4.429982],[51.907883,4.429441],[51.90791,4.42913]],"c":[51.90814,4.429444],"won":90,"kant":2200,"bedr":5600,"voorz":1900,"jaar":2035,"note":"Programma naar rato van kaveloppervlak verdeeld","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"KK-09","naam":"Keilekwartier Keilehaven kade","gebied":"Keilekwartier","poly":[[51.907384,4.426442],[51.90807,4.428482],[51.907826,4.42856],[51.907253,4.427577],[51.906987,4.426786]],"c":[51.907504,4.427569],"won":175,"kant":4200,"bedr":10900,"voorz":3700,"jaar":2038,"note":"Programma naar rato van kaveloppervlak verdeeld","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"KK-11","naam":"Keilekwartier pier west","gebied":"Keilekwartier","poly":[[51.904897,4.425994],[51.905246,4.426295],[51.906227,4.429134],[51.905949,4.429501],[51.90464,4.42631]],"c":[51.905392,4.427447],"won":330,"kant":8000,"bedr":20600,"voorz":7100,"jaar":2043,"note":"Pier Keilehaven–Lekhaven; walstroom nodig voor wonen","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"KK-12","naam":"Keilekwartier pier oost","gebied":"Keilekwartier","poly":[[51.906227,4.429134],[51.906954,4.431255],[51.906623,4.431558],[51.905949,4.429501]],"c":[51.906438,4.430362],"won":175,"kant":4200,"bedr":10900,"voorz":3800,"jaar":2042,"note":"Pier Keilehaven–Lekhaven","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"},{"id":"KK-13","naam":"Keilekwartier Lekhaven noord","gebied":"Keilekwartier","poly":[[51.907235,4.432026],[51.907319,4.432405],[51.906595,4.433218],[51.906504,4.433008]],"c":[51.906913,4.432664],"won":60,"kant":1400,"bedr":3700,"voorz":1300,"jaar":2041,"note":"Programma naar rato van kaveloppervlak verdeeld","bron":"Ruimtelijk Raamwerk M4H 2019, raamwerkkaart 2035"}],"hubs":[{"id":"H-MW-O","naam":"Hub Marconistrip oost","gebied":"Merwehaven","c":[51.913112,4.421082],"cap":570,"deelautoStrategie":30,"open":2027,"status":"gepland","bron":"SP Merwehaven 2025: plot 2 M-HUB, wordt als eerste gebouwd; capaciteit: Mobiliteitsstrategie M4H (2022), kaart variant 3","poly":[[51.913423,4.420792],[51.913402,4.421326],[51.912796,4.421356],[51.912842,4.420822]]},{"id":"H-MW-W","naam":"Hub Marconistrip west","gebied":"Merwehaven","c":[51.913381,4.416733],"cap":420,"deelautoStrategie":55,"open":2029,"status":"gepland","bron":"SP Merwehaven 2025: plot 4 M-HUB; capaciteit: Mobiliteitsstrategie M4H (2022), kaart variant 3 (verticaal uitbreidbaar)","poly":[[51.91368,4.416504],[51.913668,4.416977],[51.913078,4.416992],[51.913099,4.416504]]},{"id":"H-MW-P","naam":"Hub Middenvaarpier","gebied":"Merwehaven","c":[51.90969,4.418625],"cap":420,"deelautoStrategie":50,"open":2031,"status":"gepland","bron":"SP Merwehaven 2025: plot 11 M-HUB (met sport); capaciteit: Mobiliteitsstrategie M4H (2022), kaart variant 3","poly":[[51.91004,4.418777],[51.909926,4.419052],[51.909341,4.418472],[51.90945,4.418198]]},{"id":"H-MW-K","naam":"Reserve Kortevaarpier","gebied":"Merwehaven","c":[51.911856,4.415436],"cap":300,"deelautoStrategie":0,"open":2034,"status":"reservering","bron":"SP Merwehaven 2025: 'mocht er een vierde hub nodig zijn, dan komt deze op de Kortevaarpier' (capaciteit aanname)"},{"id":"H-GP-W","naam":"Hub Galileipark west","gebied":"Galileipark","c":[51.909106,4.423218],"cap":350,"deelautoStrategie":0,"open":2028,"status":"gepland","bron":"Mobiliteitsstrategie M4H (2022), kaart variant 3 (zakelijke deelmobiliteit)"},{"id":"H-GP-M","naam":"Hub Galileipark midden","gebied":"Galileipark","c":[51.90864,4.427497],"cap":490,"deelautoStrategie":10,"open":2030,"status":"gepland","bron":"Mobiliteitsstrategie M4H (2022), kaart variant 3"},{"id":"H-GP-Z","naam":"Hub Galileipark zuid","gebied":"Galileipark","c":[51.906621,4.425591],"cap":640,"deelautoStrategie":20,"open":2033,"status":"gepland","bron":"Mobiliteitsstrategie M4H (2022), kaart variant 3"},{"id":"H-MK","naam":"Hub Marconikwartier","gebied":"Marconikwartier","c":[51.911834,4.429008],"cap":680,"deelautoStrategie":55,"open":2031,"status":"gepland","bron":"Mobiliteitsstrategie M4H (2022), kaart variant 3"},{"id":"H-KK-W","naam":"Hub Keilepand","gebied":"Keilekwartier","c":[51.908935,4.432298],"cap":680,"deelautoStrategie":40,"open":2032,"status":"gepland","bron":"Mobiliteitsstrategie M4H (2022), kaart variant 3 (verticaal uitbreidbaar)"},{"id":"H-KK-O","naam":"Hub Vierhavensstraat","gebied":"Keilekwartier","c":[51.909967,4.434271],"cap":180,"deelautoStrategie":10,"open":2036,"status":"gepland","bron":"Mobiliteitsstrategie M4H (2022), kaart variant 3"},{"id":"H-KK-R","naam":"Reserve Lekhaven","gebied":"Keilekwartier","c":[51.906554,4.430249],"cap":400,"deelautoStrategie":0,"open":2040,"status":"reservering","bron":"Mobiliteitsstrategie M4H (2022), kaart variant 3: reservering extra hub bij hogere vraag (capaciteit aanname)"}]};
+const BASE = JSON.parse(JSON.stringify(DATA));
+const YEARS = []; for (let y = 2025; y <= 2045; y++) YEARS.push(y);
+const WALK = 400;
+const MOMENTS = ['Werkdag ochtend','Werkdag middag','Werkdag avond','Koopavond','Zaterdagmiddag','Zaterdagavond','Nacht'];
+const F = {
+  won:  {label:'Wonen (bewoners)', short:'Wonen', norm:0.67, unit:'per woning', pres:[50,50,90,80,60,80,100], col:'#671566'},
+  bez:  {label:'Bezoek wonen', short:'Bezoek', norm:0.10, unit:'per woning', pres:[10,20,80,70,60,100,0], col:'#b07ab0'},
+  kant: {label:'Kantoor / werken', short:'Kantoor', norm:1.00, unit:'per 100 m² bvo', pres:[100,100,5,5,0,0,0], col:'#45bce6'},
+  bedr: {label:'Bedrijf / maakindustrie', short:'Bedrijf', norm:1.20, unit:'per 100 m² bvo', pres:[100,100,5,5,0,0,0], col:'#0f6fa8'},
+  voorz:{label:'Horeca / voorzieningen / cultuur', short:'Voorz.', norm:2.50, unit:'per 100 m² bvo', pres:[23,47,67,90,77,63,0], col:'#cc007f'},
+  da:   {label:'Deelautoplaatsen', short:'Deelauto', col:'#e0a100'}
+};
+const OV = {Merwehaven:20, Galileipark:20, Keilekwartier:20, Marconikwartier:30};
+const GEBIEDEN = ['Merwehaven','Galileipark','Marconikwartier','Keilekwartier'];
+const GEBIED_COL = {Merwehaven:'#671566', Galileipark:'#45bce6', Marconikwartier:'#cc007f', Keilekwartier:'#5f8f3e'};
+const HUB_COL = {'H-MW-O':'#671566','H-MW-W':'#cc007f','H-MW-P':'#9b59b6','H-MW-K':'#e48fbf','H-GP-W':'#1f78b4','H-GP-M':'#45bce6','H-GP-Z':'#0b3f73','H-MK':'#e07b00','H-KK-W':'#2e8b57','H-KK-O':'#8bc34a','H-KK-R':'#a5b88a'};
+const FASEN = [{n:'Fase 1', a:2025, b:2029, t:'Marconistrip & start Galileipark'},{n:'Fase 2', a:2030, b:2034, t:'Pieren Merwehaven & Marconikwartier'},{n:'Fase 3', a:2035, b:2045, t:'Keilekwartier & afronding'}];
+const TEMP_COL = '#9da9b1';
+
+const state = {year:2030, scen:'M', res:false, circles:false, links:true, future:true, colorMode:'hub', sel:null};
+let R = null; // simulatieresultaten
+
+// ---------------------------------------------------------------- rekenen
+const fmt = n => Math.round(n).toLocaleString('nl-NL');
+const pct = n => Math.round(n*100) + '%';
+function dist(a, b){ const R0=6371000, r=Math.PI/180; const dLat=(b[0]-a[0])*r, dLon=(b[1]-a[1])*r;
+  const x=Math.sin(dLat/2)**2+Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.sin(dLon/2)**2; return 2*R0*Math.asin(Math.sqrt(x)); }
+function korting(p){ return (OV[p.gebied] + 10 + (p.won>0?20:0) + (state.scen==='L'?20:0)) / 100; }
+function plotParts(p, m){ // regulier (voor korting) per functie op moment m
+  return { won: p.won*F.won.norm*F.won.pres[m]/100, kant: p.kant/100*F.kant.norm*F.kant.pres[m]/100,
+           bedr: p.bedr/100*F.bedr.norm*F.bedr.pres[m]/100, voorz: p.voorz/100*F.voorz.norm*F.voorz.pres[m]/100,
+           bez: p.won*F.bez.norm*F.bez.pres[m]/100 };
+}
+function bruto(p){ return p.won*F.won.norm + p.won*F.bez.norm + p.kant/100*F.kant.norm + p.bedr/100*F.bedr.norm + p.voorz/100*F.voorz.norm; }
+function calc(list){
+  const D = MOMENTS.map((_,m) => list.reduce((s,p) => { const q=plotParts(p,m), k=korting(p);
+    return s + (1-k)*(q.won+q.kant+q.bedr+q.voorz) + q.bez; }, 0));
+  let mm = 0; D.forEach((v,i) => { if (v > D[mm]) mm = i; });
+  const parts = {won:0,bez:0,kant:0,bedr:0,voorz:0,da:0}; const share = {};
+  let naDG = 0;
+  MOMENTS.forEach((_,m) => { const t = list.reduce((s,p)=>{const q=plotParts(p,m); return s+q.won+q.kant+q.bedr+q.voorz+q.bez;},0); if (t>naDG) naDG=t; });
+  list.forEach(p => { const q=plotParts(p,mm), k=korting(p);
+    const reg = q.won+q.kant+q.bedr+q.voorz; const da = p.won>0 ? 0.04*reg : 0;
+    parts.won += (1-k)*q.won; parts.kant += (1-k)*q.kant; parts.bedr += (1-k)*q.bedr; parts.voorz += (1-k)*q.voorz; parts.bez += q.bez; parts.da += da;
+    share[p.id] = (1-k)*reg + q.bez + da; });
+  const total = D[mm] + parts.da;
+  return {D, mm, parts, share, total, bruto: list.reduce((s,p)=>s+bruto(p),0), naDG};
+}
+const hubActive = h => h.status==='gepland' || h.actief || (h.status==='reservering' && state.res);
+function simulate(){
+  const assign = {}, tempSince = {}, out = {};
+  const plotsSorted = [...DATA.plots].sort((a,b) => a.jaar-b.jaar || a.id.localeCompare(b.id));
+  for (const y of YEARS){
+    const open = DATA.hubs.filter(h => hubActive(h) && h.open <= y);
+    const mem = {}; DATA.hubs.forEach(h => mem[h.id] = []);
+    const active = plotsSorted.filter(p => p.jaar <= y), pending = [];
+    for (const p of active){ const a = assign[p.id]; if (a && open.find(h=>h.id===a)) mem[a].push(p); else pending.push(p); }
+    for (const p of pending){
+      const cands = open.map(h => ({h, d:dist(p.c, h.c)})).filter(x => x.d <= WALK).sort((a,b)=>a.d-b.d);
+      if (!cands.length){ assign[p.id] = null; if (tempSince[p.id]==null) tempSince[p.id] = y; continue; }
+      let ch = cands.find(c => calc([...mem[c.h.id], p]).total <= c.h.cap);
+      if (!ch) ch = cands[0];
+      mem[ch.h.id].push(p); assign[p.id] = ch.h.id;
+    }
+    // herverdelen: overbezette hub geeft (nieuwste) plots af aan een andere open hub binnen 400 m met ruimte
+    for (const h of open){
+      let guard = 0;
+      while (calc(mem[h.id]).total > h.cap + 0.5 && guard++ < 30){
+        const cand = [...mem[h.id]].sort((a,b)=>b.jaar-a.jaar || b.id.localeCompare(a.id));
+        let moved = false;
+        for (const p of cand){
+          const alt = open.filter(h2 => h2!==h && dist(p.c,h2.c) <= WALK).sort((a,b)=>dist(p.c,a.c)-dist(p.c,b.c))
+                          .find(h2 => calc([...mem[h2.id], p]).total <= h2.cap);
+          if (alt){ mem[h.id] = mem[h.id].filter(x=>x!==p); mem[alt.id].push(p); assign[p.id] = alt.id; moved = true; break; }
+        }
+        if (!moved) break;
+      }
+    }
+    const hubs = {}; let tot = 0, cap = 0, da = 0;
+    for (const h of DATA.hubs){
+      const isOpen = open.includes(h); const c = calc(mem[h.id]);
+      hubs[h.id] = {open:isOpen, cap:h.cap, members:mem[h.id].map(p=>p.id), ...c};
+      if (isOpen){ tot += c.total; cap += h.cap; da += c.parts.da; }
+    }
+    const plots = {}; let temp = 0, tempN = 0, over10 = 0;
+    for (const p of DATA.plots){
+      if (p.jaar > y){ plots[p.id] = {status:'toekomst'}; continue; }
+      const hid = assign[p.id];
+      if (hid){ plots[p.id] = {status:'hub', hub:hid, d:dist(p.c, DATA.hubs.find(h=>h.id===hid).c), share:hubs[hid].share[p.id], since:tempSince[p.id]}; }
+      else { const own = calc([p]).total; temp += own; tempN++; const yrs = y - tempSince[p.id];
+        if (yrs >= 10) over10++; plots[p.id] = {status:'tijdelijk', share:own, since:tempSince[p.id], yrs}; }
+    }
+    out[y] = {hubs, plots, tot, cap, da, temp, tempN, over10};
+  }
+  return out;
+}
+
+// ---------------------------------------------------------------- kaart
+const map = L.map('map', {zoomControl:true, attributionControl:true, zoomSnap:0.25}).setView([51.9095, 4.4255], 15.25);
+const bgGrijs = L.tileLayer('https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/grijs/EPSG:3857/{z}/{x}/{y}.png', {maxZoom:19, attribution:'Kaart: <a href="https://www.pdok.nl">PDOK</a> / Kadaster'}).addTo(map);
+const bgLucht = L.tileLayer('https://service.pdok.nl/hwh/luchtfotorgb/wmts/v1_0/Actueel_orthoHR/EPSG:3857/{z}/{x}/{y}.jpeg', {maxZoom:19, attribution:'Luchtfoto: <a href="https://www.pdok.nl">PDOK</a>'});
+L.control.layers({'Kaart (grijs)':bgGrijs, 'Luchtfoto':bgLucht}, null, {position:'topright'}).addTo(map);
+L.control.scale({imperial:false, position:'bottomright'}).addTo(map);
+map.createPane('links'); map.getPane('links').style.zIndex = 450;
+const gPlots = L.layerGroup().addTo(map), gLinks = L.layerGroup().addTo(map), gCircles = L.layerGroup().addTo(map), gHubs = L.layerGroup().addTo(map), gLabels = L.layerGroup().addTo(map);
+[['MERWEHAVEN',[51.9081,4.4132]],['GALILEIPARK',[51.9101,4.4262]],['MARCONIKWARTIER',[51.9137,4.4300]],['KEILEKWARTIER',[51.9053,4.4335]]].forEach(([t,c]) =>
+  L.marker(c, {interactive:false, icon:L.divIcon({className:'', html:`<div class="gebiedlabel">${t}</div>`, iconSize:[0,0]})}).addTo(gLabels));
+
+const legend = L.control({position:'bottomleft'});
+legend.onAdd = () => { const d = L.DomUtil.create('div','maplegend'); d.id = 'legend'; return d; };
+legend.addTo(map);
+
+function jaarCol(y){ const t = Math.max(0, Math.min(1, (y-2026)/(2044-2026)));
+  const a=[163,226,248], b=[103,21,102]; return `rgb(${a.map((v,i)=>Math.round(v+(b[i]-v)*t)).join(',')})`; }
+function vraagCol(v){ const t = Math.max(0, Math.min(1, v/180)); const a=[252,228,240], b=[140,0,88]; return `rgb(${a.map((x,i)=>Math.round(x+(b[i]-x)*t)).join(',')})`; }
+function occCol(o){ return o > 1.0005 ? 'var(--tekort)' : o >= 0.9 ? 'var(--krap)' : 'var(--ok)'; }
+function occHex(o){ return o > 1.0005 ? '#d7263d' : o >= 0.9 ? '#e0a100' : '#2e9e6b'; }
+
+function renderMap(){
+  const Y = R[state.year]; gPlots.clearLayers(); gLinks.clearLayers(); gCircles.clearLayers(); gHubs.clearLayers();
+  const sel = state.sel, selHub = sel && sel.t==='hub' ? sel.id : null, selPlot = sel && sel.t==='plot' ? sel.id : null;
+  const selPlotHub = selPlot && Y.plots[selPlot].hub;
+  for (const p of DATA.plots){
+    const r = Y.plots[p.id]; const fut = r.status==='toekomst';
+    if (fut && !state.future) continue;
+    let fill;
+    if (state.colorMode==='hub') fill = r.status==='hub' ? HUB_COL[r.hub] : r.status==='tijdelijk' ? TEMP_COL : '#ffffff';
+    else if (state.colorMode==='gebied') fill = GEBIED_COL[p.gebied];
+    else if (state.colorMode==='jaar') fill = jaarCol(p.jaar);
+    else fill = fut ? '#ffffff' : vraagCol(r.share);
+    const dim = (selHub && r.hub !== selHub) || (selPlot && p.id !== selPlot);
+    const hl = (selHub && r.hub === selHub) || p.id === selPlot;
+    const poly = L.polygon(p.poly, {color: hl ? '#2b0a2a' : (fut ? '#7a6b7a' : '#ffffff'), weight: hl ? 2.5 : (fut ? 1.2 : 1), dashArray: fut ? '4 3' : (r.status==='tijdelijk' ? '3 3' : null),
+      fillColor: fill, fillOpacity: fut ? (state.colorMode==='jaar'||state.colorMode==='gebied' ? 0.22 : 0.35) : (dim ? 0.25 : 0.82), opacity: dim ? 0.5 : 1});
+    const st = fut ? `oplevering ${p.jaar}` : r.status==='tijdelijk' ? `<b>tijdelijk</b> (geen hub ≤ 400 m)` : `→ ${hubName(r.hub)} (${Math.round(r.d)} m)`;
+    poly.bindTooltip(`<b>${p.naam}</b><br>${progTxt(p)}<br>${fut ? '' : `Parkeervraag: <b>${fmt(r.share)}</b> · `}${st}`, {className:'tt', sticky:true});
+    poly.on('click', () => select('plot', p.id));
+    poly.addTo(gPlots);
+    if (state.colorMode==='hub' && !fut && map.getZoom() >= 16.5) L.marker(p.c, {interactive:false, icon:L.divIcon({className:'', html:`<div class="plotlabel">${p.id.replace(/^(MW|GP|MK|KK)-/,'')}</div>`, iconSize:[0,0]})}).addTo(gPlots);
+    if (!fut && r.status==='hub' && (state.links || r.hub===selHub || p.id===selPlot)){
+      const h = DATA.hubs.find(x=>x.id===r.hub); const strong = r.hub===selHub || p.id===selPlot;
+      if (state.links || strong) L.polyline([p.c, h.c], {pane:'links', color: strong ? '#2b0a2a' : HUB_COL[h.id], weight: strong ? 2.2 : 1.3, opacity: (selHub||selPlot) && !strong ? 0.15 : (strong ? 0.9 : 0.55), dashArray: strong ? null : '2 4', interactive:false}).addTo(gLinks);
+    }
+  }
+  if (selPlot){ const p = DATA.plots.find(x=>x.id===selPlot); L.circle(p.c, {radius:WALK, color:'#cc007f', weight:1.5, dashArray:'6 5', fill:true, fillOpacity:0.04, interactive:false}).addTo(gCircles); }
+  for (const h of DATA.hubs) if (h.poly) L.polygon(h.poly, {color:'#671566', weight:1.5, dashArray: Y.hubs[h.id].open ? null : '4 3', fillColor:'#671566', fillOpacity: Y.hubs[h.id].open ? 0.55 : 0.12, interactive:false}).addTo(gPlots);
+  for (const h of DATA.hubs){
+    const r = Y.hubs[h.id]; const active = hubActive(h);
+    if (!active && h.status==='reservering' && !(selHub===h.id)) {
+      // reservering die niet meedoet: klein gestippeld
+    }
+    if (state.circles || h.id===selHub) L.circle(h.c, {radius:WALK, color: HUB_COL[h.id], weight: h.id===selHub ? 2 : 1, dashArray:'5 5', fillOpacity: h.id===selHub ? 0.06 : 0.02, interactive:false}).addTo(gCircles);
+    const size = Math.round(30 + Math.sqrt(h.cap)*1.15);
+    const occ = r.open && h.cap ? r.total / h.cap : 0;
+    const cls = ['hubm']; if (!r.open) cls.push('closed'); if (h.status==='reservering') cls.push('res'); if (h.id===selHub || h.id===selPlotHub) cls.push('sel');
+    const inner = r.open ? `${fmt(r.total)}<small>/ ${fmt(h.cap)}</small>` : `<small>${active ? 'vanaf' : 'reserve'}</small>${active ? h.open : fmt(h.cap)}`;
+    const html = `<div class="${cls.join(' ')}" style="width:${size}px;height:${size}px;--p:${Math.min(1,occ)};--ring:${occHex(occ)}"><span>${inner}</span></div>
+      <div class="hublabel" style="position:absolute;left:50%;transform:translateX(-50%);top:${size+2}px">${h.naam.replace('Hub ','')}</div>`;
+    const m = L.marker(h.c, {icon:L.divIcon({className:'', html, iconSize:[size,size], iconAnchor:[size/2,size/2]}), zIndexOffset: h.id===selHub ? 1000 : 0, opacity: (selHub && h.id!==selHub) || (selPlot && h.id!==selPlotHub) ? 0.55 : 1});
+    m.bindTooltip(`<b>${h.naam}</b><br>${r.open ? `Vraag ${fmt(r.total)} / capaciteit ${fmt(h.cap)} (${pct(occ)})<br>${r.members.length} plots · ${fmt(r.parts.da)} deelautoplaatsen` : (active ? `Opent in ${h.open} · capaciteit ${fmt(h.cap)}` : `Reservering · capaciteit ${fmt(h.cap)} (niet actief)`)}`, {className:'tt', direction:'top', offset:[0,-size/2]});
+    m.on('click', () => select('hub', h.id));
+    m.addTo(gHubs);
+  }
+  renderLegend();
+}
+function renderLegend(){
+  const el = document.getElementById('legend'); let h = '<b>Hubs</b>';
+  h += `<div class="it"><span class="ring" style="background:conic-gradient(#2e9e6b 0.6turn,#ddd 0)"></span>Ring = bezetting (vraag / capaciteit)</div>`;
+  h += `<div class="it" style="gap:10px;padding-left:21px"><span><span class="sw" style="display:inline-block;width:10px;height:10px;background:#2e9e6b"></span> &lt;90%</span><span><span class="sw" style="display:inline-block;width:10px;height:10px;background:#e0a100"></span> 90–100%</span><span><span class="sw" style="display:inline-block;width:10px;height:10px;background:#d7263d"></span> &gt;100%</span></div>`;
+  h += `<div class="it"><span class="ring" style="border:2px dashed #671566"></span>Nog niet open / reservering</div>`;
+  h += '<div style="margin-top:6px"><b>Plots</b></div>';
+  if (state.colorMode==='hub') h += `<div class="it"><span class="sw" style="background:#671566"></span>Kleur = gekoppelde hub</div><div class="it"><span class="sw" style="background:${TEMP_COL};border:1px dashed #555"></span>Tijdelijk (geen hub ≤ 400 m)</div>`;
+  if (state.colorMode==='gebied') GEBIEDEN.forEach(g => h += `<div class="it"><span class="sw" style="background:${GEBIED_COL[g]}"></span>${g}</div>`);
+  if (state.colorMode==='jaar') h += `<div class="it"><span class="sw" style="background:linear-gradient(90deg,${jaarCol(2026)},${jaarCol(2044)});width:60px"></span>2026 → 2044</div>`;
+  if (state.colorMode==='vraag') h += `<div class="it"><span class="sw" style="background:linear-gradient(90deg,${vraagCol(0)},${vraagCol(180)});width:60px"></span>0 → 180+ plekken</div>`;
+  h += `<div class="it"><span class="sw" style="background:#fff;border:1.5px dashed #7a6b7a"></span>Nog niet opgeleverd</div>`;
+  el.innerHTML = h;
+}
+const hubName = id => DATA.hubs.find(h=>h.id===id).naam;
+const progTxt = p => [p.won ? `${fmt(p.won)} woningen` : '', p.kant ? `${fmt(p.kant)} m² kantoor` : '', p.bedr ? `${fmt(p.bedr)} m² bedrijf` : '', p.voorz ? `${fmt(p.voorz)} m² voorz.` : ''].filter(Boolean).join(' · ');
+
+// ---------------------------------------------------------------- zijpaneel
+function faseOf(y){ return FASEN.find(f => y>=f.a && y<=f.b); }
+function renderSide(){
+  const y = state.year, Y = R[y], f = faseOf(y);
+  document.getElementById('yr').textContent = y; document.getElementById('slider').value = y;
+  document.getElementById('fase').textContent = f.n; document.getElementById('faseTxt').textContent = f.t;
+  document.querySelectorAll('.cy').forEach(e => e.textContent = y);
+  document.querySelectorAll('#faseChips .chip').forEach(c => c.classList.toggle('on', +c.dataset.a <= y && y <= +c.dataset.b));
+  const vraag = Y.tot + Y.temp, occ = Y.cap ? Y.tot / Y.cap : 0;
+  const short = DATA.hubs.filter(h => Y.hubs[h.id].open && Y.hubs[h.id].total > h.cap + 0.5);
+  const tekort = short.reduce((s,h)=>s + Y.hubs[h.id].total - h.cap, 0);
+  document.getElementById('kpis').innerHTML = `
+    <div class="kpi"><div class="v">${fmt(vraag)}</div><div class="l">netto parkeervraag (plekken)</div></div>
+    <div class="kpi"><div class="v">${fmt(Y.cap)}</div><div class="l">capaciteit geopende hubs</div></div>
+    <div class="kpi ${occ>1?'warn':''}"><div class="v" style="color:${occCol(occ)}">${Y.cap ? pct(occ) : '–'}</div><div class="l">gem. bezetting hubs</div></div>
+    <div class="kpi ${short.length?'warn':'good'}"><div class="v">${short.length ? '−'+fmt(tekort) : '0'}</div><div class="l">tekort in ${short.length} hub${short.length===1?'':'s'}</div></div>
+    <div class="kpi ${Y.tempN?'':'good'}"><div class="v" style="${Y.tempN?'color:#7a6b7a':''}">${Y.tempN}</div><div class="l">plots tijdelijk geparkeerd (${fmt(Y.temp)} pl.)${Y.over10?` · <b style="color:#d7263d">${Y.over10} &gt; 10 jr</b>`:''}</div></div>
+    <div class="kpi"><div class="v" style="color:#b07d00">${fmt(Y.da)}</div><div class="l">deelautoplaatsen in hubs</div></div>`;
+  document.getElementById('totChart').innerHTML = lineChart(YEARS.map(yy => ({x:yy, a:R[yy].tot + R[yy].temp, b:R[yy].cap})), {h:120, la:'Parkeervraag', lb:'Capaciteit open hubs'});
+  // hublijst
+  let html = '';
+  for (const g of GEBIEDEN){
+    html += `<div class="gebiedkop">${g}</div>`;
+    for (const h of DATA.hubs.filter(x=>x.gebied===g)){
+      const r = Y.hubs[h.id], act = hubActive(h); const o = r.open ? r.total/h.cap : 0;
+      html += `<div class="h ${state.sel&&state.sel.id===h.id?'sel':''}" data-hub="${h.id}">
+        <span class="dot" style="background:${HUB_COL[h.id]};${act?'':'opacity:.4'}"></span>
+        <div><div class="nm">${h.naam}</div><div class="sub">${r.open ? `${r.members.length} plots · maatgevend: ${MOMENTS[r.mm].toLowerCase()}` : act ? `opent in ${h.open}` : 'reservering, niet actief'}</div>
+          ${r.open ? `<div class="bar"><i style="width:${Math.min(100,o*100)}%;background:${occHex(o)}"></i></div>` : ''}</div>
+        <div class="num">${r.open ? `${fmt(r.total)} / ${fmt(h.cap)}<small style="color:${occHex(o)}">${o>1?'tekort '+fmt(r.total-h.cap):'ruimte '+fmt(h.cap-r.total)}</small>` : `– / ${fmt(h.cap)}<small>&nbsp;</small>`}</div></div>`;
+    }
+  }
+  document.getElementById('hublist').innerHTML = html;
+  document.querySelectorAll('#hublist .h').forEach(e => e.onclick = () => select('hub', e.dataset.hub));
+  renderDetail();
+}
+function lineChart(pts, o){
+  const W = 410, H = o.h||120, pl = 36, pr = 16, pt = 8, pb = 20;
+  const max = Math.max(10, ...pts.map(p=>Math.max(p.a,p.b))) * 1.08;
+  const x = i => pl + (W-pl-pr) * i/(pts.length-1), yv = v => pt + (H-pt-pb) * (1 - v/max);
+  const ya = pts.map((p,i)=>`${i?'L':'M'}${x(i).toFixed(1)},${yv(p.a).toFixed(1)}`).join('');
+  let yb = ''; pts.forEach((p,i) => { yb += i ? `L${x(i).toFixed(1)},${yv(pts[i-1].b).toFixed(1)}L${x(i).toFixed(1)},${yv(p.b).toFixed(1)}` : `M${x(0).toFixed(1)},${yv(p.b).toFixed(1)}`; });
+  const ci = pts.findIndex(p=>p.x===state.year);
+  const step = max > 4000 ? 2000 : max > 1500 ? 500 : max > 600 ? 200 : 100;
+  let grid = ''; for (let v = 0; v <= max; v += step) grid += `<line x1="${pl}" x2="${W-pr}" y1="${yv(v)}" y2="${yv(v)}" stroke="#e6ecf0"/><text x="${pl-5}" y="${yv(v)+4}" text-anchor="end" font-size="10.5" fill="#5d6670">${fmt(v)}</text>`;
+  let xt = ''; pts.forEach((p,i) => { if (p.x % 5 === 0) xt += `<text x="${x(i)}" y="${H-5}" text-anchor="${i===pts.length-1?'end':i===0?'start':'middle'}" font-size="10.5" fill="#5d6670">${p.x}</text>`; });
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" style="display:block">${grid}${xt}
+    <rect x="${x(ci)-6}" y="${pt}" width="12" height="${H-pt-pb}" fill="#cc007f" opacity=".08"/>
+    <path d="${yb}" fill="none" stroke="#45bce6" stroke-width="2.5"/>
+    <path d="${ya}" fill="none" stroke="#671566" stroke-width="2.5"/>
+    <circle cx="${x(ci)}" cy="${yv(pts[ci].a)}" r="4" fill="#671566"/>
+  </svg><div class="legend-s" style="margin-top:2px"><span><i style="background:#671566"></i>${o.la}</span><span><i style="background:#45bce6"></i>${o.lb}</span></div>`;
+}
+function stackBar(parts, total){
+  const keys = ['won','bez','kant','bedr','voorz','da'];
+  const bar = keys.filter(k=>parts[k]>0.5).map(k => `<i title="${F[k].label}: ${fmt(parts[k])}" style="display:block;width:${parts[k]/total*100}%;background:${F[k].col}"></i>`).join('');
+  const leg = keys.filter(k=>parts[k]>0.5).map(k => `<span><i style="background:${F[k].col}"></i>${F[k].short} ${fmt(parts[k])}</span>`).join('');
+  return `<div class="stack">${bar}</div><div class="legend-s">${leg}</div>`;
+}
+function renderDetail(){
+  const el = document.getElementById('detail'); const s = state.sel;
+  if (!s){ el.classList.remove('open'); el.innerHTML=''; return; }
+  el.classList.add('open'); const Y = R[state.year];
+  if (s.t==='hub'){
+    const h = DATA.hubs.find(x=>x.id===s.id), r = Y.hubs[h.id], act = hubActive(h); const o = r.open ? r.total/h.cap : 0;
+    const rows = r.members.map(id => DATA.plots.find(p=>p.id===id)).sort((a,b)=>r.share[b.id]-r.share[a.id]).map(p =>
+      `<tr class="c" data-plot="${p.id}"><td>${p.naam}</td><td class="r">${p.jaar}</td><td class="r">${Math.round(dist(p.c,h.c))} m</td><td class="r"><b>${fmt(r.share[p.id])}</b></td></tr>`).join('');
+    const series = YEARS.map(yy => ({x:yy, a:R[yy].hubs[h.id].open ? R[yy].hubs[h.id].total : 0, b:R[yy].hubs[h.id].open ? h.cap : 0}));
+    el.innerHTML = `<div class="dhead"><span class="dot" style="width:14px;height:14px;border-radius:50%;background:${HUB_COL[h.id]};margin-top:6px;flex:none"></span>
+      <div><h2>${h.naam}</h2><div class="meta">${h.gebied} · ${h.status==='reservering'?'reservering':'gepland'} · opent ${h.open}</div></div><button class="x" title="Sluiten">×</button></div>
+      ${r.open ? `<div class="big"><div><div class="v">${fmt(r.total)}</div><div class="l">vraag (plekken)</div></div><div><div class="v">${fmt(h.cap)}</div><div class="l">capaciteit</div></div>
+        <div><div class="v" style="color:${occHex(o)}">${pct(o)}</div><div class="l">bezetting</div></div><div><div class="v" style="color:${occHex(o)}">${o>1?'−':'+'}${fmt(Math.abs(h.cap-r.total))}</div><div class="l">${o>1?'tekort':'overschot'}</div></div></div>
+        <div style="font-size:12.5px;font-weight:600;margin-top:4px">Uitsplitsing op maatgevend moment: ${MOMENTS[r.mm].toLowerCase()}</div>${stackBar(r.parts, r.total)}
+        <div class="calcline">Bruto eis <b>${fmt(r.bruto)}</b> → na dubbelgebruik <b>${fmt(r.naDG)}</b> → na kortingen + deelauto's <b>${fmt(r.total)}</b> · <b>${fmt(r.parts.da)}</b> deelautoplaatsen</div>`
+      : `<div class="note">${act ? `Deze hub opent in <b>${h.open}</b>. Schuif naar dat jaar of later om de verdeling te zien.` : 'Deze reservering doet niet mee. Zet "Reservehubs meenemen" aan of activeer hem hieronder.'}</div>`}
+      <div style="font-size:12.5px;font-weight:600;margin-top:10px">Vraag en capaciteit 2025–2045</div>${lineChart(series, {h:110, la:'Vraag', lb:'Capaciteit'})}
+      ${r.open && o>1 ? `<div class="flag">Overbezet: ${fmt(r.total-h.cap)} plekken tekort. Opties: capaciteit verhogen (verticaal uitbreiden), een reservehub activeren of programma verschuiven.</div>` : ''}
+      <div class="edit"><label>Capaciteit (plekken)<input type="number" id="eCap" min="0" step="10" value="${h.cap}"></label><label>Openingsjaar<input type="number" id="eOpen" min="2025" max="2045" value="${h.open}"></label></div>
+      ${h.status==='reservering' ? `<label style="display:flex;gap:6px;align-items:center;margin-top:8px;font-size:13.5px"><input type="checkbox" id="eAct" ${act?'checked':''}> Deze reservehub meenemen</label>` : ''}
+      ${r.open && r.members.length ? `<table class="pl"><tr><th>Plot (${r.members.length})</th><th class="r">Oplevering</th><th class="r">Afstand</th><th class="r">Vraag</th></tr>${rows}</table>` : ''}
+      <div class="note">Bron locatie/capaciteit: ${h.bron}. Strategie: ${h.deelautoStrategie} deelauto's.</div>`;
+    el.querySelector('#eCap').onchange = e => { h.cap = Math.max(0, +e.target.value||0); recompute(); };
+    el.querySelector('#eOpen').onchange = e => { h.open = Math.min(2045, Math.max(2025, +e.target.value||2025)); recompute(); };
+    const ea = el.querySelector('#eAct'); if (ea) ea.onchange = e => { h.actief = e.target.checked; recompute(); };
+    el.querySelectorAll('tr[data-plot]').forEach(tr => tr.onclick = () => select('plot', tr.dataset.plot));
+  } else {
+    const p = DATA.plots.find(x=>x.id===s.id), r = Y.plots[p.id], k = korting(p);
+    const own = calc([p]);
+    const reach = DATA.hubs.map(h => ({h, d:dist(p.c,h.c)})).filter(x=>x.d<=WALK).sort((a,b)=>a.d-b.d);
+    let status;
+    if (r.status==='toekomst') status = `<div class="note">Nog niet opgeleverd (gepland <b>${p.jaar}</b>).</div>`;
+    else if (r.status==='hub') status = `<div class="note">Parkeert in <b>${hubName(r.hub)}</b> op ${Math.round(r.d)} m. Aandeel in de hubvraag: <b>${fmt(r.share)}</b> plekken.${r.since!=null?` Eerder tijdelijk geparkeerd vanaf ${r.since}.`:''}</div>`;
+    else status = `<div class="flag ${r.yrs>=10?'':'amber'}">Geen geopende hub binnen 400 m: parkeert <b>tijdelijk</b> op maaiveld of in een bestaande garage (sinds ${r.since}, ${r.yrs} jaar).${r.yrs>=10?' <b>Termijn van 10 jaar overschreden.</b>':''}</div>`;
+    el.innerHTML = `<div class="dhead"><div><h2>${p.naam}</h2><div class="meta">${p.id} · ${p.gebied} · oplevering ${p.jaar}</div></div><button class="x" title="Sluiten">×</button></div>
+      ${status}
+      <div class="big"><div><div class="v">${fmt(own.bruto)}</div><div class="l">bruto eis</div></div><div><div class="v">${pct(k)}</div><div class="l">korting</div></div><div><div class="v">${fmt(own.total)}</div><div class="l">netto (plot alleen)</div></div></div>
+      <div style="font-size:12.5px;font-weight:600">Uitsplitsing (plot alleen, ${MOMENTS[own.mm].toLowerCase()})</div>${stackBar(own.parts, own.total)}
+      <div class="calcline">Korting: OV ${OV[p.gebied]}% + fiets 10%${p.won>0?' + deelauto 20%':''}${state.scen==='L'?' + MaaS 20%':''}. Hubs binnen 400 m: ${reach.length ? reach.map(x=>`${x.h.naam.replace('Hub ','')} (${Math.round(x.d)} m${hubActive(x.h)?'':', reservering'})`).join(', ') : '<b style="color:#d7263d">geen</b>'}.</div>
+      <div style="font-size:12.5px;font-weight:600;margin-top:10px">Programma aanpassen</div>
+      <div class="edit">
+        <label>Woningen<input type="number" min="0" step="5" data-k="won" value="${p.won}"></label>
+        <label>Kantoor (m² bvo)<input type="number" min="0" step="500" data-k="kant" value="${p.kant}"></label>
+        <label>Bedrijf / maak (m² bvo)<input type="number" min="0" step="500" data-k="bedr" value="${p.bedr}"></label>
+        <label>Horeca / voorz. (m² bvo)<input type="number" min="0" step="100" data-k="voorz" value="${p.voorz}"></label>
+        <label>Opleverjaar<input type="number" min="2025" max="2045" data-k="jaar" value="${p.jaar}"></label>
+        <div style="display:flex;align-items:flex-end"><button class="btn" id="pReset">Herstel plot</button></div>
+      </div>
+      ${p.note ? `<div class="note">${p.note}</div>` : ''}
+      <div class="meta" style="margin-top:6px">Plotgrens: ${p.bron || 'indicatief'}</div>`;
+    el.querySelectorAll('input[data-k]').forEach(inp => inp.onchange = e => { const k2 = e.target.dataset.k; let v = Math.max(0, +e.target.value||0);
+      if (k2==='jaar') v = Math.min(2045, Math.max(2025, v)); p[k2] = v; recompute(); });
+    el.querySelector('#pReset').onclick = () => { const b = BASE.plots.find(x=>x.id===p.id); Object.assign(p, JSON.parse(JSON.stringify(b))); recompute(); };
+  }
+  el.querySelector('.x').onclick = () => select(null);
+}
+function select(t, id){
+  state.sel = t ? {t, id} : null; renderMap(); renderSide();
+  if (t) document.querySelector('aside').scrollTo({top:0, behavior:'smooth'});
+}
+function recompute(){ R = simulate(); renderMap(); renderSide(); renderInfo(); }
+function setYear(y){ state.year = Math.min(2045, Math.max(2025, y)); renderMap(); renderSide(); }
+
+// ---------------------------------------------------------------- infopagina's (dynamisch deel)
+function renderInfo(){
+  let t = '<tr><th>Functie</th>' + MOMENTS.map(m=>`<th class="r">${m.replace('Werkdag ','Wd ').replace('Zaterdag','Za ')}</th>`).join('') + '</tr>';
+  ['won','bez','kant','bedr','voorz'].forEach(k => t += `<tr><td>${F[k].label}</td>` + F[k].pres.map(v=>`<td class="r">${v}%</td>`).join('') + '</tr>');
+  document.getElementById('presTable').innerHTML = t;
+  document.getElementById('normTable').innerHTML = '<tr><th>Functie</th><th class="r">Norm</th><th>Eenheid</th></tr>' + ['won','bez','kant','bedr','voorz'].map(k =>
+    `<tr><td>${F[k].label}</td><td class="r">${F[k].norm.toLocaleString('nl-NL',{minimumFractionDigits:2})}</td><td>${F[k].unit}</td></tr>`).join('');
+  const x = y => ((y-2025)/21*100).toFixed(2) + '%';
+  let g = `<tr><td class="lbl"></td><td><div class="gbar" style="height:16px">${[2025,2030,2035,2040,2045].map(y=>`<span style="position:absolute;left:${x(y)};transform:translateX(-50%);font-size:11px;color:#5d6670">${y}</span>`).join('')}</div></td></tr>`;
+  g += `<tr><td class="lbl">Fasen (tool)</td><td><div class="gbar">${FASEN.map((f,i)=>`<i style="left:${x(f.a)};width:calc(${x(f.b+1)} - ${x(f.a)});background:${['#671566','#9b59b6','#cc007f'][i]};opacity:.85"></i><span style="position:absolute;left:calc(${x(f.a)} + 6px);top:2px;color:#fff;font-size:11.5px;font-weight:600">${f.n}</span>`).join('')}</div></td></tr>`;
+  for (const ge of GEBIEDEN){
+    const ps = DATA.plots.filter(p=>p.gebied===ge), a = Math.min(...ps.map(p=>p.jaar)), b = Math.max(...ps.map(p=>p.jaar));
+    const hs = DATA.hubs.filter(h=>h.gebied===ge);
+    g += `<tr><td class="lbl">${ge}<div class="meta" style="font-weight:400">${fmt(ps.reduce((s,p)=>s+p.won,0))} won. · ${fmt(ps.reduce((s,p)=>s+p.kant+p.bedr+p.voorz,0))} m² overig</div></td><td><div class="gbar"><i style="left:${x(a)};width:calc(${x(b+1)} - ${x(a)});background:${GEBIED_COL[ge]};opacity:.35"></i>${ps.map(p=>`<span title="${p.naam} (${p.jaar})" style="position:absolute;left:${x(p.jaar+0.5)};top:6px;width:4px;height:6px;background:${GEBIED_COL[ge]};transform:translateX(-50%)"></span>`).join('')}${hs.map(h=>`<span title="${h.naam} (${h.open})" style="position:absolute;left:${x(h.open+0.5)};top:-1px;transform:translateX(-50%);font-size:15px;color:${h.status==='reservering'?'#9da9b1':'#2b0a2a'}">◆</span>`).join('')}</div></td></tr>`;
+  }
+  document.getElementById('gantt').innerHTML = g;
+}
+
+// ---------------------------------------------------------------- UI
+document.getElementById('faseChips').innerHTML = FASEN.map(f => `<button class="chip" data-a="${f.a}" data-b="${f.b}">${f.n} · ${f.a}–${f.b}</button>`).join('') + `<button class="chip" data-a="2045" data-b="2045" data-end="1">Eindbeeld 2045</button>`;
+document.querySelectorAll('#faseChips .chip').forEach(c => c.onclick = () => setYear(c.dataset.end ? 2045 : +c.dataset.b));
+document.getElementById('slider').oninput = e => setYear(+e.target.value);
+let timer = null;
+document.getElementById('play').onclick = () => {
+  const b = document.getElementById('play');
+  if (timer){ clearInterval(timer); timer = null; b.textContent = '▶ Afspelen'; return; }
+  if (state.year >= 2045) setYear(2025);
+  b.textContent = '❚❚ Pauze';
+  timer = setInterval(() => { if (state.year >= 2045){ clearInterval(timer); timer = null; b.textContent = '▶ Afspelen'; return; } setYear(state.year + 1); }, 900);
+};
+document.addEventListener('keydown', e => { if (e.target.tagName==='INPUT' || e.target.tagName==='SELECT') return;
+  if (e.key==='ArrowRight') setYear(state.year+1); if (e.key==='ArrowLeft') setYear(state.year-1); if (e.key==='Escape') select(null); });
+document.querySelectorAll('#scen button').forEach(b => b.onclick = () => { state.scen = b.dataset.s; document.querySelectorAll('#scen button').forEach(x=>x.classList.toggle('on', x===b)); recompute(); });
+document.getElementById('colorMode').onchange = e => { state.colorMode = e.target.value; renderMap(); };
+document.getElementById('tLinks').onchange = e => { state.links = e.target.checked; renderMap(); };
+document.getElementById('tCircles').onchange = e => { state.circles = e.target.checked; renderMap(); };
+document.getElementById('tFuture').onchange = e => { state.future = e.target.checked; renderMap(); };
+document.getElementById('tRes').onchange = e => { state.res = e.target.checked; recompute(); };
+document.getElementById('resetAll').onclick = () => { const b = JSON.parse(JSON.stringify(BASE)); DATA.plots = b.plots; DATA.hubs = b.hubs; recompute(); };
+document.querySelectorAll('#nav button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('#nav button').forEach(x => x.classList.toggle('on', x===b));
+  document.querySelectorAll('.view').forEach(v => v.classList.toggle('on', v.id === 'view-' + b.dataset.v));
+  if (b.dataset.v === 'kaart') setTimeout(() => map.invalidateSize(), 50);
+});
+map.on('zoomend', () => renderMap());
+recompute();
+map.fitBounds(L.latLngBounds([...DATA.plots.flatMap(p=>p.poly), ...DATA.hubs.map(h=>h.c)]), {padding:[40,40]});
+</script>
+</body>
+</html>

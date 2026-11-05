@@ -1,0 +1,776 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Smoelenboek</title>
+<link rel="stylesheet" href="../assets/vendor/leaflet.css">
+<script src="../assets/vendor/leaflet.js"></script>
+<style>
+:root{
+  --bg:#f5f6f4; --surface:#ffffff; --surface-2:#eef1ed; --ink:#1a1f1b; --muted:#5b665e; --line:#dfe4de;
+  --brand:#00811f; --brand-ink:#ffffff; --brand-soft:#e3f1e6; --river:#cfe3f3; --shadow:0 1px 2px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.06);
+  --radius:14px; --nav-h:64px; --head-h:60px;
+  font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#111412; --surface:#1a1e1b; --surface-2:#232824; --ink:#edf1ee; --muted:#9aa59d; --line:#2e3530;
+    --brand:#43c25f; --brand-ink:#08130b; --brand-soft:#1b3322; --river:#1c3446; --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111412; --surface:#1a1e1b; --surface-2:#232824; --ink:#edf1ee; --muted:#9aa59d; --line:#2e3530;
+  --brand:#43c25f; --brand-ink:#08130b; --brand-soft:#1b3322; --river:#1c3446; --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font-size:15px;line-height:1.45;overflow:hidden}
+button{font:inherit;color:inherit}
+a{color:var(--brand)}
+
+/* ---------- kop en navigatie ---------- */
+header{height:var(--head-h);display:flex;align-items:center;gap:16px;padding:0 20px;background:var(--surface);border-bottom:1px solid var(--line)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;white-space:nowrap}
+.logo .mark{width:30px;height:30px;border-radius:8px;background:var(--brand);color:var(--brand-ink);display:grid;place-items:center;font-size:15px}
+.logo small{display:block;font-weight:400;font-size:12px;color:var(--muted);margin-top:-3px}
+nav.tabs{display:flex;gap:4px;margin-left:auto}
+nav.tabs button{border:0;background:none;padding:8px 14px;border-radius:999px;cursor:pointer;color:var(--muted);font-weight:600;display:flex;align-items:center;gap:8px}
+nav.tabs button svg{width:18px;height:18px}
+nav.tabs button[aria-current="true"]{background:var(--brand-soft);color:var(--brand)}
+nav.tabs button:hover{color:var(--ink)}
+main{height:calc(100dvh - var(--head-h));position:relative}
+.view{position:absolute;inset:0;display:none;overflow:auto}
+.view.active{display:block}
+
+@media (max-width:900px){
+  :root{--head-h:54px}
+  header{padding:0 16px}
+  nav.tabs{position:fixed;bottom:0;left:0;right:0;height:calc(var(--nav-h) + env(safe-area-inset-bottom));padding:6px 6px env(safe-area-inset-bottom);background:var(--surface);border-top:1px solid var(--line);z-index:1200;justify-content:space-around;margin:0}
+  nav.tabs button{flex-direction:column;gap:2px;font-size:11px;padding:6px 8px;border-radius:12px;flex:1}
+  nav.tabs button svg{width:22px;height:22px}
+  main{height:calc(100dvh - var(--head-h) - var(--nav-h) - env(safe-area-inset-bottom))}
+}
+
+/* ---------- mensen ---------- */
+.toolbar{position:sticky;top:0;z-index:5;background:var(--bg);padding:16px 20px 10px;border-bottom:1px solid transparent}
+.search{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:0 14px;height:46px;box-shadow:var(--shadow)}
+.search input{flex:1;border:0;background:none;outline:none;font:inherit;color:var(--ink);min-width:0;font-size:16px}
+.search svg{width:18px;height:18px;color:var(--muted);flex:none}
+.filters{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.filters select{appearance:none;-webkit-appearance:none;font:inherit;font-size:14px;color:var(--ink);background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23889'/%3E%3C/svg%3E") no-repeat right 10px center;border:1px solid var(--line);border-radius:999px;padding:7px 28px 7px 12px;max-width:100%;cursor:pointer}
+.filters select.set{border-color:var(--brand);background-color:var(--brand-soft);color:var(--brand);font-weight:600}
+.resultbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;color:var(--muted);font-size:13px}
+.linkbtn{border:0;background:none;color:var(--brand);cursor:pointer;font-weight:600;padding:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;padding:6px 20px 24px}
+@media (max-width:760px){.toolbar{padding:12px 16px 8px}.grid{padding:6px 16px 20px}}
+@media (max-width:560px){.grid{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px;display:flex;gap:12px;cursor:pointer;text-align:left;width:100%;transition:transform .12s,box-shadow .12s}
+.card:hover{box-shadow:var(--shadow);transform:translateY(-1px)}
+.card:focus-visible,button:focus-visible,select:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.card .who{min-width:0;flex:1}
+.card .name{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .fn{color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .org{font-size:12px;margin-top:6px;display:flex;align-items:center;gap:6px;color:var(--muted)}
+.card .tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.avatar{flex:none;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:16px;color:#fff;position:relative}
+.avatar.lg{width:84px;height:84px;font-size:28px}
+.avatar.sm{width:30px;height:30px;font-size:11px}
+.avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover}
+.dot{width:8px;height:8px;border-radius:50%;flex:none;display:inline-block}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--ink);border:0;cursor:pointer;white-space:nowrap}
+.chip:hover{background:var(--brand-soft)}
+.lijn{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:2px 9px 2px 3px;border-radius:999px;background:var(--surface-2);border:0;cursor:pointer;white-space:nowrap;color:var(--ink)}
+.lijn i{font-style:normal;color:#fff;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:10px}
+.empty{padding:40px 20px;text-align:center;color:var(--muted)}
+
+/* ---------- paneel (zijpaneel / bottom sheet) ---------- */
+.panel{position:fixed;top:calc(var(--head-h) + 12px);right:12px;bottom:12px;width:400px;max-width:calc(100vw - 24px);background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 40px rgba(0,0,0,.18);z-index:1100;display:flex;flex-direction:column;transform:translateX(calc(100% + 24px));transition:transform .22s ease}
+.panel.open{transform:none}
+.panel .phead{display:flex;align-items:center;gap:8px;padding:10px 10px 0 16px}
+.panel .phead .crumb{flex:1;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.iconbtn{border:0;background:var(--surface-2);width:36px;height:36px;border-radius:50%;cursor:pointer;display:grid;place-items:center;flex:none}
+.iconbtn svg{width:18px;height:18px}
+.panel .pbody{overflow:auto;padding:8px 18px 22px;flex:1}
+.grab{display:none}
+@media (max-width:900px){
+  .panel{top:auto;left:0;right:0;bottom:0;width:auto;max-width:none;height:78dvh;border-radius:20px 20px 0 0;transform:translateY(105%);z-index:1300}
+  .grab{display:block;width:40px;height:5px;border-radius:3px;background:var(--line);margin:8px auto 0}
+}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:1250;display:none}
+@media (max-width:900px){.scrim.open{display:block}}
+.ptitle{font-size:22px;font-weight:750;margin:6px 0 2px;line-height:1.2}
+.psub{color:var(--muted);margin:0 0 12px}
+.sec{margin-top:20px}
+.sec h4{margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.row{display:flex;align-items:center;gap:10px;padding:8px;border-radius:10px;cursor:pointer;border:0;background:none;width:100%;text-align:left}
+.row:hover{background:var(--surface-2)}
+.row .t{font-weight:600;font-size:14px}
+.row .s{font-size:12px;color:var(--muted)}
+.row .grow{flex:1;min-width:0}
+.kv{display:grid;grid-template-columns:96px 1fr;gap:6px 10px;font-size:14px}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0}
+.actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);padding:8px 14px;border-radius:999px;cursor:pointer;font-weight:600;font-size:14px;text-decoration:none;color:var(--ink)}
+.btn.primary{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.btn svg{width:16px;height:16px}
+.stack{display:flex;height:12px;border-radius:6px;overflow:hidden;background:var(--surface-2)}
+.stack span{display:block;height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:8px;font-size:12px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.bars .b{display:grid;grid-template-columns:120px 1fr 32px;align-items:center;gap:8px;font-size:13px;padding:3px 0;cursor:pointer;border:0;background:none;width:100%;text-align:left;color:var(--ink)}
+.bars .b .track{height:8px;background:var(--surface-2);border-radius:4px;overflow:hidden}
+.bars .b .fill{height:100%;border-radius:4px}
+.bars .b .n{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+.faces{display:flex;flex-wrap:wrap;gap:4px}
+.faces button{border:0;padding:0;background:none;cursor:pointer;border-radius:50%}
+.group-h{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13px;margin:14px 0 4px}
+
+/* ---------- kaart ---------- */
+#v-kaart{overflow:hidden}
+#map{position:absolute;inset:0;background:var(--surface-2)}
+.mapbar{position:absolute;top:12px;left:12px;right:12px;z-index:500;display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.mapbar::-webkit-scrollbar{display:none}
+.pill{flex:none;border:1px solid var(--line);background:var(--surface);box-shadow:var(--shadow);padding:6px 12px;border-radius:999px;cursor:pointer;font-weight:600;font-size:13px;display:flex;align-items:center;gap:6px}
+.pill[aria-pressed="true"]{color:#fff;border-color:transparent}
+.mapnote{position:absolute;left:12px;bottom:12px;z-index:500;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:10px 12px;font-size:12px;max-width:260px}
+.mapnote b{font-size:13px}
+.scale{display:flex;align-items:center;gap:6px;margin-top:6px}
+.scale .ramp{height:8px;width:120px;border-radius:4px}
+.gebied-label{background:none;border:0;box-shadow:none;font-weight:700;font-size:12px;color:#1a1f1b;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff;text-align:center;line-height:1.15;padding:0}
+.gebied-label::before{display:none}
+.gebied-label span{display:block;font-weight:600;font-size:11px;color:#3b463e}
+.leaflet-container{font:inherit}
+
+/* ---------- lijnennet ---------- */
+.lijnen-wrap{padding:16px 20px 24px}
+.intro{max-width:760px;color:var(--muted);margin:0 0 12px;font-size:14px}
+.lijnen-legend{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.metro-scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+#metro{display:block;width:100%;min-width:780px;height:auto}
+#metro .river{fill:none;stroke:var(--river);stroke-width:34;stroke-linecap:round}
+#metro .river-lbl{fill:var(--muted);font-size:12px;font-style:italic;letter-spacing:.3em;opacity:.8}
+#metro .track{fill:none;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;transition:opacity .15s}
+#metro .hit{fill:none;stroke:transparent;stroke-width:16;cursor:pointer}
+#metro .dim{opacity:.12}
+#metro .st-outer{stroke:var(--ink);stroke-linecap:round}
+#metro .st-inner{stroke:var(--surface);stroke-linecap:round}
+#metro .st{cursor:pointer}
+#metro .st:hover .st-inner{stroke:var(--brand-soft)}
+#metro .lbl{fill:var(--ink);font-size:13px;font-weight:700;paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
+#metro .lbl-n{fill:var(--muted);font-size:11px;font-weight:600;paint-order:stroke;stroke:var(--surface);stroke-width:4px}
+#metro .hub-lbl{font-size:14px}
+.lijnen-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-top:16px}
+.lcard{border:1px solid var(--line);background:var(--surface);border-radius:var(--radius);padding:12px;cursor:pointer;text-align:left;border-left-width:6px}
+.lcard .h{display:flex;align-items:center;gap:8px;font-weight:700}
+.lcard .m{color:var(--muted);font-size:12px;margin-top:4px}
+@media (max-width:760px){.lijnen-wrap{padding:12px 16px 20px}}
+
+/* ---------- organisatie ---------- */
+.org-wrap{padding:16px 20px 24px;max-width:1200px}
+.org-wrap h2{font-size:18px;margin:8px 0 4px}
+.afd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
+.afd{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px;border-top:5px solid}
+.afd .h{font-weight:750;font-size:16px}
+.afd .m{color:var(--muted);font-size:12px;margin-bottom:6px}
+.matrix-scroll{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);margin-top:8px}
+table.matrix{border-collapse:collapse;font-size:13px;width:100%;min-width:720px}
+.matrix th,.matrix td{padding:8px;text-align:center;border-bottom:1px solid var(--line)}
+.matrix th{font-size:12px;color:var(--muted);font-weight:600}
+.matrix th:first-child,.matrix td:first-child{text-align:left;white-space:nowrap}
+.matrix td button{border:0;border-radius:8px;width:100%;padding:6px 0;cursor:pointer;font-weight:700;font-variant-numeric:tabular-nums}
+@media (max-width:760px){.org-wrap{padding:12px 16px 20px}}
+.demo-badge{font-size:11px;font-weight:700;background:#fff3cd;color:#7a5b00;padding:2px 8px;border-radius:999px;margin-left:6px}
+@media (max-width:420px){.logo small{display:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><div class="mark">S</div><div>Smoelenboek<span class="demo-badge">DEMO</span><small>Fictieve gegevens · prototype</small></div></div>
+  <nav class="tabs" aria-label="Weergaven">
+    <button data-view="mensen" aria-current="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.6c2.9 0 4.9 1.7 5.5 4.4"/></svg>Mensen</button>
+    <button data-view="kaart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>Gebieden</button>
+    <button data-view="lijnen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7h6l6 10h6"/><path d="M3 17h6l3-5"/><circle cx="9" cy="7" r="2" fill="currentColor"/><circle cx="15" cy="17" r="2" fill="currentColor"/></svg>Thema's</button>
+    <button data-view="org"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="5" rx="1"/><rect x="2" y="16" width="6" height="5" rx="1"/><rect x="9" y="16" width="6" height="5" rx="1"/><rect x="16" y="16" width="6" height="5" rx="1"/><path d="M12 8v4M5 16v-4h14v4M12 12v4"/></svg>Organisatie</button>
+  </nav>
+</header>
+
+<main>
+  <section class="view active" id="v-mensen">
+    <div class="toolbar">
+      <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+        <input id="q" type="search" placeholder="Zoek op naam, functie, gebied, thema…" autocomplete="off" aria-label="Zoeken"></label>
+      <div class="filters">
+        <select id="f-afd" aria-label="Afdeling"></select>
+        <select id="f-team" aria-label="Team"></select>
+        <select id="f-gebied" aria-label="Gebied"></select>
+        <select id="f-thema" aria-label="Thema"></select>
+      </div>
+      <div class="resultbar"><span id="count"></span><button class="linkbtn" id="reset" hidden>Filters wissen</button></div>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div id="sentinel" style="height:1px"></div>
+  </section>
+
+  <section class="view" id="v-kaart">
+    <div id="map"></div>
+    <div class="mapbar" id="mapbar"></div>
+    <div class="mapnote" id="mapnote"></div>
+  </section>
+
+  <section class="view" id="v-lijnen">
+    <div class="lijnen-wrap">
+      <p class="intro">Elk gebiedsoverstijgend thema is een <b>lijn</b>, elk gebied een <b>halte</b>. Een lijn stopt waar collega's aan dat thema werken. Bij <b>Stadsbreed</b> stappen collega's in die voor de hele stad werken. Hoe meer lijnen bij een halte, hoe groter het overstapstation. Klik op een lijn of halte om te zien wie er werkt.</p>
+      <div class="lijnen-legend" id="lijnlegend"></div>
+      <div class="metro-scroll"><svg id="metro" viewBox="0 0 1000 620" role="img" aria-label="Lijnenkaart van thema's door de gebieden"></svg></div>
+      <div class="lijnen-cards" id="lijncards"></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-org">
+    <div class="org-wrap">
+      <h2>Afdelingen en teams</h2>
+      <p class="intro">Klik op een team om de mensen te zien.</p>
+      <div class="afd-grid" id="afdgrid"></div>
+      <h2 style="margin-top:28px">Waar raken afdelingen elkaar?</h2>
+      <p class="intro">Aantal mensen per afdeling dat aan een thema werkt. Klik op een getal voor de namen. Zo vind je snel je collega's bij andere afdelingen.</p>
+      <div class="matrix-scroll"><table class="matrix" id="matrix"></table></div>
+    </div>
+  </section>
+</main>
+
+<div class="scrim" id="scrim"></div>
+<aside class="panel" id="panel" aria-live="polite">
+  <div class="grab"></div>
+  <div class="phead"><button class="iconbtn" id="pback" hidden aria-label="Terug"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></button><span class="crumb" id="pcrumb"></span><button class="iconbtn" id="pclose" aria-label="Sluiten"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+  <div class="pbody" id="pbody"></div>
+</aside>
+
+<!-- =====================================================================
+     GEGEVENS
+     In de echte versie komen deze uit een SharePoint-lijst of Excel.
+     Hieronder staat alleen de structuur + een generator voor 500 FICTIEVE personen.
+     ===================================================================== -->
+<script>
+// Gebiedsgrenzen: CBS Wijken en Buurten 2023 via PDOK (vereenvoudigd). Havengebied = Waalhaven-Eemhaven + Vondelingenplaat + Botlek-Europoort-Maasvlakte.
+const GEO = {"centrum":[[[51.9263,4.4778],[51.9245,4.4881],[51.9237,4.4973],[51.9215,4.4987],[51.9213,4.4982],[51.9202,4.4998],[51.9194,4.5],[51.9181,4.5003],[51.9169,4.4954],[51.9134,4.4893],[51.9109,4.4863],[51.9073,4.4834],[51.9044,4.4792],[51.9003,4.4678],[51.9089,4.4624],[51.9085,4.4583],[51.9096,4.4576],[51.9118,4.4636],[51.9165,4.4628],[51.9204,4.4633],[51.9233,4.4625],[51.9227,4.455],[51.924,4.4548],[51.9246,4.4624],[51.926,4.4699],[51.9263,4.4778]]],"delfshaven":[[[51.9233,4.4625],[51.9204,4.4633],[51.9165,4.4628],[51.9118,4.4636],[51.9096,4.4576],[51.9085,4.4583],[51.9089,4.4624],[51.9003,4.4678],[51.8999,4.4659],[51.8993,4.4543],[51.902,4.4355],[51.9029,4.4358],[51.9038,4.4362],[51.9058,4.4408],[51.9103,4.4338],[51.9124,4.4325],[51.9124,4.4304],[51.913,4.4303],[51.914,4.4135],[51.9146,4.4136],[51.9145,4.4153],[51.9204,4.4171],[51.9227,4.4459],[51.9233,4.4625]]],"overschie":[[[51.9756,4.4293],[51.9628,4.4467],[51.9658,4.4505],[51.9673,4.4568],[51.9643,4.4607],[51.962,4.4617],[51.9566,4.4615],[51.9507,4.4597],[51.9396,4.4605],[51.9381,4.4541],[51.9367,4.4519],[51.935,4.4506],[51.9339,4.4456],[51.9261,4.4323],[51.9378,4.4174],[51.9373,4.4148],[51.9385,4.4177],[51.941,4.4151],[51.9454,4.4148],[51.9483,4.4121],[51.9466,4.4078],[51.946,4.4012],[51.9464,4.3953],[51.9471,4.3944],[51.9455,4.3889],[51.9634,4.3793],[51.9651,4.3898],[51.9646,4.3899],[51.9649,4.3918],[51.9625,4.3936],[51.9766,4.4281],[51.9756,4.4293]]],"noord":[[[51.9429,4.4859],[51.9414,4.487],[51.9395,4.4857],[51.9386,4.4858],[51.9358,4.4877],[51.9351,4.49],[51.934,4.4894],[51.9329,4.4874],[51.9283,4.4848],[51.9251,4.4852],[51.9263,4.4779],[51.926,4.4699],[51.9246,4.4624],[51.9241,4.4549],[51.923,4.4549],[51.922,4.4372],[51.9261,4.4323],[51.9339,4.4456],[51.935,4.4506],[51.9373,4.4527],[51.9388,4.4558],[51.9429,4.4859]]],"hillegersberg":[[[51.9801,4.47],[51.9674,4.4953],[51.9718,4.4958],[51.9664,4.5066],[51.9657,4.5058],[51.9639,4.5093],[51.9624,4.5122],[51.9627,4.5139],[51.9603,4.5186],[51.9634,4.5209],[51.9639,4.5237],[51.9521,4.5289],[51.9507,4.5271],[51.9489,4.5285],[51.9396,4.4605],[51.9507,4.4597],[51.9566,4.4615],[51.9625,4.4616],[51.9644,4.4605],[51.9673,4.4568],[51.9691,4.4604],[51.9716,4.4602],[51.9727,4.4622],[51.9748,4.4613],[51.9771,4.464],[51.9775,4.4632],[51.9789,4.4658],[51.9785,4.4667],[51.979,4.4678],[51.9802,4.4695],[51.9805,4.469],[51.9801,4.47]]],"kralingen":[[[51.9488,4.5287],[51.9473,4.5298],[51.9464,4.5283],[51.9464,4.5294],[51.9453,4.5298],[51.9456,4.5315],[51.9453,4.5316],[51.9451,4.5308],[51.9334,4.5367],[51.9281,4.5376],[51.9281,4.5381],[51.926,4.5356],[51.9256,4.5375],[51.9202,4.5341],[51.9155,4.534],[51.9157,4.5345],[51.9145,4.5345],[51.9123,4.5358],[51.9038,4.5425],[51.9001,4.5281],[51.9001,4.5247],[51.901,4.521],[51.9035,4.517],[51.9054,4.5164],[51.9103,4.5165],[51.9124,4.5152],[51.9148,4.5123],[51.9171,4.5064],[51.9181,4.5003],[51.9194,4.5],[51.9202,4.4998],[51.9213,4.4982],[51.9215,4.4987],[51.9237,4.4973],[51.9251,4.4852],[51.9283,4.4848],[51.9329,4.4874],[51.934,4.4894],[51.9351,4.49],[51.9358,4.4877],[51.9386,4.4858],[51.9395,4.4857],[51.9414,4.487],[51.9431,4.4858],[51.9488,4.5287]]],"feijenoord":[[[51.8995,4.5149],[51.8946,4.5198],[51.8868,4.5258],[51.8864,4.5225],[51.8829,4.5215],[51.8823,4.5134],[51.8775,4.506],[51.8828,4.4981],[51.885,4.492],[51.8884,4.4926],[51.8894,4.494],[51.8943,4.4938],[51.898,4.4956],[51.8992,4.4924],[51.8958,4.4766],[51.8985,4.469],[51.8988,4.4688],[51.9003,4.4678],[51.9044,4.4792],[51.9073,4.4834],[51.9109,4.4863],[51.9134,4.4893],[51.917,4.4957],[51.9181,4.5007],[51.9161,4.5099],[51.9143,4.5131],[51.9119,4.5155],[51.9099,4.5166],[51.9054,4.5164],[51.9032,4.5172],[51.9017,4.513],[51.8995,4.5149]]],"ijsselmonde":[[[51.9004,4.576],[51.8781,4.5689],[51.8782,4.5615],[51.8723,4.5443],[51.8708,4.5426],[51.8688,4.532],[51.8697,4.5261],[51.8691,4.5226],[51.869,4.5152],[51.8718,4.5144],[51.8752,4.5111],[51.8775,4.506],[51.8823,4.5134],[51.8829,4.5215],[51.8864,4.5225],[51.8868,4.5258],[51.8946,4.5198],[51.9017,4.513],[51.9032,4.5172],[51.9007,4.5216],[51.9,4.5274],[51.9036,4.5413],[51.9056,4.5551],[51.9044,4.5695],[51.903,4.5763],[51.9004,4.576]]],"pernis":[[[51.895,4.3849],[51.8942,4.391],[51.8917,4.3987],[51.8916,4.3977],[51.8886,4.3962],[51.8866,4.398],[51.8864,4.3974],[51.884,4.3963],[51.8821,4.3915],[51.8805,4.3898],[51.8807,4.3892],[51.8782,4.3888],[51.8783,4.3858],[51.8795,4.3847],[51.8869,4.3803],[51.8931,4.378],[51.8928,4.3838],[51.895,4.3849]]],"alexander":[[[51.9764,4.5938],[51.9754,4.5944],[51.9721,4.6018],[51.9687,4.5923],[51.9686,4.59],[51.9581,4.568],[51.9579,4.5668],[51.9599,4.5644],[51.9589,4.5621],[51.9569,4.5629],[51.9566,4.5616],[51.9508,4.5641],[51.9435,4.5728],[51.9424,4.5705],[51.9409,4.5606],[51.9298,4.5653],[51.9295,4.5647],[51.9259,4.5662],[51.9233,4.5641],[51.9199,4.5569],[51.9203,4.5563],[51.9194,4.5521],[51.9193,4.5411],[51.9198,4.5375],[51.9193,4.5379],[51.9207,4.5358],[51.9185,4.5352],[51.9163,4.5357],[51.9154,4.5382],[51.9145,4.5373],[51.9136,4.5373],[51.9119,4.5383],[51.9116,4.5393],[51.9091,4.5401],[51.9062,4.5421],[51.9072,4.5477],[51.908,4.5474],[51.9148,4.5503],[51.9166,4.554],[51.9148,4.554],[51.9148,4.5565],[51.9104,4.5568],[51.9096,4.5511],[51.9049,4.5492],[51.9039,4.5434],[51.9038,4.5425],[51.9123,4.5358],[51.9145,4.5345],[51.9157,4.5345],[51.9155,4.534],[51.9202,4.5341],[51.9256,4.5375],[51.926,4.5356],[51.9281,4.5381],[51.9281,4.5376],[51.9334,4.5367],[51.9451,4.5308],[51.9453,4.5316],[51.9456,4.5315],[51.9453,4.5298],[51.9464,4.5294],[51.9464,4.5283],[51.9473,4.5298],[51.9483,4.5288],[51.9484,4.5295],[51.9491,4.5281],[51.9507,4.5271],[51.9521,4.5289],[51.9639,4.5237],[51.9657,4.5278],[51.967,4.5288],[51.9683,4.535],[51.9704,4.5357],[51.9699,4.54],[51.9728,4.5472],[51.9689,4.5542],[51.9685,4.5566],[51.9697,4.5607],[51.9708,4.5617],[51.9712,4.5611],[51.9719,4.5624],[51.9712,4.5669],[51.9727,4.5739],[51.9758,4.579],[51.9762,4.5774],[51.9746,4.5735],[51.979,4.5702],[51.9811,4.5789],[51.984,4.5789],[51.9864,4.5773],[51.9873,4.5797],[51.9885,4.5787],[51.9888,4.5797],[51.9899,4.5789],[51.9943,4.5944],[51.988,4.5988],[51.9764,4.5938]]],"charlois":[[[51.8958,4.4766],[51.8992,4.4924],[51.898,4.4956],[51.8943,4.4938],[51.8894,4.494],[51.8884,4.4926],[51.885,4.492],[51.8829,4.498],[51.8783,4.5045],[51.8753,4.5109],[51.8718,4.5144],[51.869,4.5152],[51.869,4.494],[51.8653,4.4799],[51.8623,4.4804],[51.8617,4.4719],[51.8622,4.4637],[51.8661,4.4465],[51.8659,4.441],[51.8664,4.4402],[51.8683,4.4455],[51.8691,4.4513],[51.8695,4.4516],[51.8703,4.4508],[51.8718,4.4556],[51.8723,4.453],[51.8736,4.4541],[51.8779,4.4538],[51.893,4.4627],[51.8936,4.4626],[51.8941,4.4634],[51.8953,4.4596],[51.8992,4.4597],[51.9003,4.4678],[51.8988,4.4688],[51.8985,4.469],[51.8958,4.4766]],[[51.8906,4.4257],[51.8889,4.4239],[51.886,4.4262],[51.8859,4.4256],[51.8872,4.42],[51.89,4.4216],[51.8914,4.4155],[51.8931,4.4204],[51.8947,4.4191],[51.8963,4.4188],[51.897,4.4238],[51.8959,4.422],[51.8915,4.4258],[51.8906,4.4257]]],"hoogvliet":[[[51.8757,4.3861],[51.8722,4.3867],[51.8679,4.3862],[51.8683,4.388],[51.8659,4.386],[51.8627,4.3849],[51.8618,4.3855],[51.8617,4.3845],[51.8578,4.3835],[51.8567,4.3837],[51.8555,4.385],[51.8538,4.3852],[51.8524,4.3832],[51.8421,4.3837],[51.8429,4.3745],[51.8444,4.3676],[51.8485,4.3549],[51.8506,4.3505],[51.8559,4.3427],[51.8656,4.3345],[51.8718,4.3306],[51.8725,4.3338],[51.8719,4.3347],[51.8733,4.3403],[51.8737,4.3402],[51.8762,4.357],[51.8766,4.3697],[51.875,4.3768],[51.8768,4.3757],[51.8768,4.3769],[51.8756,4.3776],[51.8752,4.3799],[51.8757,4.3819],[51.8773,4.3836],[51.8774,4.3854],[51.8757,4.3861]]],"hvh":[[[51.985,4.1493],[51.9848,4.15],[51.9814,4.1473],[51.9797,4.1553],[51.9778,4.1551],[51.974,4.1696],[51.9717,4.1759],[51.9668,4.1875],[51.9659,4.1866],[51.9657,4.1872],[51.9652,4.1885],[51.966,4.1906],[51.9654,4.1912],[51.9627,4.1867],[51.9548,4.1924],[51.9416,4.2178],[51.9416,4.2192],[51.9415,4.2197],[51.9337,4.2127],[51.9475,4.1777],[51.9693,4.134],[51.9737,4.1233],[51.9818,4.093],[51.9919,4.0456],[51.9947,4.0474],[51.9843,4.0964],[51.9927,4.1113],[52.0016,4.1253],[51.9985,4.1325],[51.9972,4.131],[51.9927,4.1356],[51.9876,4.151],[51.985,4.1493]]],"haven":[[[51.9024,4.4274],[51.902,4.4355],[51.8996,4.4505],[51.8992,4.4597],[51.8953,4.4596],[51.8941,4.4634],[51.8936,4.4626],[51.893,4.4627],[51.8779,4.4538],[51.8736,4.4541],[51.8724,4.453],[51.8718,4.4556],[51.8713,4.4552],[51.8703,4.4508],[51.8695,4.4516],[51.8691,4.4513],[51.8683,4.4455],[51.8664,4.4402],[51.8686,4.4365],[51.8698,4.4317],[51.8695,4.4305],[51.8694,4.4302],[51.8708,4.4273],[51.8725,4.4169],[51.8714,4.4123],[51.8732,4.4058],[51.872,4.3934],[51.8705,4.3904],[51.8682,4.388],[51.8679,4.3862],[51.8734,4.3866],[51.8779,4.3851],[51.8782,4.3888],[51.8807,4.3892],[51.8805,4.3898],[51.8821,4.3915],[51.8838,4.3962],[51.8866,4.398],[51.8886,4.3962],[51.8916,4.3977],[51.8917,4.3987],[51.8942,4.391],[51.895,4.3849],[51.8928,4.3838],[51.8931,4.378],[51.8992,4.3721],[51.8968,4.3876],[51.8967,4.3934],[51.8974,4.399],[51.9015,4.4175],[51.9024,4.4274]],[[51.8996,4.3646],[51.8992,4.3721],[51.8949,4.3766],[51.8926,4.3783],[51.8886,4.3795],[51.8843,4.3817],[51.878,4.3862],[51.8773,4.3836],[51.8759,4.3823],[51.8752,4.3804],[51.8754,4.3779],[51.8768,4.3769],[51.8768,4.3757],[51.875,4.3768],[51.8766,4.3697],[51.8762,4.357],[51.8737,4.3402],[51.8719,4.3347],[51.8725,4.3338],[51.8718,4.3306],[51.8946,4.3196],[51.894,4.328],[51.8944,4.3353],[51.8987,4.3545],[51.8996,4.3646]],[[51.9835,4.0854],[51.9767,4.1134],[51.9722,4.1271],[51.9495,4.1733],[51.9418,4.1913],[51.9385,4.1871],[51.9226,4.219],[51.9196,4.2196],[51.9153,4.2235],[51.9117,4.2256],[51.9033,4.2282],[51.9035,4.2305],[51.9027,4.2333],[51.9014,4.2352],[51.8966,4.2605],[51.8982,4.262],[51.8992,4.2629],[51.9059,4.2662],[51.9017,4.2771],[51.8986,4.2879],[51.8966,4.2998],[51.8946,4.3196],[51.8731,4.3297],[51.8643,4.3355],[51.8645,4.2684],[51.865,4.2631],[51.8664,4.2579],[51.8725,4.2404],[51.8756,4.2351],[51.8795,4.2315],[51.8852,4.2292],[51.8881,4.2274],[51.8954,4.2208],[51.8989,4.2159],[51.9083,4.1971],[51.9129,4.1854],[51.9179,4.1765],[51.9191,4.1682],[51.9231,4.167],[51.9267,4.1627],[51.9281,4.1581],[51.9288,4.1519],[51.9308,4.1472],[51.9319,4.1424],[51.9357,4.1131],[51.9348,4.1127],[51.9361,4.1077],[51.927,4.1017],[51.9235,4.102],[51.9325,4.0929],[51.9338,4.081],[51.9335,4.0717],[51.9322,4.0637],[51.9162,3.9951],[51.919,3.9899],[51.92,3.9895],[51.9205,3.9866],[51.9196,3.9866],[51.918,3.9897],[51.9193,3.9851],[51.917,3.9856],[51.9165,3.9877],[51.9161,3.9856],[51.9188,3.9834],[51.9228,3.9821],[51.9343,3.9761],[51.9533,3.9639],[51.9571,3.9626],[51.9615,3.9624],[51.9662,3.9643],[51.9731,3.97],[51.9787,3.9764],[51.9804,3.9771],[51.9846,3.9826],[51.987,3.9918],[51.9888,4.001],[51.989,4.0061],[51.9856,4.0235],[51.9869,4.0277],[51.9875,4.0327],[51.986,4.0417],[51.9919,4.0456],[51.9841,4.0823],[51.9835,4.0854]]],"rozenburg":[[[51.9052,4.2659],[51.8992,4.2629],[51.8982,4.262],[51.8966,4.2605],[51.9014,4.2352],[51.9027,4.2333],[51.9035,4.2305],[51.9033,4.2282],[51.9117,4.2256],[51.9153,4.2235],[51.9196,4.2196],[51.9226,4.219],[51.9385,4.1871],[51.9418,4.1913],[51.9327,4.2153],[51.9273,4.225],[51.9199,4.2331],[51.9165,4.2378],[51.9059,4.2662],[51.9052,4.2659]]]};
+
+// x/y = positie op de schematische lijnenkaart; lx/ly/a = labelpositie; label = vaste positie op de geokaart
+const GEBIEDEN = [
+  {id:'hvh',          naam:'Hoek van Holland',          x:70,  y:130, lx:0,   ly:-26, a:'middle', label:[51.978,4.135]},
+  {id:'rozenburg',    naam:'Rozenburg',                 x:175, y:330, lx:0,   ly:32,  a:'middle', label:[51.917,4.232]},
+  {id:'haven',        naam:'Havengebied',               x:275, y:450, lx:0,   ly:34,  a:'middle', label:[51.952,4.04]},
+  {id:'hoogvliet',    naam:'Hoogvliet',                 x:345, y:560, lx:0,   ly:34,  a:'middle'},
+  {id:'pernis',       naam:'Pernis',                    x:420, y:470, lx:-4,  ly:38,  a:'start'},
+  {id:'overschie',    naam:'Overschie',                 x:470, y:130, lx:0,   ly:-26, a:'middle'},
+  {id:'delfshaven',   naam:'Delfshaven',                x:470, y:290, lx:-26, ly:5,   a:'end'},
+  {id:'noord',        naam:'Noord',                     x:585, y:190, lx:-22, ly:30,  a:'end'},
+  {id:'stad',         naam:'Stadsbreed',                x:610, y:300, lx:-38, ly:-30, a:'end', hub:true},
+  {id:'centrum',      naam:'Centrum',                   x:680, y:350, lx:28,  ly:-14, a:'start'},
+  {id:'hillegersberg',naam:'Hillegersberg-Schiebroek',  x:690, y:95,  lx:0,   ly:-26, a:'middle'},
+  {id:'kralingen',    naam:'Kralingen-Crooswijk',       x:790, y:250, lx:0,   ly:-26, a:'middle'},
+  {id:'alexander',    naam:'Prins Alexander',           x:905, y:160, lx:0,   ly:-26, a:'middle'},
+  {id:'charlois',     naam:'Charlois',                  x:560, y:500, lx:0,   ly:36,  a:'middle'},
+  {id:'feijenoord',   naam:'Feijenoord',                x:720, y:470, lx:0,   ly:36,  a:'middle'},
+  {id:'ijsselmonde',  naam:'IJsselmonde',               x:880, y:540, lx:0,   ly:36,  a:'middle'},
+];
+
+const THEMAS = [
+  {id:'ov',    naam:'OV',                     code:'OV', kleur:'#d7263d', oms:'Tram, metro, bus, knooppunten en OV-concessies.',
+   focus:['noord','centrum','alexander','ijsselmonde','charlois','hoogvliet','kralingen','feijenoord']},
+  {id:'park',  naam:'Parkeren',               code:'P',  kleur:'#1f5fbf', oms:'Parkeerbeleid, vergunningen, garages en parkeernormen.',
+   focus:['centrum','noord','delfshaven','kralingen','feijenoord','hillegersberg']},
+  {id:'fiets', naam:'Fietsparkeren',          code:'F',  kleur:'#ef7d1a', oms:'Fietsenstallingen, nietjes, weesfietsen en stations.',
+   focus:['centrum','noord','delfshaven','feijenoord','kralingen']},
+  {id:'deel',  naam:'Deelmobiliteit',         code:'D',  kleur:'#8e44ad', oms:'Deelscooters, deelauto’s, deelfietsen en hubs.',
+   focus:['centrum','feijenoord','charlois','alexander','delfshaven']},
+  {id:'fin',   naam:'Financiën',         code:'€', kleur:'#0f8b8d', oms:'Begroting, subsidies, control en investeringsplanning.',
+   focus:['centrum','noord','feijenoord','alexander','hoogvliet']},
+  {id:'vv',    naam:'Verkeersveiligheid',     code:'VV', kleur:'#c9a227', oms:'Schoolzones, 30 km/u, black spots en gedragscampagnes.',
+   focus:['charlois','ijsselmonde','overschie','alexander','delfshaven','hillegersberg','hoogvliet']},
+  {id:'groen', naam:'Groen & klimaat',        code:'G',  kleur:'#2e9e44', oms:'Landschap, vergroening, klimaatadaptatie en water.',
+   focus:['hvh','rozenburg','overschie','hillegersberg','alexander','charlois','noord','ijsselmonde']},
+  {id:'log',   naam:'Logistiek & haven',      code:'L',  kleur:'#8b5a2b', oms:'Stadslogistiek, zero-emissiezones en havenverkeer.',
+   focus:['haven','pernis','centrum','hoogvliet','rozenburg']},
+];
+
+const AFDELINGEN = [
+  {id:'mob', naam:'Mobiliteit', kleur:'#00811f', teams:[
+    {id:'mob-ov',   naam:'Cluster OV',                  thema:['ov'],    n:44, fn:['Beleidsadviseur OV','Projectleider OV','Adviseur OV-knooppunten','Senior adviseur concessies'], rol:['Gebiedsadviseur OV','Projectleider halte-aanpak']},
+    {id:'mob-park', naam:'Cluster Parkeren',            thema:['park'],  n:42, fn:['Beleidsadviseur parkeren','Parkeerexpert','Adviseur parkeernormen'], rol:['Gebiedsadviseur parkeren','Parkeerregisseur']},
+    {id:'mob-fiets',naam:'Fiets & Fietsparkeren',       thema:['fiets'], n:30, fn:['Adviseur fietsparkeren','Projectleider fiets','Fietsregisseur'], rol:['Gebiedsadviseur fiets','Projectleider stallingen']},
+    {id:'mob-deel', naam:'Deelmobiliteit',              thema:['deel'],  n:20, fn:['Adviseur deelmobiliteit','Vergunningverlener deelmobiliteit'], rol:['Contactpersoon hubs']},
+    {id:'mob-vv',   naam:'Verkeersveiligheid',          thema:['vv'],    n:40, fn:['Verkeerskundige','Adviseur verkeersveiligheid','Projectleider schoolzones'], rol:['Gebiedsverkeerskundige']},
+    {id:'mob-log',  naam:'Stadslogistiek',              thema:['log'],   n:18, fn:['Adviseur stadslogistiek','Programmamanager ZE-logistiek'], rol:['Contactpersoon logistiek']},
+    {id:'mob-fin',  naam:'Bedrijfsvoering & Financiën', thema:['fin'], n:24, fn:['Financieel adviseur','Controller','Subsidieadviseur'], rol:['Financieel adviseur gebied'], stad:.6},
+  ]},
+  {id:'roa', naam:'Ruimtelijke Ordening & Advies', kleur:'#3d5a9e', teams:[
+    {id:'roa-land', naam:'Landschap & Groen',           thema:['groen'], n:34, fn:['Landschapsarchitect','Adviseur groen','Ecoloog'], rol:['Landschapper','Groenadviseur']},
+    {id:'roa-sted', naam:'Stedenbouw',                  thema:['groen','ov','park'], n:44, fn:['Stedenbouwkundige','Senior stedenbouwkundige'], rol:['Gebiedsstedenbouwkundige']},
+    {id:'roa-adv',  naam:'Ruimtelijk Advies',           thema:['park','fiets','groen','log'], n:34, fn:['Ruimtelijk adviseur','Planoloog','Juridisch adviseur Omgevingswet'], rol:['Ruimtelijk adviseur']},
+  ]},
+  {id:'sbh', naam:'Stadsbeheer', kleur:'#b5541a', teams:[
+    {id:'sbh-or',   naam:'Beheer Openbare Ruimte',      thema:['fiets','park','groen','vv'], n:52, fn:['Beheerder openbare ruimte','Wijkregisseur beheer','Toezichthouder'], rol:['Gebiedsbeheerder','Wijkregisseur']},
+    {id:'sbh-hh',   naam:'Handhaving Parkeren',         thema:['park','fiets'], n:28, fn:['Teamleider handhaving','Handhaver','Coordinator weesfietsen'], rol:['Handhavingscoördinator']},
+    {id:'sbh-fin',  naam:'Control & Financiën',    thema:['fin'],   n:14, fn:['Business controller','Financieel adviseur'], rol:['Financieel adviseur gebied'], stad:.7},
+  ]},
+  {id:'sto', naam:'Stadsontwikkeling', kleur:'#7a3b8f', teams:[
+    {id:'sto-gm',   naam:'Gebiedsmanagement',           thema:['ov','park','fiets','deel','vv','groen','log'], n:40, fn:['Gebiedsmanager','Accounthouder gebied','Gebiedscoördinator'], rol:['Gebiedsmanager','Accounthouder']},
+    {id:'sto-pm',   naam:'Projectmanagement',           thema:['ov','fiets','groen','deel'], n:36, fn:['Projectmanager','Projectleider','Omgevingsmanager'], rol:['Projectmanager','Omgevingsmanager']},
+  ]},
+];
+
+// ---------- generator voor 500 fictieve personen ----------
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const rng = mulberry32(2026);
+const pick = a => a[Math.floor(rng()*a.length)];
+const VOORNAMEN = ['Anouk','Bram','Chantal','Daan','Esra','Fatima','Gijs','Hanna','Ilias','Jasmijn','Kees','Lotte','Mohamed','Noor','Olga','Pieter','Quinten','Rachida','Sem','Tess','Umut','Vera','Wouter','Yara','Zeynep','Arjen','Bo','Celine','Dewi','Emre','Floor','Goran','Hatice','Ivo','Joost','Kim','Lars','Meryem','Niels','Orlando','Priya','Ruben','Samira','Thijs','Ursula','Vincent','Wendy','Xander','Youssef','Zoë','Mila','Jeroen','Sanne','Rik','Ayoub','Mirjam','Stefan','Ingrid','Kevin','Nadia','Marco','Linda','Tim','Elif','Dirk','Roos','Jamal','Femke'];
+const ACHTERNAMEN = ['de Jong','Jansen','de Vries','van den Berg','van Dijk','Bakker','Janssen','Visser','Smit','Meijer','de Boer','Mulder','de Groot','Bos','Vos','Peters','Hendriks','van Leeuwen','Dekker','Brouwer','de Wit','Dijkstra','Smits','de Graaf','van der Meer','van der Linden','Kok','Jacobs','de Haan','Vermeulen','van den Heuvel','van der Veen','van den Broek','de Bruijn','Yilmaz','El Amrani','Kaya','Benali','Öztürk','Rodrigues','Tahiri','Sedney','Martina','Nguyen','Kramer','Verhoeven','Koster','Prins','Huisman','Boer','Postma','Kuipers','Veenstra','Schouten','Willems','Hoekstra','van Wijk','Bouzid','Pinas','Doğan','Haddou','Lie','Wong','Fernandes'];
+const ADJ = ['Rotterdam Noord','Hoek van Holland'];
+
+function makePerson(i, afd, team){
+  const voornaam = pick(VOORNAMEN), achternaam = pick(ACHTERNAMEN);
+  const themas = [pick(team.thema)];
+  if (rng() < .28){ const t2 = pick(THEMAS).id; if(!themas.includes(t2)) themas.push(t2); }
+  const rollen = [];
+  if (rng() >= (team.stad ?? .12)){
+    const n = rng()<.6 ? 1 : rng()<.8 ? 2 : 3;
+    const pool = THEMAS.find(t=>t.id===themas[0]).focus;
+    for(let k=0;k<n*3 && rollen.length<n;k++){
+      const g = (k>0 && themas[1] && rng()<.4) ? pick(THEMAS.find(t=>t.id===themas[1]).focus) : pick(pool);
+      if(!rollen.some(r=>r.gebied===g)) rollen.push({gebied:g, rol:pick(team.rol)});
+    }
+  }
+  const slug = (voornaam+'.'+achternaam).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z.]/g,'');
+  return {id:'p'+i, voornaam, achternaam, functie:pick(team.fn), afdeling:afd.id, team:team.id, themas, rollen,
+          email:slug+'@voorbeeld.nl', telefoon:'fictief'};
+}
+
+const PERSONEN = [
+  {id:'p1', voornaam:'Pietje', achternaam:'Puk', functie:'Beleidsadviseur OV', afdeling:'mob', team:'mob-ov', themas:['ov'],
+   rollen:[{gebied:'noord', rol:'Gebiedsadviseur OV'}], email:'pietje.puk@voorbeeld.nl', telefoon:'fictief'},
+  {id:'p2', voornaam:'Sara', achternaam:'de Wit', functie:'Landschapsarchitect', afdeling:'roa', team:'roa-land', themas:['groen'],
+   rollen:[{gebied:'noord', rol:'Ruimtelijk adviseur'},{gebied:'hvh', rol:'Landschapper'}], email:'sara.dewit@voorbeeld.nl', telefoon:'fictief'},
+];
+{ let i = 3;
+  for(const afd of AFDELINGEN) for(const team of afd.teams)
+    for(let k=0;k<team.n - (team.id==='mob-ov'||team.id==='roa-land'?1:0);k++) PERSONEN.push(makePerson(i++, afd, team));
+}
+</script>
+
+<!-- =====================================================================
+     APPLICATIE
+     ===================================================================== -->
+<script>
+(() => {
+// ---------- indexen ----------
+const byId = Object.fromEntries(PERSONEN.map(p=>[p.id,p]));
+const AFD = Object.fromEntries(AFDELINGEN.map(a=>[a.id,a]));
+const TEAM = {}; AFDELINGEN.forEach(a=>a.teams.forEach(t=>TEAM[t.id]={...t, afdeling:a.id}));
+const GEB = Object.fromEntries(GEBIEDEN.map(g=>[g.id,g]));
+const TH = Object.fromEntries(THEMAS.map(t=>[t.id,t]));
+const inGebied = id => id==='stad' ? PERSONEN.filter(p=>!p.rollen.length) : PERSONEN.filter(p=>p.rollen.some(r=>r.gebied===id));
+const naam = p => p.voornaam+' '+p.achternaam;
+const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+PERSONEN.forEach(p => p._q = norm([naam(p),p.functie,AFD[p.afdeling].naam,TEAM[p.team].naam,
+  ...p.rollen.map(r=>GEB[r.gebied].naam+' '+r.rol), ...p.themas.map(t=>TH[t].naam), p.rollen.length?'':'stadsbreed'].join(' ')));
+PERSONEN.sort((a,b)=> a.id==='p1'||a.id==='p2' ? -1 : b.id==='p1'||b.id==='p2' ? 1 : a.voornaam.localeCompare(b.voornaam,'nl'));
+
+const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const initials = p => (p.voornaam[0] + p.achternaam.split(' ').pop()[0]).toUpperCase();
+const avatar = (p, cls='') => `<span class="avatar ${cls}" style="background:${AFD[p.afdeling].kleur}" aria-hidden="true">${p.foto?`<img src="${esc(p.foto)}" alt="">`:esc(initials(p))}</span>`;
+const lijnBadge = t => `<button class="lijn" data-act="lijn" data-id="${t.id}"><i style="background:${t.kleur}">${esc(t.code)}</i>${esc(t.naam)}</button>`;
+const gebChip = (g, extra='') => `<button class="chip" data-act="gebied" data-id="${g.id}">${esc(g.naam)}${extra}</button>`;
+const ICON = {
+  mail:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
+  chat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v11H8l-4 4z"/></svg>',
+  map:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/></svg>',
+  users:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/></svg>',
+};
+
+// ---------- weergaven ----------
+const views = {mensen:'v-mensen', kaart:'v-kaart', lijnen:'v-lijnen', org:'v-org'};
+let current = 'mensen';
+function show(v){
+  current = v;
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-current', b.dataset.view===v));
+  Object.entries(views).forEach(([k,id])=>document.getElementById(id).classList.toggle('active',k===v));
+  if(v==='kaart') initMap();
+  if(v==='lijnen') drawMetro();
+  if(v==='org') drawOrg();
+}
+document.querySelectorAll('nav.tabs button').forEach(b=>b.onclick=()=>{closePanel();show(b.dataset.view);setHash(b.dataset.view)});
+
+// ---------- MENSEN ----------
+const F = {q:'', afd:'', team:'', gebied:'', thema:''};
+const $ = id => document.getElementById(id);
+function fillSelects(){
+  const opt = (v,l,sel) => `<option value="${v}"${sel?' selected':''}>${esc(l)}</option>`;
+  $('f-afd').innerHTML = opt('','Alle afdelingen') + AFDELINGEN.map(a=>opt(a.id,a.naam,F.afd===a.id)).join('');
+  const teams = AFDELINGEN.filter(a=>!F.afd||a.id===F.afd).flatMap(a=>a.teams);
+  $('f-team').innerHTML = opt('','Alle teams') + teams.map(t=>opt(t.id,t.naam,F.team===t.id)).join('');
+  $('f-gebied').innerHTML = opt('','Alle gebieden') + GEBIEDEN.map(g=>opt(g.id,g.naam,F.gebied===g.id)).join('');
+  $('f-thema').innerHTML = opt('','Alle thema’s') + THEMAS.map(t=>opt(t.id,t.naam,F.thema===t.id)).join('');
+  ['afd','team','gebied','thema'].forEach(k=>$('f-'+k).classList.toggle('set',!!F[k]));
+}
+function filtered(){
+  const words = norm(F.q).split(/\s+/).filter(Boolean);
+  return PERSONEN.filter(p=>
+    (!F.afd || p.afdeling===F.afd) && (!F.team || p.team===F.team) &&
+    (!F.thema || p.themas.includes(F.thema)) &&
+    (!F.gebied || (F.gebied==='stad' ? !p.rollen.length : p.rollen.some(r=>r.gebied===F.gebied))) &&
+    words.every(w=>p._q.includes(w)));
+}
+let list = [], shown = 0;
+function card(p){
+  const geb = p.rollen.length ? p.rollen.map(r=>`<span class="chip" style="cursor:inherit">${esc(GEB[r.gebied].naam)}</span>`).join('') : '<span class="chip" style="cursor:inherit">Stadsbreed</span>';
+  return `<button class="card" data-act="person" data-id="${p.id}">${avatar(p)}<span class="who">
+    <div class="name">${esc(naam(p))}</div><div class="fn">${esc(p.functie)}</div>
+    <div class="org"><span class="dot" style="background:${AFD[p.afdeling].kleur}"></span>${esc(AFD[p.afdeling].naam)} · ${esc(TEAM[p.team].naam)}</div>
+    <div class="tags">${p.themas.map(t=>`<span class="dot" title="${esc(TH[t].naam)}" style="background:${TH[t].kleur};width:10px;height:10px;margin-top:5px"></span>`).join('')}${geb}</div>
+  </span></button>`;
+}
+function renderMore(){
+  const next = list.slice(shown, shown+48);
+  $('grid').insertAdjacentHTML('beforeend', next.map(card).join(''));
+  shown += next.length;
+}
+function renderPeople(){
+  fillSelects();
+  list = filtered(); shown = 0; $('grid').innerHTML = '';
+  $('count').textContent = `${list.length} ${list.length===1?'persoon':'personen'}`;
+  $('reset').hidden = !(F.q||F.afd||F.team||F.gebied||F.thema);
+  if(!list.length) $('grid').innerHTML = '<div class="empty">Niemand gevonden. Probeer een andere zoekterm of wis de filters.</div>';
+  else renderMore();
+}
+new IntersectionObserver(e=>{ if(e[0].isIntersecting && shown<list.length) renderMore(); },{root:$('v-mensen'),rootMargin:'400px'}).observe($('sentinel'));
+let qt; $('q').addEventListener('input',e=>{clearTimeout(qt);qt=setTimeout(()=>{F.q=e.target.value;renderPeople()},120)});
+$('f-afd').onchange=e=>{F.afd=e.target.value;F.team='';renderPeople()};
+$('f-team').onchange=e=>{F.team=e.target.value;if(F.team)F.afd=TEAM[F.team].afdeling;renderPeople()};
+$('f-gebied').onchange=e=>{F.gebied=e.target.value;renderPeople()};
+$('f-thema').onchange=e=>{F.thema=e.target.value;renderPeople()};
+$('reset').onclick=()=>{Object.keys(F).forEach(k=>F[k]='');$('q').value='';renderPeople()};
+function filterPeople(patch){
+  Object.keys(F).forEach(k=>F[k]=''); Object.assign(F,patch); $('q').value='';
+  closePanel(); show('mensen'); setHash('mensen'); renderPeople(); $('v-mensen').scrollTop=0;
+}
+
+// ---------- PANEEL ----------
+const stack = [];
+function openPanel(crumb, html, push=true){
+  if(push) stack.push({crumb, html});
+  $('pcrumb').textContent = crumb; $('pbody').innerHTML = html; $('pbody').scrollTop = 0;
+  $('pback').hidden = stack.length < 2;
+  $('panel').classList.add('open'); $('scrim').classList.add('open');
+}
+function closePanel(){ stack.length=0; $('panel').classList.remove('open'); $('scrim').classList.remove('open'); highlightLine(null); }
+$('pclose').onclick = ()=>{closePanel(); setHash(current)};
+$('scrim').onclick = ()=>{closePanel(); setHash(current)};
+$('pback').onclick = ()=>{ stack.pop(); const t = stack[stack.length-1]; if(t) openPanel(t.crumb,t.html,false); };
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') {closePanel(); setHash(current);} });
+
+function peopleRows(ps, sub){
+  return ps.map(p=>`<button class="row" data-act="person" data-id="${p.id}">${avatar(p,'sm')}<span class="grow"><div class="t">${esc(naam(p))}</div><div class="s">${esc(sub?sub(p):p.functie)}</div></span></button>`).join('');
+}
+function faces(ps, max=14){
+  return `<div class="faces">${ps.slice(0,max).map(p=>`<button data-act="person" data-id="${p.id}" title="${esc(naam(p))}">${avatar(p,'sm')}</button>`).join('')}${ps.length>max?`<span class="chip" style="cursor:default">+${ps.length-max}</span>`:''}</div>`;
+}
+function stackBar(ps){
+  const tot = ps.length || 1;
+  const parts = AFDELINGEN.map(a=>({a, n:ps.filter(p=>p.afdeling===a.id).length})).filter(x=>x.n);
+  return `<div class="stack">${parts.map(x=>`<span style="width:${x.n/tot*100}%;background:${x.a.kleur}" title="${esc(x.a.naam)}: ${x.n}"></span>`).join('')}</div>
+    <div class="legend">${parts.map(x=>`<span><i class="dot" style="background:${x.a.kleur}"></i>${esc(x.a.naam)} ${x.n}</span>`).join('')}</div>`;
+}
+
+function openPerson(id){
+  const p = byId[id]; if(!p) return;
+  const sameGeb = PERSONEN.filter(q=>q!==p && q.afdeling!==p.afdeling && q.rollen.some(r=>p.rollen.some(s=>s.gebied===r.gebied)));
+  const sameTh  = PERSONEN.filter(q=>q!==p && q.afdeling!==p.afdeling && q.themas.some(t=>p.themas.includes(t)) && (!p.rollen.length || q.rollen.some(r=>p.rollen.some(s=>s.gebied===r.gebied)) ));
+  const team = PERSONEN.filter(q=>q!==p && q.team===p.team);
+  const html = `
+    <div style="display:flex;gap:16px;align-items:center;margin-top:6px">${avatar(p,'lg')}<div>
+      <div class="ptitle">${esc(naam(p))}</div><p class="psub" style="margin:0">${esc(p.functie)}</p></div></div>
+    <div class="actions">
+      <a class="btn primary" href="https://teams.microsoft.com/l/chat/0/0?users=${encodeURIComponent(p.email)}" target="_blank" rel="noopener">${ICON.chat}Chat in Teams</a>
+      <a class="btn" href="mailto:${esc(p.email)}">${ICON.mail}Mail</a>
+    </div>
+    <div class="sec"><h4>Organisatie</h4><dl class="kv">
+      <dt>Afdeling</dt><dd><button class="chip" data-act="filter" data-k="afd" data-v="${p.afdeling}"><i class="dot" style="background:${AFD[p.afdeling].kleur}"></i>${esc(AFD[p.afdeling].naam)}</button></dd>
+      <dt>Team</dt><dd><button class="chip" data-act="filter" data-k="team" data-v="${p.team}">${esc(TEAM[p.team].naam)}</button></dd>
+      <dt>Telefoon</dt><dd>${esc(p.telefoon)}</dd>
+      <dt>E-mail</dt><dd style="word-break:break-all">${esc(p.email)}</dd></dl></div>
+    <div class="sec"><h4>Werkt in</h4>${p.rollen.length ? p.rollen.map(r=>`<button class="row" data-act="gebied" data-id="${r.gebied}"><span class="iconbtn" style="width:30px;height:30px">${ICON.map}</span><span class="grow"><div class="t">${esc(GEB[r.gebied].naam)}</div><div class="s">${esc(r.rol)}</div></span></button>`).join('') : `<button class="row" data-act="station" data-id="stad"><span class="iconbtn" style="width:30px;height:30px">${ICON.map}</span><span class="grow"><div class="t">Stadsbreed</div><div class="s">Werkt voor de hele stad</div></span></button>`}</div>
+    <div class="sec"><h4>Thema's (lijnen)</h4><div style="display:flex;flex-wrap:wrap;gap:6px">${p.themas.map(t=>lijnBadge(TH[t])).join('')}</div></div>
+    ${sameTh.length?`<div class="sec"><h4>Zelfde thema en gebied, andere afdeling</h4>${peopleRows(sameTh.slice(0,6),q=>AFD[q.afdeling].naam+' · '+q.functie)}</div>`:''}
+    ${sameGeb.length?`<div class="sec"><h4>Andere afdelingen in ${p.rollen.length===1?esc(GEB[p.rollen[0].gebied].naam):'dezelfde gebieden'} (${sameGeb.length})</h4>${faces(sameGeb,21)}</div>`:''}
+    <div class="sec"><h4>Teamgenoten (${team.length})</h4>${faces(team,21)}</div>`;
+  openPanel('Persoon', html); setHash('persoon/'+id);
+}
+
+function openGebied(id){
+  const g = GEB[id]; if(!g) return;
+  const ps = inGebied(id);
+  const thCounts = THEMAS.map(t=>({t, n:ps.filter(p=>p.themas.includes(t.id)).length})).filter(x=>x.n).sort((a,b)=>b.n-a.n);
+  const max = Math.max(1,...thCounts.map(x=>x.n));
+  const groups = AFDELINGEN.map(a=>({a, ps:ps.filter(p=>p.afdeling===a.id)})).filter(x=>x.ps.length);
+  const rolIn = p => (p.rollen.find(r=>r.gebied===id)||{rol:p.functie}).rol + ' · ' + TEAM[p.team].naam;
+  const html = `<div class="ptitle">${esc(g.naam)}</div><p class="psub">${ps.length} collega's${id==='stad'?' werken stadsbreed':' werken in dit gebied'}, vanuit ${groups.length} afdelingen</p>
+    ${stackBar(ps)}
+    <div class="actions"><button class="btn" data-act="filter" data-k="gebied" data-v="${id}">${ICON.users}Als lijst</button>${id!=='stad'?`<button class="btn" data-act="tomap" data-id="${id}">${ICON.map}Op kaart</button>`:''}</div>
+    <div class="sec"><h4>Thema's in dit gebied</h4><div class="bars">${thCounts.map(x=>`<button class="b" data-act="station-lijn" data-id="${id}" data-t="${x.t.id}"><span style="display:flex;align-items:center;gap:6px"><i class="dot" style="background:${x.t.kleur}"></i>${esc(x.t.naam)}</span><span class="track"><span class="fill" style="display:block;width:${x.n/max*100}%;background:${x.t.kleur}"></span></span><span class="n">${x.n}</span></button>`).join('')}</div></div>
+    <div class="sec"><h4>Mensen per afdeling</h4>${groups.map(x=>`<div class="group-h"><i class="dot" style="background:${x.a.kleur}"></i>${esc(x.a.naam)} <span style="color:var(--muted);font-weight:400">${x.ps.length}</span></div>${peopleRows(x.ps,rolIn)}`).join('')}</div>`;
+  openPanel(id==='stad'?'Stadsbreed':'Gebied', html); setHash('gebied/'+id);
+}
+
+function openStationLijn(gid, tid){
+  const t = TH[tid], g = GEB[gid];
+  const ps = inGebied(gid).filter(p=>p.themas.includes(tid));
+  const html = `<div style="margin-top:6px">${lijnBadge(t)}</div><div class="ptitle">${esc(g.naam)}</div><p class="psub">${ps.length} collega's werken hier aan ${esc(t.naam.toLowerCase())}</p>${stackBar(ps)}
+    <div class="sec">${peopleRows(ps,p=>AFD[p.afdeling].naam+' · '+p.functie)}</div>`;
+  openPanel('Halte', html);
+}
+
+function openLijn(tid){
+  const t = TH[tid]; if(!t) return;
+  const ps = PERSONEN.filter(p=>p.themas.includes(tid));
+  const route = ROUTES[tid] || [];
+  const afdN = new Set(ps.map(p=>p.afdeling)).size;
+  const html = `<div style="background:${t.kleur};color:#fff;border-radius:12px;padding:14px 16px;margin-top:6px;display:flex;align-items:center;gap:12px">
+      <span style="background:#fff;color:${t.kleur};width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:800">${esc(t.code)}</span>
+      <div><div style="font-size:12px;opacity:.85;text-transform:uppercase;letter-spacing:.08em">Lijn</div><div style="font-size:20px;font-weight:750">${esc(t.naam)}</div></div></div>
+    <p class="psub" style="margin-top:10px">${esc(t.oms)}</p>
+    <p style="margin:0 0 8px"><b>${ps.length}</b> collega's · <b>${afdN}</b> afdelingen · <b>${route.length}</b> haltes</p>
+    ${stackBar(ps)}
+    <div class="actions"><button class="btn" data-act="filter" data-k="thema" data-v="${tid}">${ICON.users}Als lijst</button><button class="btn" data-act="tomap-thema" data-id="${tid}">${ICON.map}Op kaart</button></div>
+    <div class="sec"><h4>Haltes</h4>
+      <div style="position:relative;padding-left:22px">
+        <div style="position:absolute;left:8px;top:14px;bottom:14px;width:5px;border-radius:3px;background:${t.kleur}"></div>
+        ${route.map(gid=>{ const s = inGebied(gid).filter(p=>p.themas.includes(tid));
+          return `<div style="position:relative;padding:8px 0">
+            <span style="position:absolute;left:-19px;top:13px;width:13px;height:13px;border-radius:50%;background:var(--surface);border:3px solid ${t.kleur}"></span>
+            <button class="linkbtn" style="color:var(--ink);font-size:14px" data-act="station-lijn" data-id="${gid}" data-t="${tid}">${esc(GEB[gid].naam)}</button>
+            <span style="color:var(--muted);font-size:12px"> · ${s.length}</span>
+            <div style="margin-top:6px">${faces(s,10)}</div></div>`;}).join('')}
+      </div></div>`;
+  openPanel('Thema', html); setHash('lijn/'+tid); highlightLine(tid);
+}
+
+// gedelegeerde klikken
+document.addEventListener('click', e=>{
+  const el = e.target.closest('[data-act]'); if(!el) return;
+  const {act, id} = el.dataset;
+  if(act==='person') openPerson(id);
+  else if(act==='gebied') { if(current==='kaart') focusGebied(id); openGebied(id); }
+  else if(act==='station') { id==='stad' ? openGebied('stad') : openGebied(id); }
+  else if(act==='station-lijn') openStationLijn(id, el.dataset.t);
+  else if(act==='lijn') { if(current!=='lijnen'&&current!=='kaart'){show('lijnen');} openLijn(id); }
+  else if(act==='filter') filterPeople({[el.dataset.k]: el.dataset.v});
+  else if(act==='tomap') { show('kaart'); setMapThema(''); focusGebied(id); openGebied(id); }
+  else if(act==='tomap-thema') { show('kaart'); closePanel(); setMapThema(id); setHash('kaart'); }
+});
+
+// ---------- KAART ----------
+let map, layers = {}, mapThema = '';
+function initMap(){
+  if(map){ setTimeout(()=>map.invalidateSize(),0); return; }
+  map = L.map('map',{zoomControl:true, attributionControl:true, minZoom:10, maxZoom:16}).setView([51.92,4.35], 11);
+  L.tileLayer('https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0/grijs/EPSG:3857/{z}/{x}/{y}.png',
+    {attribution:'Kaart: <a href="https://www.pdok.nl">PDOK</a> · Gebieden: CBS', maxZoom:19}).addTo(map);
+  map.zoomControl.setPosition('bottomright');
+  const all = [];
+  for(const g of GEBIEDEN){
+    if(!GEO[g.id]) continue;
+    const poly = L.polygon(GEO[g.id].map(r=>[r]), {weight:1.5, color:'#ffffff', fillOpacity:.75});
+    poly.on('click',()=>{ openGebied(g.id); });
+    poly.on('mouseover',()=>poly.setStyle({weight:3,color:'#1a1f1b'}));
+    poly.on('mouseout',()=>poly.setStyle({weight:1.5,color:'#ffffff'}));
+    poly.addTo(map); all.push(poly);
+    const lbl = L.tooltip({permanent:true, direction:'center', className:'gebied-label', interactive:false})
+      .setLatLng(g.label || poly.getCenter());
+    lbl.addTo(map);
+    layers[g.id] = {poly, lbl};
+  }
+  const fit = () => map.fitBounds(L.featureGroup(all).getBounds(), {padding:[20,20]});
+  fit(); map.on('resize', ()=>{});
+  // themaknoppen
+  $('mapbar').innerHTML = `<button class="pill" data-mt="" aria-pressed="true" style="background:var(--brand)">Alle thema's</button>` +
+    THEMAS.map(t=>`<button class="pill" data-mt="${t.id}" aria-pressed="false"><i class="dot" style="background:${t.kleur}"></i>${esc(t.naam)}</button>`).join('');
+  $('mapbar').onclick = e=>{ const b = e.target.closest('[data-mt]'); if(b) setMapThema(b.dataset.mt); };
+  map.on('zoomend', labelVisibility);
+  setMapThema(mapThema); labelVisibility();
+  setTimeout(()=>{map.invalidateSize(); fit();},50);
+}
+function labelVisibility(){
+  const z = map.getZoom();
+  document.querySelectorAll('.gebied-label').forEach(el=>el.style.display = z>=11 ? '' : 'none');
+}
+function mix(hex, t){ // meng kleur met wit (t=0 wit, 1 vol)
+  const n = parseInt(hex.slice(1),16), r=n>>16, g=n>>8&255, b=n&255;
+  const m = c => Math.round(255 + (c-255)*t);
+  return `rgb(${m(r)},${m(g)},${m(b)})`;
+}
+function setMapThema(tid){
+  mapThema = tid;
+  if(!map) return;
+  const base = tid ? TH[tid].kleur : '#00811f';
+  const counts = Object.fromEntries(GEBIEDEN.map(g=>[g.id, inGebied(g.id).filter(p=>!tid||p.themas.includes(tid)).length]));
+  const max = Math.max(1,...Object.entries(counts).filter(([k])=>k!=='stad').map(([,v])=>v));
+  for(const [id,{poly,lbl}] of Object.entries(layers)){
+    const n = counts[id];
+    poly.setStyle({fillColor: n ? mix(base, .18 + .82*n/max) : '#d9dcd9', fillOpacity: n ? .78 : .45});
+    lbl.setContent(`${esc(GEB[id].naam)}<span>${n} ${n===1?'persoon':'personen'}</span>`);
+  }
+  document.querySelectorAll('#mapbar .pill').forEach(b=>{
+    const on = b.dataset.mt===tid; b.setAttribute('aria-pressed',on);
+    b.style.background = on ? (tid?TH[tid].kleur:'var(--brand)') : ''; b.style.color = on ? '#fff' : '';
+  });
+  $('mapnote').innerHTML = `<b>${tid?esc(TH[tid].naam):'Alle thema’s'}</b>
+    <div class="scale"><span style="font-size:11px;color:var(--muted)">weinig</span><span class="ramp" style="background:linear-gradient(90deg,${mix(base,.18)},${base})"></span><span style="font-size:11px;color:var(--muted)">veel</span></div>
+    <div style="margin-top:8px"><button class="linkbtn" data-act="station" data-id="stad">+ ${counts.stad} stadsbreed${tid?'':' (zonder gebied)'}</button></div>
+    <div style="color:var(--muted);margin-top:4px">Klik op een gebied voor de mensen.</div>`;
+}
+function focusGebied(id){
+  if(!map || !layers[id]) return;
+  map.flyToBounds(layers[id].poly.getBounds(), {padding:[40,40], maxZoom:14, duration:.6});
+}
+
+// ---------- LIJNENKAART ----------
+// Spoornet: vaste verbindingen tussen buurgebieden. Lijnen rijden over deze sporen, zodat ze netjes parallel lopen.
+const SPOREN = [['hvh','rozenburg'],['rozenburg','haven'],['haven','hoogvliet'],['haven','pernis'],['hoogvliet','pernis'],
+  ['pernis','charlois'],['pernis','delfshaven'],['delfshaven','overschie'],['overschie','noord'],['delfshaven','stad'],['noord','stad'],
+  ['stad','centrum'],['noord','hillegersberg'],['hillegersberg','alexander'],['noord','kralingen'],['kralingen','alexander'],
+  ['centrum','kralingen'],['centrum','feijenoord'],['feijenoord','charlois'],['feijenoord','ijsselmonde'],['ijsselmonde','alexander']];
+const NB = {}; SPOREN.forEach(([a,b])=>{ const d=Math.hypot(GEB[a].x-GEB[b].x,GEB[a].y-GEB[b].y); (NB[a]=NB[a]||[]).push([b,d]); (NB[b]=NB[b]||[]).push([a,d]); });
+function shortest(from){ // Dijkstra
+  const dist={[from]:0}, prev={}, todo=new Set(GEBIEDEN.map(g=>g.id));
+  while(todo.size){ let u=null; todo.forEach(v=>{ if(dist[v]!==undefined && (u===null||dist[v]<dist[u])) u=v; }); if(u===null) break; todo.delete(u);
+    for(const [v,w] of NB[u]||[]) if(dist[u]+w < (dist[v]??Infinity)){ dist[v]=dist[u]+w; prev[v]=u; } }
+  return {dist, path: to=>{ const p=[to]; while(p[0]!==from) p.unshift(prev[p[0]]); return p; }};
+}
+const SP = Object.fromEntries(GEBIEDEN.map(g=>[g.id, shortest(g.id)]));
+const STOPS = {}, PATHS = {};
+THEMAS.forEach(t=>{
+  const stops = GEBIEDEN.filter(g=> inGebied(g.id).filter(p=>p.themas.includes(t.id)).length >= (g.hub?1:3)).map(g=>g.id);
+  // volgorde: probeer elke halte als begin, kies de kortste 'dichtstbijzijnde-volgende'-route
+  let best=null, bestLen=Infinity;
+  for(const start of stops){ const left=stops.filter(s=>s!==start), order=[start]; let len=0;
+    while(left.length){ const c=order[order.length-1]; left.sort((a,b)=>SP[c].dist[a]-SP[c].dist[b]); len+=SP[c].dist[left[0]]; order.push(left.shift()); }
+    if(len<bestLen){ bestLen=len; best=order; } }
+  STOPS[t.id] = best || [];
+  const path = [];
+  (best||[]).forEach((s,i)=>{ if(i===0) path.push(s); else path.push(...SP[best[i-1]].path(s).slice(1)); });
+  PATHS[t.id] = path;
+});
+const ROUTES = STOPS;
+const GAP = 6.5;
+const ekey = (a,b) => a<b ? a+'|'+b : b+'|'+a;
+// welke lijnen gebruiken welk spoor → compacte, gecentreerde sporen per verbinding
+const EDGE_LINES = {};
+THEMAS.forEach(t=>{ const p=PATHS[t.id]; for(let i=1;i<p.length;i++){ const k=ekey(p[i-1],p[i]); (EDGE_LINES[k]=EDGE_LINES[k]||new Set()).add(t.id); } });
+const slot = (k,tid) => { const ls=THEMAS.map(t=>t.id).filter(id=>EDGE_LINES[k].has(id)); return (ls.indexOf(tid)-(ls.length-1)/2)*GAP; };
+function octPts(a,b){ // octilineaire tussenpunten van a naar b (symmetrisch)
+  const dx=b.x-a.x, dy=b.y-a.y, ax=Math.abs(dx), ay=Math.abs(dy), sx=Math.sign(dx), sy=Math.sign(dy);
+  if(ax>=ay){ const h=(ax-ay)/2; return [a,{x:a.x+sx*h,y:a.y},{x:a.x+sx*(h+ay),y:b.y},b]; }
+  const v=(ay-ax)/2; return [a,{x:a.x,y:a.y+sy*v},{x:b.x,y:a.y+sy*(v+ax)},b];
+}
+const STATION_PTS = {};
+function linePath(tid){
+  const p = PATHS[tid]; if(p.length<2) return '';
+  const segs = [];
+  for(let i=1;i<p.length;i++){
+    const u=p[i-1], v=p[i], k=ekey(u,v), d=slot(k,tid);
+    const [c1,c2] = u<v ? [u,v] : [v,u];               // vaste richting → vaste kant voor de normaal
+    let pts = octPts(GEB[c1],GEB[c2]).filter((q,j,arr)=>j===0||q.x!==arr[j-1].x||q.y!==arr[j-1].y);
+    const sub = [];
+    for(let j=1;j<pts.length;j++){ const a=pts[j-1], b=pts[j], L=Math.hypot(b.x-a.x,b.y-a.y); const n={x:-(b.y-a.y)/L, y:(b.x-a.x)/L};
+      sub.push({a:{x:a.x+n.x*d,y:a.y+n.y*d}, b:{x:b.x+n.x*d,y:b.y+n.y*d}}); }
+    if(u>v) { sub.reverse(); sub.forEach(s=>{ const t=s.a; s.a=s.b; s.b=t; }); }
+    sub[0].node = u; sub[sub.length-1].endNode = v;
+    segs.push(...sub);
+  }
+  const out = [segs[0].a]; (STATION_PTS[p[0]]=STATION_PTS[p[0]]||[]).push(segs[0].a);
+  for(let i=1;i<segs.length;i++){
+    const s1=segs[i-1], s2=segs[i], r={x:s1.b.x-s1.a.x,y:s1.b.y-s1.a.y}, s={x:s2.b.x-s2.a.x,y:s2.b.y-s2.a.y};
+    const cr = r.x*s.y - r.y*s.x; let pts;
+    if(Math.abs(cr) < 1e-6) pts = [s1.b, s2.a];
+    else { const t=((s2.a.x-s1.a.x)*s.y-(s2.a.y-s1.a.y)*s.x)/cr; pts=[{x:s1.a.x+t*r.x, y:s1.a.y+t*r.y}]; }
+    out.push(...pts);
+    if(s2.node) (STATION_PTS[s2.node]=STATION_PTS[s2.node]||[]).push(...pts);
+  }
+  const last = segs[segs.length-1].b; out.push(last); (STATION_PTS[p[p.length-1]]=STATION_PTS[p[p.length-1]]||[]).push(last);
+  return 'M'+out.map(q=>q.x.toFixed(1)+','+q.y.toFixed(1)).join(' L');
+}
+let metroDrawn = false, activeLine = null;
+function drawMetro(){
+  if(metroDrawn) return; metroDrawn = true;
+  const svg = $('metro');
+  let s = `<path class="river" d="M-20,215 C110,240 160,370 300,385 S520,395 620,410 S820,400 1020,420"/>
+           <text class="river-lbl" x="380" y="402">DE MAAS</text>`;
+  THEMAS.forEach(t=>{
+    const d = linePath(t.id); if(!d) return;
+    s += `<path class="track" data-line="${t.id}" d="${d}" stroke="${t.kleur}"/><path class="hit" data-line="${t.id}" d="${d}"><title>Lijn ${esc(t.naam)}</title></path>`;
+  });
+  GEBIEDEN.forEach(g=>{
+    const idx = THEMAS.filter(t=>STOPS[t.id].includes(g.id));
+    const n = inGebied(g.id).length;
+    const P = STATION_PTS[g.id] || [{x:g.x,y:g.y}];
+    let A=P[0], B=P[0], far=-1;   // capsule tussen de twee verst uiteen liggende sporen
+    for(const a of P) for(const b of P){ const d=Math.hypot(a.x-b.x,a.y-b.y); if(d>far){far=d;A=a;B=b;} }
+    const x1=A.x, y1=A.y, x2=B.x, y2=B.y;
+    const w = g.hub ? 22 : 15;
+    s += `<g class="st" data-st="${g.id}" tabindex="0" role="button" aria-label="${esc(g.naam)}, ${n} personen">
+      <line class="st-outer" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke-width="${w}"/>
+      <line class="st-inner" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke-width="${w-6}"/>
+      <text class="lbl ${g.hub?'hub-lbl':''}" x="${g.x+g.lx}" y="${g.y+g.ly}" text-anchor="${g.a}">${esc(g.naam)}</text>
+      <text class="lbl-n" x="${g.x+g.lx}" y="${g.y+g.ly+14}" text-anchor="${g.a}">${n} mensen · ${idx.length} ${idx.length===1?'lijn':'lijnen'}</text></g>`;
+  });
+  svg.innerHTML = s;
+  svg.addEventListener('click', e=>{
+    const ln = e.target.closest('[data-line]'); const st = e.target.closest('[data-st]');
+    if(st) openGebied(st.dataset.st); else if(ln) openLijn(ln.dataset.line);
+  });
+  svg.addEventListener('keydown', e=>{ const st=e.target.closest('[data-st]'); if(st&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openGebied(st.dataset.st);} });
+  $('lijnlegend').innerHTML = THEMAS.map(lijnBadge).join('');
+  $('lijncards').innerHTML = THEMAS.map(t=>{ const ps = PERSONEN.filter(p=>p.themas.includes(t.id));
+    return `<button class="lcard" data-act="lijn" data-id="${t.id}" style="border-left-color:${t.kleur}"><div class="h"><span class="dot" style="background:${t.kleur};width:12px;height:12px"></span>${esc(t.naam)}</div>
+      <div class="m">${ps.length} mensen · ${new Set(ps.map(p=>p.afdeling)).size} afdelingen · ${ROUTES[t.id].length} haltes</div><div style="margin-top:8px">${stackBar(ps).split('<div class="legend">')[0]}</div></button>`;}).join('');
+  highlightLine(activeLine);
+}
+function highlightLine(tid){
+  activeLine = tid;
+  document.querySelectorAll('#metro .track').forEach(p=>p.classList.toggle('dim', !!tid && p.dataset.line!==tid));
+}
+
+// ---------- ORGANISATIE ----------
+let orgDrawn = false;
+function drawOrg(){
+  if(orgDrawn) return; orgDrawn = true;
+  $('afdgrid').innerHTML = AFDELINGEN.map(a=>{ const ps = PERSONEN.filter(p=>p.afdeling===a.id);
+    return `<div class="afd" style="border-top-color:${a.kleur}"><div class="h">${esc(a.naam)}</div><div class="m">${ps.length} mensen · ${a.teams.length} teams</div>
+      ${a.teams.map(t=>{ const n = ps.filter(p=>p.team===t.id).length;
+        return `<button class="row" data-act="filter" data-k="team" data-v="${t.id}"><span class="grow"><div class="t">${esc(t.naam)}</div><div class="s" style="display:flex;gap:4px;margin-top:3px">${t.thema.map(x=>`<i class="dot" title="${esc(TH[x].naam)}" style="background:${TH[x].kleur}"></i>`).join('')}</div></span><span class="s">${n}</span></button>`;}).join('')}</div>`;}).join('');
+  const max = Math.max(...AFDELINGEN.flatMap(a=>THEMAS.map(t=>PERSONEN.filter(p=>p.afdeling===a.id&&p.themas.includes(t.id)).length)));
+  $('matrix').innerHTML = `<thead><tr><th></th>${THEMAS.map(t=>`<th><span style="display:inline-flex;align-items:center;gap:5px"><i class="dot" style="background:${t.kleur}"></i>${esc(t.naam)}</span></th>`).join('')}</tr></thead><tbody>` +
+    AFDELINGEN.map(a=>`<tr><td><span style="display:inline-flex;align-items:center;gap:6px;font-weight:600"><i class="dot" style="background:${a.kleur}"></i>${esc(a.naam)}</span></td>${THEMAS.map(t=>{
+      const n = PERSONEN.filter(p=>p.afdeling===a.id&&p.themas.includes(t.id)).length;
+      return `<td>${n?`<button data-act="filter2" data-a="${a.id}" data-t="${t.id}" style="background:${mix(t.kleur, .12+.7*n/max)};color:${n/max>.5?'#fff':'#1a1f1b'}">${n}</button>`:'<span style="color:var(--muted)">–</span>'}</td>`;}).join('')}</tr>`).join('') + '</tbody>';
+}
+document.addEventListener('click', e=>{ const b = e.target.closest('[data-act="filter2"]'); if(b) filterPeople({afd:b.dataset.a, thema:b.dataset.t}); });
+
+// ---------- deeplinks (handig om in Teams te delen) ----------
+function setHash(h){ history.replaceState(null,'','#'+h); }
+function route(){
+  const [k,v] = location.hash.slice(1).split('/');
+  if(k==='persoon') { show('mensen'); openPerson(v); }
+  else if(k==='gebied') { show('kaart'); setTimeout(()=>{focusGebied(v); openGebied(v);},120); }
+  else if(k==='lijn') { show('lijnen'); openLijn(v); }
+  else if(views[k]) show(k);
+}
+renderPeople(); route();
+})();
+</script>
+</body>
+</html>

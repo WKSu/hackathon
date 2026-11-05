@@ -40,7 +40,7 @@ window.RESULTATEN = [
     concept:
       "Voorspellen waar parkeerdruk naartoe schuift als een gebied betaald parkeren krijgt, zodat de gemeente eerder maatregelen kan nemen.",
     gebouwd:
-      "Een kaart van Rotterdam en buurgemeenten met drie scenario’s en schuifjes voor de aannames. Per buurt zie je de extra parkeerdruk en waar de auto’s vandaan komen. Echt: subbuurtgrenzen, parkeercapaciteit en autobezit per subbuurt (CBS, 1 januari 2026). Fictief: de huidige bezetting, het uitwijkgedrag en alle cijfers van buurgemeenten.",
+      "Een kaart van Rotterdam en buurgemeenten met drie scenario’s en schuifjes voor de aannames. Per buurt zie je de extra parkeerdruk en waar de auto’s vandaan komen. Nieuw: de verandering in autobezit van 2019 tot 2026 en een voor- en nameting rond de invoering van betaald parkeren. Echt: subbuurtgrenzen, parkeercapaciteit en autobezit per subbuurt (CBS, 1 januari 2026). Fictief: de huidige bezetting, het uitwijkgedrag en alle cijfers van buurgemeenten.",
     controle:
       "Acht aannames, zoals de indeling binnen en buiten de ring en de tweede auto als benadering voor ‘geen vergunning’. Voor een echte prognose zijn parkeerdrukmetingen en tellingen rond een eerdere invoering nodig. Zie het controledocument.",
     afbeelding: "img/resultaten/waterbedmonitor.jpg",
@@ -79,5 +79,44 @@ window.RESULTATEN = [
     links: [
       { tekst: "Plan en besluiten (GitHub)", url: "https://github.com/WKSu/hackathon-cases/tree/case/lp/cases/laadpalen" },
     ],
+  },
+  {
+    titel: "M4H Parkeerhubs",
+    team: "Team Parkeren Rotterdam",
+    casus: "M4H parkeerbalans",
+    concept:
+      "De losse parkeerbalansen van Merwe-Vierhavens samenbrengen tot één overzicht van de parkeervraag en de verdeling over de mobiliteitshubs.",
+    gebouwd:
+      "Een kaart van M4H met alle plots en hubs, en een tijdlijn van 2025 tot 2045. Per jaar wordt elke plot gekoppeld aan een hub binnen 400 meter, en je ziet waar de hubcapaciteit knelt. Klik een hub of plot aan om programma of capaciteit te wijzigen; het totaal rekent direct mee. Gebaseerd op openbare plannen: de mobiliteitsstrategie, de beleidsregel parkeernormen, het stedenbouwkundig plan Merwehaven 2025 en raadsvoorstellen.",
+    controle:
+      "De plotgrenzen zijn overgetrokken van plankaarten en het programma per plot is ingeschat; alle uitkomsten zijn indicatief. Het team moet de normen, de kortingen en de koppeling van plots aan hubs nog nalopen.",
+    afbeelding: "img/resultaten/m4h-parkeerhubs.jpg",
+    links: [{ tekst: "Open prototype", url: "prototypes/m4h-parkeerhubs/index.html" }],
+  },
+  {
+    titel: "Hubkompas",
+    team: "Team Sharing is Caring",
+    casus: "Deelmobiliteit",
+    concept:
+      "Een potentiekaart voor deelmobiliteitshubs in Rotterdam en Den Haag: plaats een hub en zie direct hoe kansrijk de plek is en wat hij doet voor het netwerk.",
+    gebouwd:
+      "Een kaart van vier gebieden (Den Haag Centrum en Moerwijk, Rotterdam Centrum en Feijenoord) met een kansrijkheid per 100 × 100 m. Je kiest het moment van de dag en de weging van zeven factoren, zoals dichtheid, functies en ov. Plaats of versleep een hub en zie het bereik binnen 300 m, het effect op deelritten en of de plek in de openbare ruimte past. Gebouwd op open data: CBS, BAG, BGT, OpenStreetMap en de dienstregeling.",
+    controle:
+      "Het model rekent met indicatieve kengetallen. De weging, de aannames voor deelritten en de eisen aan een plek moet het team nog toetsen aan de praktijk.",
+    afbeelding: "img/resultaten/hubkompas.jpg",
+    links: [{ tekst: "Open prototype", url: "prototypes/hubkompas/index.html" }],
+  },
+  {
+    titel: "Lost & Found: vind je collega bij Mobiliteit",
+    team: "Team Lost & Found",
+    casus: "Gebiedskennis",
+    concept:
+      "Per gebied vindbaar maken wat er speelt en wie het aanspreekpunt is, en belanghebbenden actief informeren als er iets verandert.",
+    gebouwd:
+      "Een site per gebied van Mobiliteit met de aanspreekpunten, de lopende projecten en thema’s, en meldingen met een maandmail. Het prototype gebruikt echte namen, rollen en foto’s van collega’s; die versie delen we alleen binnen de organisatie. Online staat een smoelenboek met 500 fictieve collega’s dat hetzelfde idee laat zien.",
+    controle:
+      "Voor een echte versie moeten collega’s instemmen met hun naam en foto, en is een vaste bron nodig, zoals een SharePoint-lijst met een eigenaar.",
+    afbeelding: "img/resultaten/smoelenboek.jpg",
+    links: [{ tekst: "Smoelenboek (fictieve gegevens)", url: "prototypes/smoelenboek/index.html" }],
   },
 ];
